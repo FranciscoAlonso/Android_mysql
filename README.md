@@ -11,10 +11,11 @@ Android + Mysql example (cambiar la URL del server)
 (CRUD = Create Read Update Delete)
 
 * Querys:
-  
+
+  * CRUD Usuarios (medicos, p.e que pueden ingresar a ver info a traves de la app y * - recordar extension)
   * CRUD segunda opinion.
   * CRUD historia medica.
-  * CRUD recursos (docs,grabaciones,imagenes,etc).
+  * CRUD recursos (docs,grabaciones,imagenes,etc) atado a la segunda opinion.
   * ...
   
 * Ejecutar llamadas a la BD de forma asincrona (Android).
