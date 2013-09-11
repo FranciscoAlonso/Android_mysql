@@ -10,19 +10,19 @@ Android + Mysql example (cambiar la URL del server)
 
 (CRUD = Create Read Update Delete)
 
--Querys:
+* Querys:
   
-  -CRUD segunda opinion.
-  -CRUD historia medica.
-  -CRUD recursos (docs,grabaciones,imagenes,etc).
-  -...
+  * CRUD segunda opinion.
+  * CRUD historia medica.
+  * CRUD recursos (docs,grabaciones,imagenes,etc).
+  * ...
   
--Ejecutar llamadas a la BD de forma asincrona (Android).
--Crear Tablas ejemplos (basada en el dump de Triaje)
--Ingresar data ejemplo.
--Autenticacion para el webservice (opcional/low priority/de ultimo xD)
+* Ejecutar llamadas a la BD de forma asincrona (Android).
+* Crear Tablas ejemplos (basada en el dump de Triaje)
+* Ingresar data ejemplo.
+* Autenticacion para el webservice (opcional/low priority/de ultimo xD)
 
--Test de cada uno de los metodos CRUD.
+* Test de cada uno de los metodos CRUD.
 
 ----------
 
