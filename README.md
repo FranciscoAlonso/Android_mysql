@@ -2,6 +2,8 @@
 
 ## Descripción
 
+Revisión: 04-10-2013
+
 Web service para comunicar la aplicación con la BD de sos_triaje.
 
 * El módulo del webservice se encuentra en el directorio */sos_triaje_web_service*
@@ -13,9 +15,9 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
 	* *db_connect.php* 	(Archivo con la clase para el manejo con la BD)
 	* *sos_triaje.sql* 	(Script de la BD)
 
-* Definir que operaciones CRUD ser podrán realizar desde la app.
+* Definir que operaciones CRUD se podrán realizar desde la app.
 
-* Resolver porque el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).
+* Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).
 
 ----------
 
@@ -33,7 +35,7 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
   
 * Ingresar data ejemplo.
 
-*  Sanitizar y validar lo que llegue al webservice (SQL Injection, etc).
+*  Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).
 
 * Test de cada uno de los metodos CRUD.
 
