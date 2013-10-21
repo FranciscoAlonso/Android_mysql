@@ -50,9 +50,9 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
 
 * Ejecutar llamadas a la BD de forma asincrona (Android), *Link: http://www.androidhive.info/2012/05/how-to-connect-android-with-php-mysql/*
 
-* Verificar que el **.htaccess** funcione con la configuración inicial de apache (sin necesidad de configurar modulos, por simplicidad ya que puede no funcionar por el **.htaccess** - ERROR 500).
+* Verificar que el **.htaccess** funcione con la configuración inicial de apache (sin necesidad de configurar modulos, por simplicidad ya que puede no funcionar por el **.htaccess** - **ERROR 500**).
 
-* Autenticacion para el webservice (opcional/low priority/de ultimo xD).
+* Autenticacion para el webservice (opcional/low priority/de ultimo xD). *Link: http://www.androidhive.info/2012/01/android-login-and-registration-with-php-mysql-and-sqlite/*
 
 * Establecer sesiones para que el webservice sólo puedan ser utilizados por usuarios registrados.
 	* Ver como mantener la sesión a traves de la aplicación.
