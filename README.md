@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Revisión: 04-10-2013
+Revisión: 21-10-2013
 
 Web service para comunicar la aplicación con la BD de sos_triaje.
 
@@ -15,15 +15,13 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
 	* *db_connect.php* 	(Archivo con la clase para el manejo con la BD)
 	* *sos_triaje.sql* 	(Script de la BD)
 
-* Definir que operaciones CRUD se podrán realizar desde la app.
-
-* Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).
-
 ----------
 
 ### Por hacer
 
 (CRUD = Create Read Update Delete)
+
+* Definir que operaciones CRUD se podrán realizar desde la app.
 
 * Querys:
 
@@ -32,7 +30,9 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
 	* CRUD historia medica.
 	* CRUD recursos (docs,grabaciones,imagenes,etc) atado a la segunda opinion.
 	* ...
-  
+
+* ~~Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).~~
+
 * Ingresar data ejemplo.
 
 *  Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).
@@ -48,9 +48,9 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
 	* No existe el registro.
 	* No se realizó la conexión.
 
-* Ejecutar llamadas a la BD de forma asincrona (Android).
+* Ejecutar llamadas a la BD de forma asincrona (Android), *Link: http://www.androidhive.info/2012/05/how-to-connect-android-with-php-mysql/*
 
-* Verificar que el **.htaccess** funcione con la configuración inicial de apache (sin necesidad de configurar modulos, por simplicidad ya que puede no funcionar por el .htaccess - ERROR 500).
+* Verificar que el **.htaccess** funcione con la configuración inicial de apache (sin necesidad de configurar modulos, por simplicidad ya que puede no funcionar por el **.htaccess** - ERROR 500).
 
 * Autenticacion para el webservice (opcional/low priority/de ultimo xD).
 
