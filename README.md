@@ -21,7 +21,9 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
 
 (CRUD = Create Read Update Delete)
 
-* REALIZAR TODO RELACIONADO CON BD con MYSQLI (A futuro mysql será obsoleto).
+* REALIZAR TODO RELACIONADO CON BD con MYSQLI (A futuro muchos o todos los metodos mysql serán obsoletos).
+
+* Verificar charset *http://www.php.net/manual/en/mysqli.set-charset.php*
 
 * Definir que operaciones CRUD se podrán realizar desde la app.
 
@@ -37,7 +39,11 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
 
 * Ingresar data ejemplo.
 
-*  Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).
+* Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).
+	* Leer: *http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php*
+	* usar *http://www.php.net/manual/en/mysqli.real-escape-string.php*
+	* uso de `sprintf`, `is_numeric()`, `ctype_digit()`... etc. *http://php.net/manual/en/security.database.sql-injection.php*
+	* *http://www.php.net/manual/en/pdo.quote.php*
 
 * Test de cada uno de los metodos CRUD.
 
