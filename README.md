@@ -21,6 +21,8 @@ Web service para comunicar la aplicación con la BD de sos_triaje.
 
 (CRUD = Create Read Update Delete)
 
+* REALIZAR TODO RELACIONADO CON BD con MYSQLI (A futuro mysql será obsoleto).
+
 * Definir que operaciones CRUD se podrán realizar desde la app.
 
 * Querys:
