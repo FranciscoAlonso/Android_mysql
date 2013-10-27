@@ -21,8 +21,8 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 
 (CRUD = Create Read Update Delete)
 
-* REALIZAR TODO RELACIONADO CON BD con **MYSQLI** (A futuro muchos o todos los metodos `mysql` de php serán obsoletos).
-	* Crear clases en php nuevas para la conección haciendo uso de mysqli.
+* REALIZAR TODO RELACIONADO CON BD con **MYSQLI** (A futuro muchos o todos los metodos `mysql` de php serán obsoletos, a partir de PHP 5.5.0).
+	* Crear nuevas clases en php para la conección haciendo uso de mysqli.
 	
 * Definir charset para la BD *http://www.php.net/manual/en/mysqli.set-charset.php*
 	
@@ -64,7 +64,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 	* 1) "Acceder a las rutas sin colocar al final la extensión .php"
 	* 2) "Prevent hacks by detecting malicious URL patterns"
 	* 3) "Explicitly disable caching for scripts and other dynamic files"
-	* Si se desea utilizar alguno de estos módulos, se realizará una documentación donde se explicará los pasos a seguir (p.e.: que modulos hay q activar, etc.).
+	* Si se desea utilizar algunas de estas características, se realizará una documentación donde se explicará los pasos a seguir (p.e.: que modulos hay que activar, etc.)
 	
 * Autenticacion para el webservice (opcional/low priority/de ultimo xD). *Link: http://www.androidhive.info/2012/01/android-login-and-registration-with-php-mysql-and-sqlite/*
 
