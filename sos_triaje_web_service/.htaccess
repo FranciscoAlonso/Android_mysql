@@ -1,9 +1,17 @@
-# HTACCESS de desarrollo
-# Tony B. & Francisco A.
-# 2013
-#
-# Acivar en el servidor los modulos de... Aun no: --"deflate_module", "headers_module"--
-#
+#####################################################
+# HTACCESS DE DESARROLLO
+# 
+# Módulos necesarios: 
+# 	* deflate_module (No aplica)
+# 	* headers_module (No aplica)
+# 	* 
+# 
+# Francisco Alonso.
+# Tony Briceño.
+# 
+# Última revision: 27-10-2013
+# 
+#####################################################
 
 #####################################################
 # Use UTF-8 encoding for anything served as `text/html` or `text/plain`.
@@ -84,7 +92,7 @@ AddDefaultCharset utf-8
 #####################################################
 
 #####################################################
-# explicitly disable caching for scripts and other dynamic files
+# Explicitly disable caching for scripts and other dynamic files
 #
 #<FilesMatch ".(pl|php|cgi|spl|scgi|fcgi)$">
 #	Header unset Cache-Control
