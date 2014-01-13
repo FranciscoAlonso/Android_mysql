@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Última revisión: 27-10-2013
+Última revisión: 13-01-2014
 
 Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 
@@ -60,12 +60,20 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 * Ejecutar consultas a la BD de forma asincrona (Android), *Link: http://www.androidhive.info/2012/05/how-to-connect-android-with-php-mysql/*
 	
 * ~~Verificar que el **.htaccess** funcione con la configuración inicial de apache (sin necesidad de configurar modulos, por simplicidad ya que puede no funcionar por el **.htaccess** - **ERROR 500**).~~
-	* Para ello se encuentran comentados en el **.htaccess** tres secciones:
-	* 1) "Acceder a las rutas sin colocar al final la extensión .php"
-	* 2) "Prevent hacks by detecting malicious URL patterns"
-	* 3) "Explicitly disable caching for scripts and other dynamic files"
-	* Si se desea utilizar algunas de estas características, se realizará una documentación donde se explicará los pasos a seguir (p.e.: que modulos hay que activar, etc.)
+
+	* **Solución fácil**: Quitar el .htaccess =)
+
+	* **WAMP**:
+		* Copiar el contenido de "**htaccess_template_WAMP.txt**" a **.htaccess**.
+		* Se encuentran comentados en el **.htaccess** tres secciones:
+		* 1) "Acceder a las rutas sin colocar al final la extensión .php"
+		* 2) "Prevent hacks by detecting malicious URL patterns"
+		* 3) "Explicitly disable caching for scripts and other dynamic files"
+		* Si se desea utilizar algunas de estas características, se realizará una documentación donde se explicará los pasos a seguir (p.e.: que modulos hay que activar, etc.)
 	
+	* **XAMPP**:
+		* Copiar el contenido de "**htaccess_template_XAMPP.txt**" a **.htaccess**.
+
 * Autenticacion para el webservice (opcional/low priority/de ultimo xD). *Link: http://www.androidhive.info/2012/01/android-login-and-registration-with-php-mysql-and-sqlite/*
 
 * Establecer sesiones para que el webservice sólo puedan ser utilizados por usuarios registrados.
