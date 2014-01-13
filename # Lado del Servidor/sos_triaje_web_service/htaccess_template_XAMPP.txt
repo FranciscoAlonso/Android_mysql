@@ -1,15 +1,15 @@
 #####################################################
 # HTACCESS DE DESARROLLO
 # 
-# MÃ³dulos necesarios: 
+# Módulos necesarios: 
 #         * deflate_module (No aplica)
 #         * headers_module (No aplica)
 #         * 
 # 
 # Francisco Alonso.
-# Tony BriceÃ±o.
+# Tony Briceño.
 # 
-# Ãšltima revision: 13-01-2014
+# Última revision: 13-01-2014
 # 
 #####################################################
 
