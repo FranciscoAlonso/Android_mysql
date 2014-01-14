@@ -38,6 +38,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 * ~~Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).~~
 	* Comentar "**Deny from all**" en el archivo de conf httpd.conf dentro del Tag *<Directory "c:/wamp/www">*
 	* Si no resulta aún, agregar excepción en el firewall.
+	* Si no resulta aún, agregar excepción del puerto en el firewall (caso 8080).
 
 * Ingresar data ejemplo.
 
