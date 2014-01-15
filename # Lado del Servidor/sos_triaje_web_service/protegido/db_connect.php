@@ -1,5 +1,5 @@
 <?php
- 
+
 /**
  * Clase para la el manejo de la BD
  */
@@ -22,7 +22,7 @@ class DB_CONNECT {
      */
     function connect() {
         # Import de las constantes para la conexión a la BD
-        require_once __DIR__ . '/db_config.php';
+        require_once __DIR__ . '\db_config.php';
         
         ######################################################################################## 
         # CAPTURAR ESTOS POSIBLES ERRORES Y MANEJARLOS 
