@@ -29,11 +29,11 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 * Definir que operaciones CRUD se podrán realizar desde la app.
 
 * Querys:
-	* CRUD Usuarios (medicos, p.e que pueden ingresar a ver info a traves de la app y * - recordar extension)
-	* CRUD segunda opinion.
-	* CRUD historia medica.
-	* CRUD recursos (docs,grabaciones,imagenes,etc) atado a la segunda opinion.
-	* ...
+	* Listar historial_caso de un médico (según estado del caso).
+	* Mostrar información del caso.
+	* Mostrar opiniones asociadas a un caso.
+	* Crear caso.
+	* Listar médicos (todos o se puede filtrar por especialidad).
 
 * ~~Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).~~
 	* Comentar "**Deny from all**" en el archivo de conf httpd.conf dentro del Tag *<Directory "c:/wamp/www">*
