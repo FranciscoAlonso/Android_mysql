@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Última revisión: 13-01-2014
+Última revisión: 02-02-2014
 
 Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 
@@ -21,7 +21,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 
 (CRUD = Create Read Update Delete)
 
-* REALIZAR TODO RELACIONADO CON BD con **MYSQLI** (A futuro muchos o todos los metodos `mysql` de php serán obsoletos, a partir de PHP 5.5.0).
+* REALIZAR TODO RELACIONADO CON BD con ~~**MYSQLI**~~ **PDO** (A futuro muchos o todos los metodos `mysql` de php serán obsoletos, a partir de PHP 5.5.0).
 	* Crear nuevas clases en php para la conección haciendo uso de mysqli.
 	
 * Definir charset para la BD *http://www.php.net/manual/en/mysqli.set-charset.php*
@@ -65,7 +65,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 	
 * ~~Verificar que el **.htaccess** funcione con la configuración inicial de apache (sin necesidad de configurar modulos, por simplicidad ya que puede no funcionar por el **.htaccess** - **ERROR 500**).~~
 
-	* **Solución fácil**: Quitar el .htaccess =)
+	* **Solución fácil**: Quitar el **.htaccess** =)
 
 	* **WAMP**:
 		* Copiar el contenido de "**htaccess_template_WAMP.txt**" a **.htaccess**.
