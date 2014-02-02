@@ -26,7 +26,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 	
 * Definir charset para la BD *http://www.php.net/manual/en/mysqli.set-charset.php*
 	
-~~* Definir que operaciones CRUD se podrán realizar desde la app.~~
+* ~~Definir que operaciones CRUD se podrán realizar desde la app.~~
 
 * Querys:
 	* Listar historial_caso de un médico (según estado del caso).
