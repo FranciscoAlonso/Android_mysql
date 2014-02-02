@@ -38,15 +38,17 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 * ~~Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).~~
 	* Comentar "**Deny from all**" en el archivo de conf httpd.conf dentro del Tag *<Directory "c:/wamp/www">*
 	* Si no resulta aún, agregar excepción en el firewall.
-	* Si no resulta aún, agregar excepción del puerto en el firewall (caso 8080).
+	* Si no resulta aún, agregar excepción del puerto en el firewall (puerto 80 a 8080 y 443 a 4430).
 
 * Ingresar data ejemplo.
 
-* Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).
+* ~~Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).
 	* Leer: *http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php*
 	* usar *http://www.php.net/manual/en/mysqli.real-escape-string.php*
 	* uso de `sprintf`, `is_numeric()`, `ctype_digit()`... etc. *http://php.net/manual/en/security.database.sql-injection.php*
-	* *http://www.php.net/manual/en/pdo.quote.php*
+	* *http://www.php.net/manual/en/pdo.quote.php*~~
+	
+	* Solución: Utilizando `prepare` de `mysqli` o de `PDO` verifica esto. 
 
 * Test de cada uno de los metodos CRUD.
 
