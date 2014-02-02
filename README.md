@@ -42,13 +42,13 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 
 * Ingresar data ejemplo.
 
-* ~~Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).
-	* Leer: *http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php*
-	* usar *http://www.php.net/manual/en/mysqli.real-escape-string.php*
-	* uso de `sprintf`, `is_numeric()`, `ctype_digit()`... etc. *http://php.net/manual/en/security.database.sql-injection.php*
-	* *http://www.php.net/manual/en/pdo.quote.php*~~
+* ~~Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).~~
+	* ~~Leer: *http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php*~~
+	* ~~usar *http://www.php.net/manual/en/mysqli.real-escape-string.php*~~
+	* ~~uso de `sprintf`, `is_numeric()`, `ctype_digit()`... etc. *http://php.net/manual/en/security.database.sql-injection.php*~~
+	* ~~*http://www.php.net/manual/en/pdo.quote.php*~~
 	
-	* Solución: Utilizando `prepare` de `mysqli` o de `PDO` verifica esto. 
+	* **Solución**: Utilizando `prepare` de `mysqli` o de `PDO` evita los ataques. 
 
 * Test de cada uno de los metodos CRUD.
 
