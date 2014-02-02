@@ -22,11 +22,11 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 (CRUD = Create Read Update Delete)
 
 * REALIZAR TODO RELACIONADO CON BD con ~~**MYSQLI**~~ **PDO** (A futuro muchos o todos los metodos `mysql` de php serán obsoletos, a partir de PHP 5.5.0).
-	* Crear nuevas clases en php para la conección haciendo uso de mysqli.
+	* Crear nuevas clases en php para la conección haciendo uso de ~~mysqli~~ PDO.
 	
 * Definir charset para la BD *http://www.php.net/manual/en/mysqli.set-charset.php*
 	
-* Definir que operaciones CRUD se podrán realizar desde la app.
+~~* Definir que operaciones CRUD se podrán realizar desde la app.~~
 
 * Querys:
 	* Listar historial_caso de un médico (según estado del caso).
@@ -36,11 +36,10 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 	* Listar médicos (todos o se puede filtrar por especialidad).
 
 * ~~Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).~~
+	* **Soluciones**:
 	* Comentar "**Deny from all**" en el archivo de conf httpd.conf dentro del Tag *<Directory "c:/wamp/www">*
 	* Si no resulta aún, agregar excepción en el firewall.
 	* Si no resulta aún, agregar excepción del puerto en el firewall (puerto 80 a 8080 y 443 a 4430).
-
-* Ingresar data ejemplo.
 
 * ~~Sanitizar y validar lo que llegue al webservice (ataques tipo SQL Injection, XSS, etc).~~
 	* ~~Leer: *http://stackoverflow.com/questions/60174/how-can-i-prevent-sql-injection-in-php*~~
@@ -49,6 +48,8 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 	* ~~*http://www.php.net/manual/en/pdo.quote.php*~~
 	
 	* **Solución**: Utilizando `prepare` de `mysqli` o de `PDO` evita los ataques. 
+
+* Ingresar data ejemplo.
 
 * Test de cada uno de los metodos CRUD.
 
