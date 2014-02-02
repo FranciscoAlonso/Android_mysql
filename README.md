@@ -69,7 +69,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 	* **Solución fácil**: Quitar el **.htaccess** =)
 
 	* **WAMP**:
-		* Copiar el contenido de "**htaccess_template_WAMP.txt**" a **.htaccess**.
+		* Copiar el contenido de "**htaccess_root_template_WAMP.txt**" al **.htaccess** que se encuentra en la raíz.
 		* Se encuentran comentados en el **.htaccess** tres secciones:
 		* 1) "Acceder a las rutas sin colocar al final la extensión .php"
 		* 2) "Prevent hacks by detecting malicious URL patterns"
@@ -77,7 +77,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 		* Si se desea utilizar algunas de estas características, se realizará una documentación donde se explicará los pasos a seguir (p.e.: que modulos hay que activar, etc.)
 	
 	* **XAMPP**:
-		* Copiar el contenido de "**htaccess_template_XAMPP.txt**" a **.htaccess**.
+		* Copiar el contenido de "**htaccess_root_template_XAMPP.txt**" al **.htaccess** que se encuentra en la raíz.
 
 * Autenticacion para el webservice (opcional/low priority/de ultimo xD). *Link: http://www.androidhive.info/2012/01/android-login-and-registration-with-php-mysql-and-sqlite/*
 
