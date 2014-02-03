@@ -30,10 +30,18 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 
 * Querys:
 	* Listar historial_caso de un médico (según estado del caso).
+		* Listar todos los historiales.
+		* Listar todos los historiales - segun estado.
+		* Listar todos los historiales de un médico.
+		* Listar todos los historiales de un médico - segun estado.
 	* Mostrar información del caso.
 	* Mostrar opiniones asociadas a un caso.
-	* Crear caso.
+	* Caso.
+		* Crear Caso.
+		* Eliminar Caso (ojo eliminar opiniones en cascada).
 	* Listar médicos (todos o se puede filtrar por especialidad).
+		* Listar todos los médicos.
+		* Listar los médicos de una determinada especialidad.
 
 * ~~Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).~~
 	* **Soluciones**:
