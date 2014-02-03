@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Última revisión: 02-02-2014
+Última revisión: 03-02-2014
 
 Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 
@@ -29,6 +29,10 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 * ~~Definir que operaciones CRUD se podrán realizar desde la app.~~
 
 * Querys:
+	* Caso.
+		* Crear Caso (relación con historial_caso y otras tablas).
+		* Editar caso.
+		* Eliminar Caso (ojo eliminar opiniones en cascada).
 	* Listar historial_caso de un médico (según estado del caso).
 		* Listar todos los historiales.
 		* Listar todos los historiales - segun estado.
@@ -36,9 +40,6 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 		* Listar todos los historiales de un médico - segun estado.
 	* Mostrar información del caso.
 	* Mostrar opiniones asociadas a un caso.
-	* Caso.
-		* Crear Caso.
-		* Eliminar Caso (ojo eliminar opiniones en cascada).
 	* Listar médicos (todos o se puede filtrar por especialidad).
 		* Listar todos los médicos.
 		* Listar los médicos de una determinada especialidad.
