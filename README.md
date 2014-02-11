@@ -29,6 +29,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 * ~~Definir que operaciones CRUD se podrán realizar desde la app.~~
 
 * Querys:
+	* Inicio/Cierre de Sesión 	
 	* Caso.
 		* Crear Caso (relación con historial_caso y otras tablas).
 		* Editar caso.
@@ -43,6 +44,7 @@ Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 	* Listar médicos (todos o se puede filtrar por especialidad).
 		* Listar todos los médicos.
 		* Listar los médicos de una determinada especialidad.
+	* Cargar/Adjuntar archivo a un caso.
 
 * ~~Resolver por que el teléfono no puede acceder al servidor web (posiblemente es el firewall de windows).~~
 	* **Soluciones**:
