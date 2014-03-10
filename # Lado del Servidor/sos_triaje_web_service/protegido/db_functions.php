@@ -41,7 +41,7 @@ class DB_FUNCTIONS {
     }
 
     /**
-     * Get user by email and password
+     * TEST
      */
     public function get_all_actor_sistema() {
 
@@ -77,13 +77,30 @@ class DB_FUNCTIONS {
 
     }
 
+    /**
+     * 
+     */
 /*
-    public function get_historial_caso(){}
-
-    public function get_historial_caso_by_state(){}
-
-    public function get_historial_caso_by_state(){}
-/**/
+public function getUserByEmailAndPassword($email, $password) {
+        $result = mysql_query("SELECT * FROM users WHERE email = '$email'") or die(mysql_error());
+        // check for result 
+        $no_of_rows = mysql_num_rows($result);
+        if ($no_of_rows > 0) {
+            $result = mysql_fetch_array($result);
+            $salt = $result['salt'];
+            $encrypted_password = $result['encrypted_password'];
+            $hash = $this->checkhashSSHA($salt, $password);
+            // check for password equality
+            if ($encrypted_password == $hash) {
+                // user authentication details are correct
+                return $result;
+            }
+        } else {
+            // user not found
+            return false;
+        }
+    }
+ /**/
 
 }
 ?>
