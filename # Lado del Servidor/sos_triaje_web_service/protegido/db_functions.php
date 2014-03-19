@@ -10,6 +10,7 @@ class DB_FUNCTIONS {
     
     # Constructor
     function __construct() {
+        // Generalizar para varias conexiones a distintas BD
         require_once __DIR__ . '\db_config.php';
 
         try {
@@ -27,6 +28,7 @@ class DB_FUNCTIONS {
 
         } catch ( PDOException $e ) {
             # echo 'Conexi&oacute;n Fallida: <br>' . $e->getMessage();
+            // Usar variables para los Strings
             exit('Conexi&oacute;n Fallida: <br>' . $e->getMessage());
         }
 

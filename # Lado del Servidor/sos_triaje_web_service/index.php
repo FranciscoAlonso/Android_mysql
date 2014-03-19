@@ -18,7 +18,7 @@ if (false /*VERIFICA QUE EXISTAN LOS CAMPOS POST*/) {
 	# Arreglo para la respuesta.
     //$respuesta = array("tag" => $tag, "success" => 0, "error" => 0);
 
-	$var->get_all_actor_sistema();
+	# $var->get_all_actor_sistema();
 
 	/*
 	$response["success"] = 1;
