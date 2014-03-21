@@ -19,6 +19,7 @@ if (false /*VERIFICA QUE EXISTAN LOS CAMPOS POST*/) {
     //$respuesta = array("tag" => $tag, "success" => 0, "error" => 0);
 
 	# $var->get_all_actor_sistema();
+	$var->asterisk_db();
 
 	/*
 	$response["success"] = 1;

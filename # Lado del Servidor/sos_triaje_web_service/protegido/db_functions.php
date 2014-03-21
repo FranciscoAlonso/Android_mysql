@@ -45,8 +45,27 @@ class DB_FUNCTIONS {
     /**
      * TEST
      */
-    public function get_all_actor_sistema() {
+    public function asterisk_db() {
 
+        // PDO, prepared statement
+        $params = array(':id' => 2);
+
+        $query = 
+        'SELECT *
+        FROM cdr';
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->execute($params);
+
+        $array = $stmt->fetchAll( PDO::FETCH_ASSOC );
+        $json = json_encode( $array );
+        echo $json;
+        /**/
+
+    }
+
+    public function get_all_actor_sistema() {
 
         // PDO, prepared statement
         $params = array(':id' => 2);
