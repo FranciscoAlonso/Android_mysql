@@ -49,6 +49,19 @@ SHOW GRANTS;
 ---
 
 LINKS POR REVISAR:
+// Debe tener una sesión iniciada para poder descargar con esta URL:
+https://192.168.2.15/index.php?menu=monitoring&action=download&id=1394505195.0&namefile=20140310-220315-1394505195.0.wav&rawmode=yes
+menu=monitoring
+&
+action=download
+&
+id=1394505195.0
+&
+namefile=20140310-220315-1394505195.0.wav
+&
+rawmode=yes
+
+
 https://190.72.195.55/recordings/misc/
 https://190.72.195.55/recordings/misc/audio.php?recindex=1
 
