@@ -70,5 +70,8 @@ http://www.freepbx.org/forum/freepbx/users/i-cannot-download-recordings
 http://community.spiceworks.com/how_to/show/23140-maintaining-elastix-system-recordings
 http://elastix.wikia.com/wiki/Auto-deletion_of_call_recordings
 
+How to Change HostName and IP-Address in CentOS / RedHat Linux:
+http://www.thegeekstuff.com/2013/10/change-hostname-ip-address/
+
 /**/
 ?>
