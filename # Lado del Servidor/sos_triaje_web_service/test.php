@@ -35,30 +35,16 @@ Fuentes:
 /*      Public domain code      */
 /* ============================ */
 
-#echo exec("ping 192.168.2.15");
-
 /* Connection details */
-/*
-$manager_host = "192.168.2.15";
+$manager_host = "190.72.197.215";
 $manager_user = "admin";
 $manager_pass = "Tajrh123654";
-/**/
-/*
-$manager_host = "192.168.2.15";
-$manager_user = "root";
-$manager_pass = "Tajrh123654";
-/**/
-$manager_host = "192.168.2.15";
-$manager_user = "6001";
-$manager_pass = "alice123";
-/**/
 
 /* Default Port */
 $manager_port = "5038";
-$manager_port = "80";
 
 /* Connection timeout */
-$manager_connection_timeout = 	30;
+$manager_connection_timeout = 30;
 
 /* The Asterisk peer you would like to check */
 $peer_name = "6001";
@@ -90,14 +76,8 @@ if (!$fp) {
     $blank_line = fgets($fp);
 
     if (substr($response,0,9) == "Message: ") {
-
-		echo "<br>**" . $response . "**<br>";
-
         /* We have got a response */
         $loginresponse = trim(substr($response,9));
-
-		echo ">>" . $loginresponse . "<<<br>";
-
         if (!$loginresponse == "Authentication Accepted") {
             echo "-- Unable to log in: $loginresponse\n";
             fclose($fp);
@@ -125,7 +105,7 @@ if (!$fp) {
             if ($found_entry == false) {
                 echo "-- We didn't get the response we were looking for - is the peer name correct?\n";
             } else if ($peer_ok == true) {
-                echo "-- Peer looks good at the moment: $status\n";
+                echo "-- Peer looks good at the moment: >$status<\n";
             } else {
                 /* We received a response other than ok - you can really do whatever */
                 /* you want here - in this example I'm going to use the originate    */
@@ -150,4 +130,51 @@ if (!$fp) {
     }
 }
     
+?>
+
+<?php
+
+# Fuente: http://www.infi.nl/blog/view/id/70/Displaying_asterisk_online_status_on_a_web_page
+
+/*
+function exec_get_output($command){
+    $output;
+    exec($command,$output);
+    return implode("\n",$output);
+}
+
+$peers = exec_get_output("/usr/sbin/asterisk -r -x 'sip show peers'");
+
+//Find users
+preg_match_all("/([0-9a-z]*)(\/[0-9a-z]*)?[ ]*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|[0-9a-z\/]*[ ]*\(Unspecified\))/",$peers,$matches);
+
+$names = $matches[1];
+$ipAddresses = $matches[3];
+
+//We are returning a png image
+header('Content-Type: image/png');
+
+if(($index = array_search($_GET['user'], $names)) === false){
+    //User was not found
+    print file_get_contents('images/unknown.png');
+}else if($ipAddresses[$index] == '(Unspecified)'){
+    //User is not logged in
+    print file_get_contents('images/unavailable.png');
+}else{
+    //Get current calls
+    $channels = exec_get_output("/usr/sbin/asterisk -r -x 'core show channels'");
+    
+    //Find requested user
+    /**/
+    #preg_match("/SIP\/" . $_GET['user'] . "*-[a-f0-9]*/",$channels,$matches);
+    /*
+    if($matches[0]){
+        //User is on the phone
+        print file_get_contents('images/busy.png');
+    }else{
+        //User is available
+        print file_get_contents('images/available.png');
+    }
+}
+/**/
 ?>
