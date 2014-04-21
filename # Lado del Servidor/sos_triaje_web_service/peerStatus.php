@@ -1,5 +1,7 @@
 <?php
 
+# Fuente: http://www.infi.nl/blog/view/id/70/Displaying_asterisk_online_status_on_a_web_page
+
 function exec_get_output($command){
 #echo '<br>' . "funcion" ;
 	$output;
@@ -7,7 +9,7 @@ function exec_get_output($command){
 	return implode("\n",$output);
 }
 
-$peers = exec_get_output("/usr/sbin/asterisk -r -x 'sip show peers'");
+$peers = exec_get_output("sudo /usr/sbin/asterisk -r -x 'sip show peers'");
 
 echo 
 "--- peers ---<br>" . 
@@ -33,7 +35,7 @@ if(($index = array_search($_GET['user'], $names)) === false){
 	echo "Unavailable";
 }else{
 	//Get current calls
-	$channels = exec_get_output("/usr/sbin/asterisk -r -x 'core show channels'");
+	$channels = exec_get_output("sudo /usr/sbin/asterisk -r -x 'core show channels'");
 	
 	//Find requested user
 	preg_match("/SIP\/" . $_GET['user'] . "*-[a-f0-9]*/",$channels,$matches);

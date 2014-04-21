@@ -72,6 +72,5 @@ http://elastix.wikia.com/wiki/Auto-deletion_of_call_recordings
 
 How to Change HostName and IP-Address in CentOS / RedHat Linux:
 http://www.thegeekstuff.com/2013/10/change-hostname-ip-address/
-
 /**/
 ?>
