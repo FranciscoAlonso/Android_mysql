@@ -88,6 +88,7 @@ else
             
             $checkpeer = "Action: Command\r\n";
             $checkpeer .= "Command: $peer_type show peer $peer_name\r\n";
+            //$checkpeer .= "Command: core show channels\r\n";
             //$checkpeer .= "Command: $peer_type show peer 0000\r\n"; # STATUS: Peer 0000 not found.
             //$checkpeer .= "Command: $peer_type show peers\r\n";
             $checkpeer .= "\r\n";
@@ -119,15 +120,18 @@ else
             }
 
             if ($found_entry == false)
-            {
+            {   # PEER NOT FOUND (Caso que no ocurrirá en la app ya que los usuarios son tomados de la misma BD de asterisk)
                 echo "-- We didn't get the response we were looking for - is the peer name correct?\n";
             } 
             else if ($peer_ok == true)
-            {
+            {   # STATUS OK
                 echo "-- Peer looks good at the moment: >$status<\n";
-            } 
-            else 
-            {
+                # FALTA VERIFICAR SI SE ENCUENTRA DISPONIBLE, que no se encuentre llamando...
+                // Ejecutar el comando 'core show channels' y verificar si el peer está o no en la lista. 
+            }
+            else
+            {   # SE RECIBIO UNA RESPUESTA DISTINTA A UN "OK", PEER NO CONECTADO
+
                 /* We received a response other than ok - you can really do whatever */
                 /* you want here - in this example I'm going to use the originate    */
                 /* command to call me and play me the tt-monkeys sound - if I hear   */
