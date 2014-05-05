@@ -6,7 +6,7 @@ Fuentes:
 
 Para poder utilizar este código es necesario que en el Asterisk se habilite
 el usuario en la ACL del manager.conf, de otra forma no podra conectarse 
-a menos que se a de forma local
+a menos que sea de forma local
 
 /**/
 
