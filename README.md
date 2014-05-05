@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Última revisión: 03-02-2014
+Última revisión: 05-05-2014
 
 Web service para comunicar la aplicación de Android con la BD de sos_triaje.
 
