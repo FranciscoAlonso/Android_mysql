@@ -37,5 +37,6 @@ echo '<br>' . 'TESTING CLASS SOS_DB_MODEL' . '<br>'; ###
 include '/protected/classes/sos_db_model.php';
 $aux = new sos_db_model(); # funciona ! =)
 
+$aux->getEspecialidades();
 
 ?>
