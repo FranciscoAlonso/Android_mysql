@@ -1,8 +1,9 @@
 <?php
-
-// INVESTIGAR: E_WARNING y display_errors
-
-# Definición de constantes para su uso en conexiones a BD.
+/**
+* Definición de constantes para su uso en conexiones a BD.
+*
+* INVESTIGAR: E_WARNING y display_errors
+*/
 
 define('SOS_DB_SERVER', 'localhost');	# Servidor de la BD de SOS Triaje
 define('SOS_DB_NAME','sos_triaje');		# Nombre de la BD a conectar
@@ -31,7 +32,6 @@ define('GLOBAL_PDO_ERROR_MODE', PDO::ERRMODE_WARNING );
   # PDO::FETCH_LAZY: Combines PDO::FETCH_BOTH/PDO::FETCH_OBJ, creating the object variable names as they are used
   # PDO::FETCH_NUM: returns an array indexed by column number
   # PDO::FETCH_OBJ: returns an anonymous object with property names that correspond to the column names
-/**/
 define('GLOBAL_PDO_FETCH_MODE', PDO::FETCH_OBJ); 
 
 /**/

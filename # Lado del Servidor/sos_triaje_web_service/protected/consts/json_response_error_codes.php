@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * Definición de los valores de error y mensajes para las respuestas JSON:
 */
 
