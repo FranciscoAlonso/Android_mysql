@@ -19,7 +19,7 @@ class getEspecialidades{
 		$DBH_SOS = new sos_db_model();
 		
 		# Obtiene las especialidades
-		$STMT = $DBH_SOS->getEspecialidades();
+		$result = $DBH_SOS->getEspecialidades();
 
 		/*
 		# Definir el query
@@ -30,13 +30,17 @@ class getEspecialidades{
 
 		$params = array( ':id' => 3 );
 
-		$STMT = $DBH_SOS->execute( $query , $params );
+		$result = $DBH_SOS->execute( $query , $params );
 		*/
 
-		# obtener el resultado (array)
-		# showing the results
+		$row_count = $result->rowCount();
+	    echo 'Columnas afectadas por el query: ';
+	    echo $row_count . '<br>';
 
-	    while( $row = $STMT->fetch() ) {
+		# obtener el resultado (array)
+		# showing the results		
+	    
+	    while( $row = $result->fetch() ) {
 	    	/**/
 		    echo $row['id'] . " - ";
 		    //echo $row['version'] . "<br>";
