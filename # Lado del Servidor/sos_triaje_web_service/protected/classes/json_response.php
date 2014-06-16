@@ -11,6 +11,8 @@ class json_response{
 
   private static $response;
 
+  # Lista de constantes que definen el valor del $errorCode 
+
   public static function echo_test( $msg ){
     //echo 'This is a test, '. $msg . '<br>';
 
@@ -25,6 +27,8 @@ class json_response{
     echo json_encode( $response ) . '<br>';
 
   }
+
+  # funcion que asigne el mensaje segun el valor del $errorCode
 
   public static function generate( $errorCode , $errorMessage , $data ){
      
