@@ -13,19 +13,25 @@ class sos_db_model{
 		try {
             # *** Conexión fallida ***
             # $this->DBH = new PDO("mysql:host=localhost;dbname=database", SOS_DB_USER , SOS_DB_PASSWORD );
-            $this->DBH = new PDO("mysql:host=" . SOS_DB_SERVER .";dbname=" . SOS_DB_NAME , SOS_DB_USER , SOS_DB_PASSWORD, array(PDO::ATTR_ERRMODE => GLOBAL_PDO_ERROR_MODE));
-            echo '# sos_db_model constructor #' . '<br>';
+            $this->DBH = new PDO(
+                                "mysql:host=" . SOS_DB_SERVER . ";dbname=" . SOS_DB_NAME,
+                                SOS_DB_USER,
+                                SOS_DB_PASSWORD,
+                                array(
+                                    PDO::ATTR_ERRMODE => GLOBAL_PDO_ERROR_MODE,
+                                    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'/**/)
+                            );
+            //echo '# sos_db_model constructor #' . '<br>';
         } catch ( PDOException $e ) {
             # echo 'Conexi&oacute;n Fallida: <br>' . $e->getMessage();
             // Usar variables para los Strings
             exit('Conexi&oacute;n Fallida: <br>' . $e->getMessage());
         }
-
     }
 
     function __destruct() {
         $this->DBH = NULL;
-        echo '# sos_db_model destructor #' . '<br>';
+        //echo '# sos_db_model destructor #' . '<br>';
     }
     
     /**
@@ -47,7 +53,6 @@ class sos_db_model{
         }
         return $STMT;
     }
-    /**/
 
     function getEspecialidades(){
 
@@ -78,6 +83,5 @@ class sos_db_model{
         # Retorno del resultado
         return $this->execute( $query , NULL );
     }
-
 }
 ?>

@@ -12,12 +12,21 @@ define('QT_SELECT','select');
 define('QT_UPDATE','update');
 define('QT_DELETE','delete');
 
+define('DATA_KEY','data');
+define('METADATA_KEY','metadata');
+
 class json_response_metadata{
   
   private $queryType; # SELECT, UPDATE, DELETE
   private $errorCode;
   private $errorMessage;
   private $rowsAffected;
+
+  # Constantes que definen el KEY para el arreglo
+  const queryTypeKey = 'queryType';
+  const errorCodeKey = 'errorCode';
+  const errorMessageKey = 'errorMessage';
+  const rowsAffectedKey = 'rowsAffected';
 
   # Getters
   function getQueryType(){ return $this->queryType; }
@@ -59,10 +68,31 @@ class json_response{
   #private function __clone(){}
 
   # Esta función se encargará es de crear la estructura para el retorno
-  public static function generate( $errorCode, $data ){
+  public static function generate( $metadata, $data ){
 
-    # extraer datos de la metadata y juntarlo con la data
-    return json_encode( $data );
+    # Extraer datos de la metadata y juntarlo con la data
+    $result[METADATA_KEY][$metadata::queryTypeKey] = $metadata->getQueryType();
+    $result[METADATA_KEY][$metadata::errorCodeKey] = $metadata->getErrorCode();
+    $result[METADATA_KEY][$metadata::errorMessageKey] = $metadata->getErrorMessage();
+    $result[METADATA_KEY][$metadata::rowsAffectedKey] = $metadata->getRowsAffected();
+
+    $index = 0;
+      while( $row = $data->fetch() ) {
+        /*echo $row['id'] . " - ";
+        echo $row['descripcion'] . " - ";
+        echo $row['nombre'] . "<br>";/**/
+        #print_r($row); echo '<br>';
+        foreach( $row as $key => $value ) {
+          //echo $key.' - '.$value.'<br />';
+          //$result[DATA_KEY][$index][$key] = utf8_encode($value);
+          $result[DATA_KEY][$index][$key] = $value;
+        }
+        $index++;
+      }
+
+    //echo $metadata::queryTypeKey . '<br>';
+    //print_r( json_decode( json_encode($result, JSON_UNESCAPED_UNICODE) ) );
+    return json_encode( $result);
   }
 
 }

@@ -3,7 +3,7 @@
 * Acceso principal al WEB SERVICE (WS)...
 * Definición de cada una de las funcionalidades del WS.
 */
-echo 'Acceso principal al WEB SERVICE (WS)...' . '<br>'; ###
+//echo 'Acceso principal al WEB SERVICE (WS)...' . '<br>'; ###
 
 # Autenticación???
 # Obtener los parametros GET
@@ -18,7 +18,7 @@ define( 'DIR_CLASSES'		, __DIR__ . '/protected/classes/');
 define( 'DIR_CONSTANTS'		, __DIR__ . '/protected/consts/');
 define( 'DIR_CONTROLLERS'	, __DIR__ . '/protected/controllers/');
 
-echo 'La solicitud fue de tipo: ' . $WS_request_type . '<br>'; ###
+//echo 'La solicitud fue de tipo: ' . $WS_request_type . '<br>'; ###
 
 # Según sea el tipo se solicitud se invocará al controlador correspondiente
 switch ( $WS_request_type ) {

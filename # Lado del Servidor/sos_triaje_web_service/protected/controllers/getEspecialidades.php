@@ -21,53 +21,23 @@ class getEspecialidades{
 			$result = $DBH_SOS->getEspecialidades();
 
 			//print_r($result);echo '<br>';
-			echo '* Rows Affected: ' . $result->rowCount() . ' *<br>';
 
-			# Crear metadata
+			# Crear metadata para la consulta exitosa
 			$metadata = 
 				new json_response_metadata(
 						QT_SELECT,
 						JR_SUCCESS,
 						$result->rowCount()
 					);
-			/*
-			print_r($metadata);echo '<br>';
-			echo '----<br>';	
-			echo $metadata->getQueryType() . '<br>';    
-			echo $metadata->getErrorCode() . '<br>';    
-			echo $metadata->getErrorMessage() . '<br>';    
-			echo $metadata->getRowsAffected() . '<br>----<br>';    
-			/**/
-			$arrayTest['metadata']['m1'] = 11;
-
-			$index = 0;
-			while( $row = $result->fetch() ) {
-		        //echo $row['id'] . " - ";
-		        //echo $row['descripcion'] . " - ";
-		        //echo $row['nombre'] . "<br>";
-		        #print_r($row); echo '<br>';
-		        foreach( $row as $key => $value ) {
-		          	echo $key.' - '.$value.'<br />';
-					$arrayTest['data'][$index][$key] = $value;
-		        }
-		       $index++;
-		    }
-
-		    echo 'Index: ' . $index . '<br>';
-		    echo json_encode($arrayTest);
-		    echo '<br>';
-
-			# incorporar dentro de la clase json_response
-
-			# retornar
-			#return json_response::generate( $metadata, $result );
-			return '=D';
+			
+			# Retorna el resultado de la consulta con información extra en formato JSON 
+			return json_response::generate( $metadata, $result );
 
 		} catch (Exception $e) {
-			#print_r($e);
+			//print_r($e);
 			//echo $e->getMessage() . '<br>';
+			# Crear metadata para la consulta fallida
 		}
-
 	}
 }
 ?>
