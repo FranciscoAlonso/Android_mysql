@@ -14,9 +14,11 @@ if (isset($_GET['request'])) # if not -> exit();
 $WS_request_type = $_GET['request'];
 
 # Constantes que definen los directorios que se utilizan en el WS
+define( 'DIR_API'			, __DIR__ . '/protected/API/');
 define( 'DIR_CLASSES'		, __DIR__ . '/protected/classes/');
 define( 'DIR_CONSTANTS'		, __DIR__ . '/protected/consts/');
 define( 'DIR_CONTROLLERS'	, __DIR__ . '/protected/controllers/');
+define( 'DIR_LIBS'			, __DIR__ . '/protected/libs/');
 
 //echo 'La solicitud fue de tipo: ' . $WS_request_type . '<br>'; ###
 
