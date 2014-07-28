@@ -1,6 +1,6 @@
 <?php
 /**
-* Definición de los valores de error para las respuestas JSON:
+* Definición de los valores de error para las respuestas JSON.
 */
 
 # Se realizó con éxito la solicitud.
