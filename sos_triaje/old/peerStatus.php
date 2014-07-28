@@ -31,7 +31,7 @@ $manager_port = "5038";
 $manager_connection_timeout = 30;
 
 /* The Asterisk peer you would like to check */
-$peer_name = "6001";
+$peer_name = "6002";
 if ( !empty($_GET['user']))
 $peer_name = $_GET['user'];
 

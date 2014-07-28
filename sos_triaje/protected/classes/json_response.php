@@ -98,19 +98,23 @@ class json_response{
   public static function generate($metadata, $data){
 
     $result = $metadata->getMetaData();
-   
-    # Se extrae los datos del objeto PDO
-    $index = 0;
-    while( $row = $data->fetch() ) {
-      /*echo $row['id'] . " - ";
-      echo $row['descripcion'] . " - ";
-      echo $row['nombre'] . "<br>";/**/
-      #print_r($row); echo '<br>';
-      foreach( $row as $key => $value ) {
-        //echo $key.' - '.$value.'<br />';
-        $result[DATA_KEY][$index][$key] = $value;
+    
+    if(is_string($data)){
+      $result[DATA_KEY][json_response::msgDescription] = $data;
+    }else{
+      # Se extrae los datos del objeto PDO
+      $index = 0;
+      while( $row = $data->fetch() ) {
+        /*echo $row['id'] . " - ";
+        echo $row['descripcion'] . " - ";
+        echo $row['nombre'] . "<br>";/**/
+        #print_r($row); echo '<br>';
+        foreach( $row as $key => $value ) {
+          //echo $key.' - '.$value.'<br />';
+          $result[DATA_KEY][$index][$key] = $value;
+        }
+        $index++;
       }
-      $index++;
     }
 
     //echo $metadata::queryTypeKey . '<br>';

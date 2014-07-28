@@ -3,8 +3,6 @@
  * Este archivo contiene las funciones de utilidad para el API
  */
 
-require_once DIR_CLASSES . '/json_response.php';
-
 /**
  * Clase estática que conteine las funciones estáticas de utilidad para el API.
  */

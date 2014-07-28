@@ -15,7 +15,8 @@ define('DEFAULT_CONTENT_TYPE', JSON_CONTENT_TYPE . ';' . DEFAULT_VERSION );
 define('DEFAULT_ERROR_MSG', 'Ha ocurrido un error mientras se realizaba la operación, intente nuevamente más tarde.'); 
 
 # Se cargan los métodos de utilidad para el API
-require_once DIR_API . '/API_functions.php';
+require_once DIR_CLASSES 	. '/json_response.php';
+require_once DIR_API 		. '/API_functions.php';
 
 $app->status(200);
 $app->contentType(DEFAULT_CONTENT_TYPE);
@@ -28,14 +29,17 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	 * params - email, password
 	 */
 	$app->post('/login', function() use ($app) {
-	            // check for required params
+	            # check for required params
 	            API::verifyRequiredParams(array('email', 'password'));
 	            
-	            // reading post params
+	            # reading post params
 	            $email = $app->request()->post('email');
 	            $password = $app->request()->post('password');
 	            $response = array();
 
+	            $metadata = new json_response_metadata(JR_ERROR, 0);//, "", $_SERVER['REQUEST_METHOD']);
+    			echo json_response::generate($metadata, "test");
+	            
 	            /*
 	            $db = new DbHandler();
 	            // check for correct email and password
@@ -62,6 +66,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 
 	            echoRespnse(200, $response);
 	            /**/
+
 	        });
 
 #endregion
@@ -73,8 +78,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	 * method - GET
 	 */
 	$app->get('/especialidades', function() use($app){
-	    		$app->status(200);
-	    		
+	    		//$app->status(200);
 	            #echo '>' . $app->request->getContentType() . '<' ; # Split por ';'
 	            # Hacer override del default Content-type con el de la solicitud.
 	    		require_once  DIR_CONTROLLERS . '/getEspecialidades.php';

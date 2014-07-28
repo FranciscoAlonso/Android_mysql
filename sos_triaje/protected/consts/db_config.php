@@ -4,17 +4,25 @@
  * constantes para su uso en conexiones a BD.
  */
 
-define('SOS_DB_SERVER', 'localhost');   # Servidor de la BD de SOS Triaje
-define('SOS_DB_NAME', 'sos_triaje');		# Nombre de la BD a conectar
-define('SOS_DB_USER', 'root');			    # Usuario de la BD
-define('SOS_DB_PASSWORD', ''); 			    # Contraseña de la BD
+define('SOS_DB_SERVER'  , 'localhost'  ); # Servidor de la BD de SOS Triaje.
+define('SOS_DB_NAME'    , 'sos_triaje' );	# Nombre de la BD a conectar.
+define('SOS_DB_USER'    , 'root'       );	# Usuario de la BD.
+define('SOS_DB_PASSWORD', ''           ); # Contraseña de la BD.
 
 # Recuerde cambiar la configuración en el servidor Elastix
 # para que permita la conexión desde otro servidor (ACL). 
-define('ELASTIX_DB_SERVER', '');	            # Servidor de la BD de Elastix
-define('ELASTIX_DB_NAME', 'asteriskcdrdb'); 	# Nombre de la BD a conectar
-define('ELASTIX_DB_USER','root'); 				    # Usuario de la BD
-define('ELASTIX_DB_PASSWORD','Tajrh123654');  # Contraseña de la BD
+define('ELASTIX_DB_SERVER'  , '192.168.2.44'  ); # Servidor de la BD de Elastix.
+define('ELASTIX_DB_NAME'    , 'asteriskcdrdb' ); # Nombre de la BD a conectar.
+define('ELASTIX_DB_USER'    , 'root'          ); # Usuario de la BD.
+define('ELASTIX_DB_PASSWORD', 'Tajrh123654'   ); # Contraseña de la BD.
+
+# Constantes para acceder al Asterisk Manager Interface (AMI)
+define('ELASTIX_AMI_HOST'     , ELASTIX_DB_SERVER   ); # AMI Host.
+define('ELASTIX_AMI_USER'     , 'admin'             ); # AMI User.
+define('ELASTIX_AMI_PASSWORD' , ELASTIX_DB_PASSWORD ); # AMI Password.
+define('ELASTIX_AMI_PORT'     , '5038'              ); # Port (Default: 5038).
+define('ELASTIX_AMI_TIMEOUT'  , 30                  ); # Connection timeout. 
+define('ELASTIX_AMI_PEER_TYPE', 'sip'               ); # The type of peer (i.e. iax2 or sip).
 
 # Definición global para los tipos de mensajes de error:
   # PDO::ERRMODE_SILENT (Deafult): The other two methods are more ideal for DRY programming. If you leave it in this mode, you'll have to check for errors in the way you're probably used to if you used the mysql or mysqli extensions.
