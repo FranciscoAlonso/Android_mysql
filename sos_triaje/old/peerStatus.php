@@ -1,4 +1,38 @@
 <?php
+/*
+Adress IP:
+\bAddr->IP : (25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b
+
+Status: 
+\bStatus : OK\b
+
+Explode:
+$str = "Hello world. It's a beautiful day.";
+print_r (explode(" ",$str));
+
+Regexp:
+$subject = "abcdef";
+$pattern = '/^def/';
+preg_match($pattern, substr($subject,3), $matches, PREG_OFFSET_CAPTURE);
+print_r($matches);
+
+# preg_match() returns 1 if the pattern matches given subject, 0 if it does not, or FALSE if an error occurred.
+
+# The \b in the pattern indicates a word boundary, so only the distinct
+# word "web" is matched, and not a word partial like "webbing" or "cobweb"
+if (preg_match("/\bweb\b/i", "PHP is the web scripting language of choice.")) {
+    echo "A match was found.";
+} else {
+    echo "A match was not found.";
+}
+
+if (preg_match("/\bweb\b/i", "PHP is the website scripting language of choice.")) {
+    echo "A match was found.";
+} else {
+    echo "A match was not found.";
+}
+*/
+
 /* 
 Fuentes:
 	http://www.venturevoip.com/news.php?rssid=2217
@@ -31,7 +65,7 @@ $manager_port = "5038";
 $manager_connection_timeout = 30;
 
 /* The Asterisk peer you would like to check */
-$peer_name = "6002";
+$peer_name = "6001";
 if ( !empty($_GET['user']))
 $peer_name = $_GET['user'];
 

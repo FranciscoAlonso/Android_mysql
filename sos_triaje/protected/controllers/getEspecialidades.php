@@ -3,9 +3,6 @@
 * Controlador que genera 
 */
 
-# Se incluyen las dependencias que requiere este controlador
-require_once DIR_CLASSES . '/sos_db_model.php';
-
 /**
  * Clase estática para obtener las especialidades. 
  */

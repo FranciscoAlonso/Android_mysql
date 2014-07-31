@@ -17,6 +17,7 @@ define('DEFAULT_ERROR_MSG', 'Ha ocurrido un error mientras se realizaba la opera
 # Se cargan los métodos de utilidad para el API
 require_once DIR_CLASSES 	. '/json_response.php';
 require_once DIR_API 		. '/API_functions.php';
+require_once DIR_CLASSES 	. '/sos_db_model.php';
 
 $app->status(200);
 $app->contentType(DEFAULT_CONTENT_TYPE);
@@ -37,9 +38,14 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	            $password = $app->request()->post('password');
 	            $response = array();
 
+	            # Validar contraseña
+	            API::validateEmail($email);
+
 	            $metadata = new json_response_metadata(JR_ERROR, 0);//, "", $_SERVER['REQUEST_METHOD']);
-    			echo json_response::generate($metadata, "test");
 	            
+				# Invocar a la clase sos_db_model
+				$DBH_SOS = new sos_db_model();
+
 	            /*
 	            $db = new DbHandler();
 	            // check for correct email and password
@@ -66,6 +72,8 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 
 	            echoRespnse(200, $response);
 	            /**/
+	            
+    			echo json_response::generate($metadata, "test");
 
 	        });
 

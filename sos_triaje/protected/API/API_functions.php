@@ -77,9 +77,7 @@ class API{
             # Required field(s) are missing or empty, echo error json and stop the app.           
             $app = \Slim\Slim::getInstance();
             $app->status(400);
-
             echo json_response::error('Required field(s) ' . substr($error_fields, 0, -2) . ' is missing or empty.');
-            
             $app->stop();
         }
     }
@@ -126,6 +124,19 @@ class API{
         }
     }
     /**/
+
+    /**
+     * Validating email address.
+     * @param  string $email Email to validate
+     */
+    public static function validateEmail($email) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {    
+            $app = \Slim\Slim::getInstance();
+            $app->status(400);
+            echo json_response::error("Dirección de correo inválida.");
+            $app->stop();
+        }
+    }
 
 }
 ?>
