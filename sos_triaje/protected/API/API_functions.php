@@ -81,7 +81,6 @@ class API{
             $app->stop();
         }
     }
-    /**/
 
     /**
      * Adding Middle Layer to authenticate every request checking if 

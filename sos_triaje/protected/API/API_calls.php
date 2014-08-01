@@ -41,11 +41,17 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	            # Validar contraseña
 	            API::validateEmail($email);
 
-	            $metadata = new json_response_metadata(JR_ERROR, 0);//, "", $_SERVER['REQUEST_METHOD']);
-	            
 				# Invocar a la clase sos_db_model
 				$DBH_SOS = new sos_db_model();
+	            
+	            $metadata = new json_response_metadata(JR_ERROR, 0);//, "", $_SERVER['REQUEST_METHOD']);
 
+	            if ($DBH_SOS->checkLogin($email, $password)) {
+	            	//exit();
+	            }else{
+	            	$metadata = new json_response_metadata(JR_ERROR, 0);//, "", $_SERVER['REQUEST_METHOD']);
+	            }
+				
 	            /*
 	            $db = new DbHandler();
 	            // check for correct email and password
@@ -72,8 +78,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 
 	            echoRespnse(200, $response);
 	            /**/
-	            
-    			echo json_response::generate($metadata, "test");
+	            echo json_response::error(DEFAULT_ERROR_MSG);
 
 	        });
 

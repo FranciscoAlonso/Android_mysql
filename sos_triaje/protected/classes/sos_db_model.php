@@ -10,7 +10,7 @@ class sos_db_model{
     /**
      * Realiza la conexión con la BD 'sos_triaje'
      */
-	function __construct(){
+	public function __construct(){
 
         require_once DIR_CONSTANTS . '/db_config.php';
 
@@ -36,7 +36,7 @@ class sos_db_model{
     /**
      * Cierra la conexión con la BD 'sos_triaje'
      */
-    function __destruct() {
+    public function __destruct() {
         $this->DBH = null;
     }
     
@@ -47,7 +47,9 @@ class sos_db_model{
     * @return PDO   Retorna el resultado de la ejecución del query (Statement).
     * @throws PDOException If Ocurre un error al ejecutar el query en la BD.
     */
-    function execute($query, $params = null){
+    public function execute($query, $params = null){
+        //echo $STMT->debugDumpParams();
+
         try {
             $STMT = $this->DBH->prepare($query);
             $STMT->execute($params);
@@ -63,7 +65,7 @@ class sos_db_model{
      * Retorna las especialidades que existe en el sistema.
      * @return PDO  Objeto PDO con las especialidades del sistema.
      */
-    function getEspecialidades(){
+    public function getEspecialidades(){
 
         # Query para obtener las especialidades
         $query = 'SELECT * FROM especialidad';
@@ -106,6 +108,33 @@ class sos_db_model{
                                 );
 
         return $result;
+    }
+
+    /**
+     * Verifica que el usuario este registrado.
+     * @param  string $user     Correo o login del usuario. 
+     * @param  string $password Contraseña del usuario.
+     * @return bool             Retorna TRUE si es un usuario registrado y FALSE en caso contrario.
+     */
+    public function checkLogin($user, $password){
+
+        # Query para obtener las especialidades
+        $query = 'SELECT password as DB_PASSWORD FROM actor_sistema WHERE mail = :user OR login = :user';
+
+        $params = array(':user' => $user);
+
+        $result =  $this->execute($query, $params);
+
+        if ($result->rowCount() > 0) {
+            
+            $result = $result->fetch();
+
+            if ($password == $result['DB_PASSWORD'])
+                return true;        
+        }
+        
+        return false;
+
     }
 }
 ?>
