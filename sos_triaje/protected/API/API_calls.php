@@ -66,7 +66,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	            	
 	            }else{
 
-	            	echo json_response::error(DEFAULT_ERROR_MSG);
+	            	echo json_response::error("Login fallido, credenciales incorrectas.");
 	            
 	            }
 
