@@ -27,58 +27,48 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	 * User Login
 	 * url - /login
 	 * method - POST
-	 * params - email, password
+	 * params - user, password
 	 */
 	$app->post('/login', function() use ($app) {
 	            # check for required params
-	            API::verifyRequiredParams(array('email', 'password'));
+	            API::verifyRequiredParams(array('user', 'password'));
 	            
 	            # reading post params
-	            $email = $app->request()->post('email');
+	            $user = $app->request()->post('user');
 	            $password = $app->request()->post('password');
+	            
 	            $response = array();
 
-	            # Validar contraseña
-	            API::validateEmail($email);
+	            # Validar correo
+	            //API::validateEmail($email);
 
 				# Invocar a la clase sos_db_model
 				$DBH_SOS = new sos_db_model();
 	            
-	            $metadata = new json_response_metadata(JR_ERROR, 0);//, "", $_SERVER['REQUEST_METHOD']);
+	            if ($DBH_SOS->checkLogin($user, $password)) {
+	            	
+	            	# Validar si existe la columna API KEY
+	            	# Si no , agregarla con QUERY y asignarle uno nuevo
+	            	# si existe pero el valor es null, generar un nuevo api key.
+	            	
+	            	$result = $DBH_SOS->getUser($user);
+	            	
+	            	# Se crea la metadata para la consulta exitosa.
+					$metadata = 
+						new json_response_metadata(
+								JR_SUCCESS,
+								$result->rowCount(),
+								$result->queryString,
+								$_SERVER['REQUEST_METHOD']
+							);
 
-	            if ($DBH_SOS->checkLogin($email, $password)) {
-	            	//exit();
+	            	echo json_response::generate($metadata, $result);
+	            	
 	            }else{
-	            	$metadata = new json_response_metadata(JR_ERROR, 0);//, "", $_SERVER['REQUEST_METHOD']);
-	            }
-				
-	            /*
-	            $db = new DbHandler();
-	            // check for correct email and password
-	            if ($db->checkLogin($email, $password)) {
-	                // get the user by email
-	                $user = $db->getUserByEmail($email);
 
-	                if ($user != NULL) {
-	                    $response["error"] = false;
-	                    $response['name'] = $user['name'];
-	                    $response['email'] = $user['email'];
-	                    $response['apiKey'] = $user['api_key'];
-	                    $response['createdAt'] = $user['created_at'];
-	                } else {
-	                    // unknown error occurred
-	                    $response['error'] = true;
-	                    $response['message'] = "An error occurred. Please try again";
-	                }
-	            } else {
-	                // user credentials are wrong
-	                $response['error'] = true;
-	                $response['message'] = 'Login failed. Incorrect credentials';
+	            	echo json_response::error(DEFAULT_ERROR_MSG);
+	            
 	            }
-
-	            echoRespnse(200, $response);
-	            /**/
-	            echo json_response::error(DEFAULT_ERROR_MSG);
 
 	        });
 

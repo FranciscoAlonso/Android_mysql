@@ -49,7 +49,6 @@ class sos_db_model{
     */
     public function execute($query, $params = null){
         //echo $STMT->debugDumpParams();
-
         try {
             $STMT = $this->DBH->prepare($query);
             $STMT->execute($params);
@@ -57,6 +56,7 @@ class sos_db_model{
             //throw new PDOException("DEBUG_MODE: Execute Exception");
             return $STMT;
         } catch (PDOException $e) {
+            //exit($e->getMessage());
             API::throwPDOException($e, 500, $STMT->queryString);
         }
     }
@@ -67,7 +67,6 @@ class sos_db_model{
      */
     public function getEspecialidades(){
 
-        # Query para obtener las especialidades
         $query = 'SELECT * FROM especialidad';
         
         #region --- Ejemplos ---
@@ -118,7 +117,6 @@ class sos_db_model{
      */
     public function checkLogin($user, $password){
 
-        # Query para obtener las especialidades
         $query = 'SELECT password as DB_PASSWORD FROM actor_sistema WHERE mail = :user OR login = :user';
 
         $params = array(':user' => $user);
@@ -129,12 +127,21 @@ class sos_db_model{
             
             $result = $result->fetch();
 
-            if ($password == $result['DB_PASSWORD'])
+            if ($password == $result['DB_PASSWORD']) # OR $password con hash == $result['DB_PASSWORD']
                 return true;        
         }
         
         return false;
 
     }
+
+    public function getUser($user){
+        
+        $query = 'SELECT * FROM actor_sistema WHERE mail = :user OR login = :user';
+        
+        $params = array(':user' => $user);
+
+        return $this->execute($query, $params);
+    }   
 }
 ?>
