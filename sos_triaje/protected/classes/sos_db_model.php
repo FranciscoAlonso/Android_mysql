@@ -62,13 +62,87 @@ class sos_db_model{
     }
 
     /**
+     * Verifica que el usuario este registrado.
+     * @param  string $user     Correo o login del usuario. 
+     * @param  string $password Contraseña del usuario.
+     * @return bool             Retorna TRUE si es un usuario registrado y FALSE en caso contrario.
+     */
+    public function checkLogin($user, $password){
+
+        $params = array(':user' => $user);
+
+        $query = 'SELECT password as DB_PASSWORD 
+                    FROM actor_sistema 
+                        WHERE mail = :user OR login = :user';
+
+        $result =  $this->execute($query, $params);
+
+        if ($result->rowCount() > 0) {
+            
+            $result = $result->fetch();
+
+            if ($password == $result['DB_PASSWORD']) # OR $password con hash == $result['DB_PASSWORD']
+                return true;        
+        }
+
+        return false;
+    }
+
+    /**
+     * Generating random Unique MD5 String for user Api key.
+     * @return string API Key.
+     */
+    private function generateApiKey() {
+        return md5(uniqid(rand(), true));
+    }
+
+    /**
+     * Retorna el login, mail, rol, api_key y user_extension de un usuario.
+     * @param  string $user correo o login de un usuario.
+     * @return PDOObject       Objeto PDO resultante de la consulta.
+     */
+    public function getUser($user){
+        
+        $params = array(':user' => $user);
+        
+        #region Verifica si el api_key es null, si es así asigna un nuevo valor.
+            $query = 'SELECT api_key 
+                        FROM actor_sistema 
+                            WHERE mail = :user OR login = :user';
+
+            $result = $this->execute($query, $params);
+            $result = $result->fetch();
+
+            if (is_null($result['api_key'])) {
+                
+                $params[':api_key'] = $this->generateApiKey();
+                
+                $query = 'UPDATE actor_sistema 
+                            SET api_key = :api_key 
+                                WHERE mail = :user OR login = :user';
+
+                $result = $this->execute($query, $params);
+            }
+        #endregion
+        
+        $query = 'SELECT login, mail, rol, api_key, user_extension 
+                    FROM actor_sistema 
+                        WHERE mail = :user OR login = :user';
+
+        $result = $this->execute($query, $params);
+        
+        return $result;
+    }
+
+    /**
      * Retorna las especialidades que existe en el sistema.
      * @return PDO  Objeto PDO con las especialidades del sistema.
      */
     public function getEspecialidades(){
 
-        $query = 'SELECT * FROM especialidad';
-        
+        $query = 'SELECT * 
+                    FROM especialidad';
+
         #region --- Ejemplos ---
             #$query = 'SELECT * FROM especialidad WHERE id = 666';        
             #$query = 'INSERT INTO `especialidad`(`id`, `version`, `descripcion`, `nombre`) VALUES (99,1,`desc`,`name`)';
@@ -109,39 +183,5 @@ class sos_db_model{
         return $result;
     }
 
-    /**
-     * Verifica que el usuario este registrado.
-     * @param  string $user     Correo o login del usuario. 
-     * @param  string $password Contraseña del usuario.
-     * @return bool             Retorna TRUE si es un usuario registrado y FALSE en caso contrario.
-     */
-    public function checkLogin($user, $password){
-
-        $query = 'SELECT password as DB_PASSWORD FROM actor_sistema WHERE mail = :user OR login = :user';
-
-        $params = array(':user' => $user);
-
-        $result =  $this->execute($query, $params);
-
-        if ($result->rowCount() > 0) {
-            
-            $result = $result->fetch();
-
-            if ($password == $result['DB_PASSWORD']) # OR $password con hash == $result['DB_PASSWORD']
-                return true;        
-        }
-        
-        return false;
-
-    }
-
-    public function getUser($user){
-        
-        $query = 'SELECT login, mail, rol, api_key, user_extension FROM actor_sistema WHERE mail = :user OR login = :user';
-        
-        $params = array(':user' => $user);
-
-        return $this->execute($query, $params);
-    }   
 }
 ?>
