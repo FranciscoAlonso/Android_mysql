@@ -137,7 +137,7 @@ class sos_db_model{
 
     public function getUser($user){
         
-        $query = 'SELECT * FROM actor_sistema WHERE mail = :user OR login = :user';
+        $query = 'SELECT login, mail, rol, api_key, user_extension FROM actor_sistema WHERE mail = :user OR login = :user';
         
         $params = array(':user' => $user);
 
