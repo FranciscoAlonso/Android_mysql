@@ -92,8 +92,35 @@ class sos_db_model{
      * Generating random Unique MD5 String for user Api key.
      * @return string API Key.
      */
-    private function generateApiKey() {
+    private function generateApiKey(){
         return md5(uniqid(rand(), true));
+    }
+
+    /**
+     * Verifica si el api_key es null, si es así asigna un nuevo valor.
+     * @param  string $user Correo o login del usuario.
+     */
+    private function checkUserApiKey($user){
+
+        $params = array(':user' => $user);
+
+        $query = 'SELECT api_key 
+                    FROM actor_sistema 
+                        WHERE mail = :user OR login = :user';
+
+        $result = $this->execute($query, $params);
+        $result = $result->fetch();
+
+        if (is_null($result['api_key'])) {
+            
+            $params[':api_key'] = $this->generateApiKey();
+            
+            $query = 'UPDATE actor_sistema 
+                        SET api_key = :api_key 
+                            WHERE mail = :user OR login = :user';
+
+            $this->execute($query, $params);
+        }
     }
 
     /**
@@ -105,25 +132,7 @@ class sos_db_model{
         
         $params = array(':user' => $user);
         
-        #region Verifica si el api_key es null, si es así asigna un nuevo valor.
-            $query = 'SELECT api_key 
-                        FROM actor_sistema 
-                            WHERE mail = :user OR login = :user';
-
-            $result = $this->execute($query, $params);
-            $result = $result->fetch();
-
-            if (is_null($result['api_key'])) {
-                
-                $params[':api_key'] = $this->generateApiKey();
-                
-                $query = 'UPDATE actor_sistema 
-                            SET api_key = :api_key 
-                                WHERE mail = :user OR login = :user';
-
-                $result = $this->execute($query, $params);
-            }
-        #endregion
+        $this->checkUserApiKey($user);
         
         $query = 'SELECT login, mail, rol, api_key, user_extension 
                     FROM actor_sistema 

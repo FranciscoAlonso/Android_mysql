@@ -83,48 +83,6 @@ class API{
     }
 
     /**
-     * Adding Middle Layer to authenticate every request checking if 
-     * the request has valid api key in the 'Authorization' header.
-     * @param  SlimRoute $route [description]
-     * @return [type]           [description]
-     */
-    /*
-    public static function authenticate(\Slim\Route $route) {
-        # Getting request headers.
-        $headers = apache_request_headers();
-        $response = array();
-        $app = \Slim\Slim::getInstance();
-
-        # Verifying Authorization Header.
-        if (isset($headers['Authorization'])) {
-            $db = new DbHandler();
-
-            # Get the api key.
-            $api_key = $headers['Authorization'];
-
-            # validating api key.
-            if (!$db->isValidApiKey($api_key)) {
-                # Api key is not present in users table.
-                $response["error"] = true;
-                $response["message"] = "Access Denied. Invalid Api key";
-                echoRespnse(401, $response);
-                $app->stop();
-            } else {
-                global $user_id;
-                # Get user primary key id.
-                $user_id = $db->getUserId($api_key);
-            }
-        } else {
-            # Api key is missing in header.
-            $response["error"] = true;
-            $response["message"] = "Api key is misssing";
-            echoRespnse(400, $response);
-            $app->stop();
-        }
-    }
-    /**/
-
-    /**
      * Validating email address.
      * @param  string $email Email to validate
      */
@@ -138,4 +96,50 @@ class API{
     }
 
 }
+
+/**
+ * Adding Middle Layer to authenticate every request checking if 
+ * the request has valid api key in the 'Authorization' header.
+ * @param  SlimRoute $route [description]
+ * @return [type]           [description]
+ */
+function authenticate(\Slim\Route $route) {
+    # Getting request headers.
+    $headers = apache_request_headers();
+    $response = array();
+    $app = \Slim\Slim::getInstance();
+
+    # Verifying Authorization Header.
+    if (isset($headers['Authorization'])) {
+    /*
+        $db = new DbHandler();
+
+        # Get the api key.
+        $api_key = $headers['Authorization'];
+
+        # validating api key.
+        if (!$db->isValidApiKey($api_key)) {
+            # Api key is not present in users table.
+            $response["error"] = true;
+            $response["message"] = "Access Denied. Invalid Api key";
+            echoRespnse(401, $response);
+            $app->stop();
+        } else {
+            global $user_id;
+            # Get user primary key id.
+            $user_id = $db->getUserId($api_key);
+        }
+        /**/
+    } else {
+        exit("NO ESTA Authorization EN LA CABECERA.");
+        /*
+        # Api key is missing in header.
+        $response["error"] = true;
+        $response["message"] = "Api key is misssing";
+        echoRespnse(400, $response);
+        $app->stop();
+        /**/
+    }
+}
+
 ?>
