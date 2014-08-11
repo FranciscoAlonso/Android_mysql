@@ -242,16 +242,20 @@ class sos_db_model{
         #   - status (listo)
 
         $query = 'SELECT
-            c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
-            s.nombre as status_caso,
-            centrosos.nombre,
-            p.fecha_nacimiento
+                    c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
+                    s.nombre as status_caso,
+                    centro.nombre as centro_sos,
+                    p.fecha_nacimiento,
 
-            FROM caso c, status s, centrosos, paciente p
-            
-            WHERE c.status_id = s.id
-            AND c.centro_id = centrosos.id
-            AND c.paciente_id = p.id';
+                    COUNT(a.id) as cant_archivos
+
+                    FROM caso c
+                    LEFT  JOIN archivo a on c.id = a.caso_id
+                    INNER JOIN status s on c.status_id = s.id
+                    INNER JOIN paciente p on c.paciente_id = p.id
+                    INNER JOIN centrosos centro on c.centro_id = centro.id
+
+                    GROUP BY c.id';
         
         $result = $this->execute($query);
         # Si el SELECT no arroja resultados retorna una respuesta generica.
@@ -267,4 +271,22 @@ class sos_db_model{
         return $result;
     }
 }
+/*
+-- Muestra la cantidad de archivos de un caso:
+SELECT
+c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
+s.nombre as status_caso,
+centro.nombre as centro_sos,
+p.fecha_nacimiento,
+
+COUNT(a.id) as cant_archivos
+
+FROM caso c
+LEFT  JOIN archivo a on c.id = a.caso_id
+INNER JOIN status s on c.status_id = s.id
+INNER JOIN paciente p on c.paciente_id = p.id
+INNER JOIN centrosos centro on c.centro_id = centro.id
+
+GROUP BY c.id
+ */
 ?>
