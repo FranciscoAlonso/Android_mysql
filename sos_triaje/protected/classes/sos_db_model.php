@@ -9,6 +9,7 @@ class sos_db_model{
 
     /**
      * Realiza la conexión con la BD 'sos_triaje'
+     * @throws PDOException If Ocurre algún error al momento que establecer la conexión con la BD.
      */
 	public function __construct(){
 
@@ -48,11 +49,11 @@ class sos_db_model{
     * @throws PDOException If Ocurre un error al ejecutar el query en la BD.
     */
     public function execute($query, $params = null){
-        //echo $STMT->debugDumpParams();
         try {
             $STMT = $this->DBH->prepare($query);
             $STMT->execute($params);
             $STMT->setFetchMode(GLOBAL_PDO_FETCH_MODE);
+            //exit($STMT->debugDumpParams());
             //throw new PDOException("DEBUG_MODE: Execute Exception");
             return $STMT;
         } catch (PDOException $e) {
@@ -75,7 +76,7 @@ class sos_db_model{
                     FROM actor_sistema 
                         WHERE mail = :user OR login = :user';
 
-        $result =  $this->execute($query, $params);
+        $result = $this->execute($query, $params);
 
         if ($result->rowCount() > 0) {
             
@@ -124,9 +125,47 @@ class sos_db_model{
     }
 
     /**
+     * Validating user api key
+     * If the api key is there in db, it is a valid key
+     * @param String $api_key user api key.
+     * @return boolean
+     */
+    public function isValidApiKey($api_key) {
+        
+        $params = array(':api_key' => $api_key);
+
+        $query = 'SELECT id 
+                    from actor_sistema 
+                        WHERE api_key = :api_key';
+
+        $result = $this->execute($query, $params);
+
+        return $result->rowCount() > 0;
+    }
+
+    /**
+     * Fetching user id by api key
+     * @param String $api_key user api key.
+     */
+    public function getUserIdByApiKey($api_key) {
+        
+        $params = array(':api_key' => $api_key);
+
+        $query = 'SELECT id as DB_ID
+                    from actor_sistema 
+                        WHERE api_key = :api_key';
+
+        $result = $this->execute($query, $params);
+
+        $result = $result->fetch();
+
+        return $result['DB_ID'];
+    }
+
+    /**
      * Retorna el login, mail, rol, api_key y user_extension de un usuario.
-     * @param  string $user correo o login de un usuario.
-     * @return PDOObject       Objeto PDO resultante de la consulta.
+     * @param  string $user     correo o login de un usuario.
+     * @return PDOObject        Objeto PDO resultante de la consulta.
      */
     public function getUser($user){
         
@@ -149,7 +188,7 @@ class sos_db_model{
      */
     public function getEspecialidades(){
 
-        $query = 'SELECT * 
+        $query = 'SELECT *
                     FROM especialidad';
 
         #region --- Ejemplos ---
@@ -178,11 +217,10 @@ class sos_db_model{
         #endregion 
         
         $result = $this->execute($query);
-        
         # Si el SELECT no arroja resultados retorna una respuesta generica.
         if($result->rowCount() == 0)
             API::throwPDOException(
-                                    SELECT_NO_RESULT_MSG,
+                                    DB_SELECT_NO_RESULT_MSG,
                                     200,
                                     $result->queryString,
                                     JR_SUCCESS,
@@ -192,5 +230,41 @@ class sos_db_model{
         return $result;
     }
 
+    /**
+     * Retorna las especialidades que existe en el sistema.
+     * @return PDO  Objeto PDO con las especialidades del sistema.
+     */
+    public function getCasos(){
+
+        # Falta considerar para el filtro:
+        #   - especialidad
+        #   - por creador
+        #   - status (listo)
+
+        $query = 'SELECT
+            c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
+            s.nombre as status_caso,
+            centrosos.nombre,
+            p.fecha_nacimiento
+
+            FROM caso c, status s, centrosos, paciente p
+            
+            WHERE c.status_id = s.id
+            AND c.centro_id = centrosos.id
+            AND c.paciente_id = p.id';
+        
+        $result = $this->execute($query);
+        # Si el SELECT no arroja resultados retorna una respuesta generica.
+        if($result->rowCount() == 0)
+            API::throwPDOException(
+                                    DB_SELECT_NO_RESULT_MSG,
+                                    200,
+                                    $result->queryString,
+                                    JR_SUCCESS,
+                                    $result->rowCount()
+                                );
+        
+        return $result;
+    }
 }
 ?>

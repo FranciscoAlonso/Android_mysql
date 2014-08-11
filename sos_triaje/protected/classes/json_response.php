@@ -59,7 +59,6 @@ class json_response_metadata{
     # Se verifica que $queryString sea un String.
     if (is_string($requestMethod))
       $this->requestMethod = $requestMethod;
-
   }
 
   /**
@@ -68,11 +67,11 @@ class json_response_metadata{
    */
   function getMetaData(){ 
     $result[METADATA_KEY][json_response_metadata::errorCodeKey]    = $this->errorCode;
-    $result[METADATA_KEY][json_response_metadata::errorMessageKey] = $this->errorMessage;
     $result[METADATA_KEY][json_response_metadata::rowsAffectedKey] = $this->rowsAffected;
     if(DEBUG_MODE){
-      $result[METADATA_KEY]['Debug'][json_response_metadata::requestMethodKey] = $this->requestMethod;
-      $result[METADATA_KEY]['Debug'][json_response_metadata::queryStringKey]   = $this->queryString;
+      $result[METADATA_KEY]['debug'][json_response_metadata::errorMessageKey] = $this->errorMessage;
+      $result[METADATA_KEY]['debug'][json_response_metadata::requestMethodKey] = $this->requestMethod;
+      $result[METADATA_KEY]['debug'][json_response_metadata::queryStringKey]   = $this->queryString;
     }
     return $result;
   }
@@ -127,14 +126,13 @@ class json_response{
    * @param  string $msgDescription Descripción del error que estará en el cuerpo del mensaje.
    * @return JSON                   JSON con el formato generico de respuesta de error. 
    */
-  public static function error($msgDescription = DEFAULT_ERROR_MSG){
+  public static function error($msgDescription = DEFAULT_ERROR_MSG, $queryString = ""){
 
-    $metadata = new json_response_metadata(JR_ERROR, 0, "", $_SERVER['REQUEST_METHOD']);
+    $metadata = new json_response_metadata(JR_ERROR, 0, $queryString, $_SERVER['REQUEST_METHOD']);
     $result = $metadata->getMetaData();
     $result[DATA_KEY][json_response::msgDescription] = $msgDescription;
 
     return json_encode($result);
   }
-
 }
 ?>

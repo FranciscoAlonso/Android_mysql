@@ -1,7 +1,7 @@
 <?php
 /**
- * Este archivo contiene las definición de 
- * constantes para su uso en conexiones a BD.
+ * Este archivo contiene las definición de constantes para 
+ * su uso en conexiones a BD y al Asterisk Manager Interface.
  */
 
 define('SOS_DB_SERVER'  , 'localhost'  ); # Servidor de la BD de SOS Triaje.
@@ -43,14 +43,14 @@ define('GLOBAL_PDO_ERROR_MODE', PDO::ERRMODE_EXCEPTION );
 define('GLOBAL_PDO_FETCH_MODE', PDO::FETCH_ASSOC);
 
 # Definición de los mensajes de feedback para el usuario.
-define('INSERT_SUCESS_MSG', 'Se ha insertado el registro con éxito.');
-define('UPDATE_SUCESS_MSG', ' registro(s) se ha(n) actualizado con éxito.');
-define('DELETE_SUCESS_MSG', ' registro(s) se ha(n) eliminado con éxito.');
+define('DB_INSERT_SUCESS_MSG', 'Se ha insertado el registro con éxito.');
+define('DB_UPDATE_SUCESS_MSG', ' registro(s) se ha(n) actualizado con éxito.');
+define('DB_DELETE_SUCESS_MSG', ' registro(s) se ha(n) eliminado con éxito.');
 
-define('SELECT_NO_RESULT_MSG', 'La operación no produjo resultados.');
-define('INSERT_NO_RESULT_MSG', 'Ocurrio un error al intentar crear.');
-define('UPDATE_NO_RESULT_MSG', 'Ocurrio un error al intentar actualizar.');
-define('DELETE_NO_RESULT_MSG', 'Ocurrio un error al intentar eliminar.');
+define('DB_SELECT_NO_RESULT_MSG', 'La operación no produjo resultados.');
+define('DB_INSERT_NO_RESULT_MSG', 'Ocurrio un error al intentar crear.');
+define('DB_UPDATE_NO_RESULT_MSG', 'Ocurrio un error al intentar actualizar.');
+define('DB_DELETE_NO_RESULT_MSG', 'Ocurrio un error al intentar eliminar.');
 
 /*
 # Lista los drivers de BD para PDO que soporta 

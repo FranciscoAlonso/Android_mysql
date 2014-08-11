@@ -1,10 +1,6 @@
 <?php
 /**
- * Este archivo contiene las funciones de utilidad para el API
- */
-
-/**
- * Clase estática que conteine las funciones estáticas de utilidad para el API.
+ * Clase estática que conteine funciones estáticas de utilidad para el API.
  */
 class API{
 
@@ -12,7 +8,7 @@ class API{
     private function __clone(){}
 
     /**
-     * Arroja una excepción con un mensaje de error y un HTTP status.
+     * Arroja una excepción en formato json_response::error()
      * @param  string/Exception $e              string o excepción para el mensaje.
      * @param  int              $status         Estado HTTP a retornar.
      * @param  string           $queryString    QUERY ejecutado.
@@ -45,9 +41,9 @@ class API{
         $app = \Slim\Slim::getInstance();
         $app->status($status);
 
-        $response = json_response::error($msg_error);
+        $response = json_response::error($msg_error, $queryString);
 
-        throw new Exception($response);
+        throw new PDOException($response);
     }
 
     /**
@@ -95,50 +91,45 @@ class API{
         }
     }
 
-}
+    /**
+     * Adding Middle Layer to authenticate every request checking if 
+     * the request has valid api key in the 'Authorization' header.
+     * @param  SlimRoute $route
+     */
+    public static function authenticate(\Slim\Route $route) {
+        # Getting request headers.
+        $headers = apache_request_headers();
+        
+        $app = \Slim\Slim::getInstance();
 
-/**
- * Adding Middle Layer to authenticate every request checking if 
- * the request has valid api key in the 'Authorization' header.
- * @param  SlimRoute $route [description]
- * @return [type]           [description]
- */
-function authenticate(\Slim\Route $route) {
-    # Getting request headers.
-    $headers = apache_request_headers();
-    $response = array();
-    $app = \Slim\Slim::getInstance();
+        try {
+            # Verifying Authorization Header.
+            if (isset($headers['Authorization'])) {
+                
+                $DBH_SOS = new sos_db_model();
 
-    # Verifying Authorization Header.
-    if (isset($headers['Authorization'])) {
-    /*
-        $db = new DbHandler();
+                # Get the api key.
+                $api_key = $headers['Authorization'];
 
-        # Get the api key.
-        $api_key = $headers['Authorization'];
-
-        # validating api key.
-        if (!$db->isValidApiKey($api_key)) {
-            # Api key is not present in users table.
-            $response["error"] = true;
-            $response["message"] = "Access Denied. Invalid Api key";
-            echoRespnse(401, $response);
+                if($DBH_SOS->isValidApiKey($api_key)){
+                    global $user_id;
+                    # Get user primary key id.
+                    $user_id = $DBH_SOS->getUserIdByApiKey($api_key);
+                }else{
+                    $app->status(401);
+                    echo json_response::error("Access Denied. Invalid Api key.");
+                    $app->stop();
+                }
+            } else {
+                $app->status(400);
+                echo json_response::error("Api key is misssing.");
+                $app->stop();
+            }
+        } catch (Exception $e) {
+            $app->status(500);
+            echo $e->getMessage();
             $app->stop();
-        } else {
-            global $user_id;
-            # Get user primary key id.
-            $user_id = $db->getUserId($api_key);
         }
-        /**/
-    } else {
-        exit("NO ESTA Authorization EN LA CABECERA.");
-        /*
-        # Api key is missing in header.
-        $response["error"] = true;
-        $response["message"] = "Api key is misssing";
-        echoRespnse(400, $response);
-        $app->stop();
-        /**/
     }
 }
 

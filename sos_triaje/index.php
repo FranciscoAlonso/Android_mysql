@@ -1,6 +1,11 @@
 <?php
 /**
  * Acceso principal al WEB SERVICE (WS) sos_triaje
+ *
+ * Autores:
+ * Francisco Alonso - francisco.a.alonso.s@gmail.com 
+ * Tony Briceño - tonybp18@gmail.com
+ * 2014
  */
 
 # Habilita mensajes para desarrollador (Default: false).
@@ -19,6 +24,9 @@ require_once DIR_LIBS . '/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
 
 $app = new \Slim\Slim();
+
+# User id from db - Global Variable
+$user_id = NULL;
 
 # Se cargan las definiciones de las llamadas al API
 require_once DIR_API . '/API_calls.php';

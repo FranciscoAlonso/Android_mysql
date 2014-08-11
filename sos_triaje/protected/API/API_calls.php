@@ -1,6 +1,6 @@
 <?php  
 /**
- * Este archivo contiene la definicion de cada llamada al API. 
+ * Este archivo contiene la definicion de cada llamada al API.
  */
 
 define('HTML_CONTENT_TYPE'	, 'text/html'		);
@@ -24,7 +24,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 
 #region Métodos sin auntenticación
 	/**
-	 * User Login
+	 * Login del usuario.
 	 * url - /login
 	 * method - POST
 	 * params - user, password
@@ -36,56 +36,36 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
         # reading post params
         $user = $app->request()->post('user');
         $password = $app->request()->post('password');
-        
-        $response = array();
 
         # Validar correo
-        //API::validateEmail($email);
+        //API::validateEmail($user); 
+        # No se valida el $user como un correo válido para que 
+        # la autenticación pueda ser por correo o por login.
 
-		# Invocar a la clase sos_db_model
-		$DBH_SOS = new sos_db_model();
-
-        if ($DBH_SOS->checkLogin($user, $password)) {
-        	
-        	# Validar si existe la columna API KEY
-        	# Si no , agregarla con QUERY y asignarle uno nuevo
-        	# si existe pero el valor es null, generar un nuevo api key.
-        	
-        	$result = $DBH_SOS->getUser($user);
-        	
-        	# Se crea la metadata para la consulta exitosa.
-			$metadata = 
-				new json_response_metadata(
-						JR_SUCCESS,
-						$result->rowCount(),
-						$result->queryString,
-						$_SERVER['REQUEST_METHOD']
-					);
-
-        	echo json_response::generate($metadata, $result);
-        	
-        }else{
-
-        	echo json_response::error("Login fallido, credenciales incorrectas.");
-        
-        }
+		require_once  DIR_CONTROLLERS . '/login.php';
+        echo login::run($user, $password);
     });
 #endregion
 
 #region Métodos con auntenticación
-# Logout #
 	/**
-	 * Prueba del API
+	 * Retorna el conjunto de especialidades que existen en el sistema.
 	 * url - /especialidades
 	 * method - GET
 	 */
-	//$app->get('/especialidades', function() use($app){
-	$app->get('/especialidades', 'authenticate', function() use($app){
-		//$app->status(200);
-        #echo '>' . $app->request->getContentType() . '<' ; # Split por ';'
-        # Hacer override del default Content-type con el de la solicitud.
-		require_once  DIR_CONTROLLERS . '/getEspecialidades.php';
-		echo getEspecialidades::run();
+	$app->get('/especialidades', 'API::authenticate', function() use($app){
+		require_once  DIR_CONTROLLERS . '/especialidades.php';
+		echo especialidades::read();
+    });
+
+	/**
+	 * Retorna el conjunto de casos que existen en el sistema.
+	 * url - /casos
+	 * method - GET
+	 */
+    $app->get('/casos', 'API::authenticate', function() use($app){
+		require_once  DIR_CONTROLLERS . '/casos.php';
+		echo casos::read();
     });
 #endregion
 ?>

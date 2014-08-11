@@ -1,32 +1,26 @@
 <?php
 /**
-* Controlador que genera 
-*/
-
-/**
- * Clase estática para obtener las especialidades. 
+ * Clase estática encargada del CRUD relacionado con la tabla "especialidad".
  */
-class getEspecialidades{
+class especialidades{
 
 	private function __construct(){}
   	private function __clone(){}
 
 	/**
-	 * Función principal del controlador para obtener las especialidades.
+	 * Función que se encarga de obtener las especialidades.
 	 * @return JSON 		JSON que contiene las especialidades. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
-	public static function run(){
+	public static function read(){
 
-		try {
-			# Invocar a la clase sos_db_model
+		try {		
+			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
 			
 			$result = $DBH_SOS->getEspecialidades();
-
-			//print_r($result);echo '<br>';
-			
-			# Crear metadata para la consulta exitosa
+		
+			# Crear metadata para la consulta exitosa.
 			$metadata = 
 				new json_response_metadata(
 						JR_SUCCESS,
@@ -35,9 +29,8 @@ class getEspecialidades{
 						$_SERVER['REQUEST_METHOD']
 					);
 			
-			# Retorna el resultado de la consulta con información extra en formato JSON 
+			# Retorna el resultado de la consulta con información extra en formato JSON.
 			return json_response::generate($metadata, $result);
-
 		} catch (Exception $e) {
             return $e->getMessage();
 		}
