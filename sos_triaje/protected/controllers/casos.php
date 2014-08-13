@@ -36,39 +36,4 @@ class casos{
 		}
 	}
 }
-/*
-SELECT 
-c.id, c.descripcion, c.fecha_inicio, 
-s.nombre as status_caso,
-centrosos.nombre,
-p.fecha_nacimiento
-
-FROM 
-caso c, status s,
-centrosos,
-paciente p
-
-WHERE 
-c.status_id = s.id
-AND
-c.centro_id = centrosos.id
-AND
-c.paciente_id = p.id
-
-----
-
-TESTING: 
-SELECT 
-c.descripcion,
-s.nombre
-
-FROM 
-caso c,
-status s
-
-WHERE 
-c.status_id = s.id
-AND
-(SELECT count(a.caso_id) FROM archivo a, caso c WHERE c.id = a.caso_id )
- */
 ?>

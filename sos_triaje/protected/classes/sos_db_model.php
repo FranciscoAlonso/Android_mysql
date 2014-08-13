@@ -40,7 +40,7 @@ class sos_db_model{
     public function __destruct() {
         $this->DBH = null;
     }
-    
+
     /**
     * Esta función se encarga de ejecutar query's con los parametros obtenidos.
     * @param string $query  String con el query que se desea ejecutar, las variables deben comenzar con dos puntos (:).
@@ -113,9 +113,9 @@ class sos_db_model{
         $result = $result->fetch();
 
         if (is_null($result['api_key'])) {
-            
+
             $params[':api_key'] = $this->generateApiKey();
-            
+
             $query = 'UPDATE actor_sistema 
                         SET api_key = :api_key 
                             WHERE mail = :user OR login = :user';
@@ -131,7 +131,7 @@ class sos_db_model{
      * @return boolean
      */
     public function isValidApiKey($api_key) {
-        
+
         $params = array(':api_key' => $api_key);
 
         $query = 'SELECT id 
@@ -148,7 +148,7 @@ class sos_db_model{
      * @param String $api_key user api key.
      */
     public function getUserIdByApiKey($api_key) {
-        
+
         $params = array(':api_key' => $api_key);
 
         $query = 'SELECT id as DB_ID
@@ -168,17 +168,17 @@ class sos_db_model{
      * @return PDOObject        Objeto PDO resultante de la consulta.
      */
     public function getUser($user){
-        
+
         $params = array(':user' => $user);
-        
+
         $this->checkUserApiKey($user);
-        
+
         $query = 'SELECT login, mail, rol, api_key, user_extension 
                     FROM actor_sistema 
                         WHERE mail = :user OR login = :user';
 
         $result = $this->execute($query, $params);
-        
+
         return $result;
     }
 
@@ -215,7 +215,7 @@ class sos_db_model{
             $params = array(':id' => 99);
             /**/
         #endregion 
-        
+
         $result = $this->execute($query);
         # Si el SELECT no arroja resultados retorna una respuesta generica.
         if($result->rowCount() == 0)
@@ -239,24 +239,31 @@ class sos_db_model{
         # Falta considerar para el filtro:
         #   - especialidad
         #   - por creador
-        #   - status (listo)
+        #   - status
 
-        $query = 'SELECT
+        $query = 'SELECT 
                     c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
-                    s.nombre as status_caso,
-                    centro.nombre as centro_sos,
+                    s.nombre AS status_caso,
+                    centro.nombre AS centro_sos,
                     p.fecha_nacimiento,
-
-                    COUNT(a.id) as cant_archivos
+                    e.nombre AS tipo_especialidad,
+                    COUNT(DISTINCT a.id) AS cant_archivos
 
                     FROM caso c
-                    LEFT  JOIN archivo a on c.id = a.caso_id
-                    INNER JOIN status s on c.status_id = s.id
-                    INNER JOIN paciente p on c.paciente_id = p.id
-                    INNER JOIN centrosos centro on c.centro_id = centro.id
+                    LEFT JOIN archivo a ON c.id = a.caso_id
+                    LEFT JOIN status s ON c.status_id = s.id
+                    LEFT JOIN paciente p ON c.paciente_id = p.id
+                    LEFT JOIN centrosos centro ON c.centro_id = centro.id
+                    
+                    LEFT JOIN caso_especialidad c_e ON c.id = c_e.caso_especialidades_id
+                    LEFT JOIN especialidad e ON c_e.especialidad_id = e.id
+
+                    -- WHERE e.nombre = "Odontologia"
+                    -- WHERE e.id = 2 
+                    -- where s.id = 999
 
                     GROUP BY c.id';
-        
+
         $result = $this->execute($query);
         # Si el SELECT no arroja resultados retorna una respuesta generica.
         if($result->rowCount() == 0)
@@ -267,26 +274,8 @@ class sos_db_model{
                                     JR_SUCCESS,
                                     $result->rowCount()
                                 );
-        
+
         return $result;
     }
 }
-/*
--- Muestra la cantidad de archivos de un caso:
-SELECT
-c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
-s.nombre as status_caso,
-centro.nombre as centro_sos,
-p.fecha_nacimiento,
-
-COUNT(a.id) as cant_archivos
-
-FROM caso c
-LEFT  JOIN archivo a on c.id = a.caso_id
-INNER JOIN status s on c.status_id = s.id
-INNER JOIN paciente p on c.paciente_id = p.id
-INNER JOIN centrosos centro on c.centro_id = centro.id
-
-GROUP BY c.id
- */
 ?>
