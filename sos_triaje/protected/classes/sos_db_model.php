@@ -236,35 +236,63 @@ class sos_db_model{
      */
     public function getCasos(){
 
-        # Falta considerar para el filtro:
-        #   - especialidad
-        #   - por creador
-        #   - status
+        /*
+        - Probar el filtro asignado al usuario logueado.
+        crear un caso nuevo y asignarselo a un medico. 
+        */
 
+        # params, definir el arreglo de los parametros aca !!!!! para evitar injection !!!
+        # $params[':api_key'] 
+        
         $query = 'SELECT 
                     c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
                     s.nombre AS status_caso,
                     centro.nombre AS centro_sos,
                     p.fecha_nacimiento,
                     e.nombre AS tipo_especialidad,
-                    COUNT(DISTINCT a.id) AS cant_archivos
+                    COUNT(DISTINCT a.id) AS cant_archivos,
+                    COUNT(DISTINCT o.id) AS cant_opiniones
 
                     FROM caso c
                     LEFT JOIN archivo a ON c.id = a.caso_id
+                    LEFT JOIN opinion o ON c.id = o.caso_id
                     LEFT JOIN status s ON c.status_id = s.id
                     LEFT JOIN paciente p ON c.paciente_id = p.id
                     LEFT JOIN centrosos centro ON c.centro_id = centro.id
+
+                    -- inner join historial_caso h_c ON c.id = h_c.caso_id
+                    -- inner join medico m ON h_c.medico_id = m.id
                     
                     LEFT JOIN caso_especialidad c_e ON c.id = c_e.caso_especialidades_id
                     LEFT JOIN especialidad e ON c_e.especialidad_id = e.id
 
-                    -- WHERE e.nombre = "Odontologia"
-                    -- WHERE e.id = 2 
-                    -- where s.id = 999
+                    -- where m.id = 3';
 
-                    GROUP BY c.id';
+        # Condiciones para el filtro
+        if (isset($_GET['especialidad']) || isset($_GET['status']) || isset($_GET['own'])) {
+            $query .= ' WHERE 1 = 1';
 
-        $result = $this->execute($query);
+            if (!empty($_GET['especialidad'])){
+                # params
+                $query .= ' AND e.id = ' . $_GET['especialidad'];
+            }
+
+            if (!empty($_GET['status'])){   
+                # params
+                $query .= ' AND s.id = ' . $_GET['status'];
+            }
+
+            if (!empty($_GET['own'])){
+                # verificar si es true -> obtener el id por el apikey!!!
+                # params
+                //$query .= ' AND m.id = ' . $_GET['own']; 
+            }
+        }
+
+        $query .= ' GROUP BY c.id';
+
+        $result = $this->execute($query); # enviar los params
+
         # Si el SELECT no arroja resultados retorna una respuesta generica.
         if($result->rowCount() == 0)
             API::throwPDOException(
