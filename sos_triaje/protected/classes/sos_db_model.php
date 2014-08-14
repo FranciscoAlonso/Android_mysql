@@ -243,6 +243,7 @@ class sos_db_model{
 
         # params, definir el arreglo de los parametros aca !!!!! para evitar injection !!!
         # $params[':api_key'] 
+        $params = array();
         
         $query = 'SELECT 
                     c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
@@ -259,39 +260,45 @@ class sos_db_model{
                     LEFT JOIN status s ON c.status_id = s.id
                     LEFT JOIN paciente p ON c.paciente_id = p.id
                     LEFT JOIN centrosos centro ON c.centro_id = centro.id
-
-                    -- inner join historial_caso h_c ON c.id = h_c.caso_id
-                    -- inner join medico m ON h_c.medico_id = m.id
-                    
                     LEFT JOIN caso_especialidad c_e ON c.id = c_e.caso_especialidades_id
                     LEFT JOIN especialidad e ON c_e.especialidad_id = e.id
-
-                    -- where m.id = 3';
+                    ';
 
         # Condiciones para el filtro
-        if (isset($_GET['especialidad']) || isset($_GET['status']) || isset($_GET['own'])) {
-            $query .= ' WHERE 1 = 1';
+        if ( isset($_GET['own']) || isset($_GET['especialidad']) || isset($_GET['status']) || isset($_GET['centro'])) {
 
+            // --------------------------------------------
+            if (!empty($_GET['own'])){
+                if(/*$_GET['own'] == /**/true){
+                    $query .= ' INNER JOIN historial_caso h_c ON c.id = h_c.caso_id
+                                INNER JOIN medico m ON h_c.medico_id = m.id';
+                    # obtener el id por el apikey!!!
+                    # params
+                    $query .= ' AND m.id = ' . $_GET['own']; 
+                }
+            }
+            /**/
+            //$query .= ' WHERE 1 = 1';
+            
             if (!empty($_GET['especialidad'])){
-                # params
-                $query .= ' AND e.id = ' . $_GET['especialidad'];
+                $params[':especialidad'] = $_GET['especialidad'];
+                $query .= ' AND e.id = :especialidad';
             }
 
             if (!empty($_GET['status'])){   
-                # params
-                $query .= ' AND s.id = ' . $_GET['status'];
+                $params[':status'] = $_GET['status'];
+                $query .= ' AND s.id = :status';
             }
 
-            if (!empty($_GET['own'])){
-                # verificar si es true -> obtener el id por el apikey!!!
-                # params
-                //$query .= ' AND m.id = ' . $_GET['own']; 
+            if (!empty($_GET['centro'])){   
+                $params[':centro'] = $_GET['centro'];
+                $query .= ' AND centro.id = :centro'; 
             }
         }
 
         $query .= ' GROUP BY c.id';
 
-        $result = $this->execute($query); # enviar los params
+        $result = $this->execute($query, $params);
 
         # Si el SELECT no arroja resultados retorna una respuesta generica.
         if($result->rowCount() == 0)
