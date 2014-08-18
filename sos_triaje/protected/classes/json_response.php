@@ -97,7 +97,7 @@ class json_response{
   public static function generate($metadata, $data){
 
     $result = $metadata->getMetaData();
-    
+
     if(is_string($data)){
       $result[DATA_KEY][json_response::msgDescription] = $data;
     }else{

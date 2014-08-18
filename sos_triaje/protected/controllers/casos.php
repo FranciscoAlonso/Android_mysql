@@ -8,17 +8,17 @@ class casos{
   	private function __clone(){}
 
 	/**
-	 * Función que se encarga de obtener las especialidades.
-	 * @return JSON 		JSON que contiene las especialidades. 	
+	 * Función que se encarga de obtener los casos.
+	 * @return JSON 		JSON que contiene los casos. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
-	public static function read(){
+	public static function read($caso_id = ""){
 
-		try {		
+		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
-		
-			$result = $DBH_SOS->getCasos();
+
+			$result = $DBH_SOS->getCasos($caso_id);
 
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
@@ -28,7 +28,7 @@ class casos{
 						$result->queryString,
 						$_SERVER['REQUEST_METHOD']
 					);
-			
+
 			# Retorna el resultado de la consulta con información extra en formato JSON.
 			return json_response::generate($metadata, $result);
 		} catch (Exception $e) {

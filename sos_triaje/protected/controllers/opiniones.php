@@ -1,24 +1,24 @@
 <?php
 /**
- * Clase estática encargada del CRUD relacionado con la tabla "especialidad".
+ * Clase estática encargada del CRUD relacionado con la tabla "opinion".
  */
-class especialidades{
+class opiniones{
 
 	private function __construct(){}
   	private function __clone(){}
 
 	/**
-	 * Función que se encarga de obtener las especialidades.
-	 * @return JSON 		JSON que contiene las especialidades. 	
+	 * Función que se encarga de obtener las opiniones.
+	 * @return JSON 		JSON que contiene las opiniones. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
-	public static function read(){
+	public static function read($caso_id = "", $opinion_id = ""){
 
 		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
 
-			$result = $DBH_SOS->getEspecialidades();
+			$result = $DBH_SOS->getOpiniones($caso_id, $opinion_id);
 
 			# Crear metadata para la consulta exitosa.
 			$metadata = 

@@ -23,7 +23,7 @@ class API{
         $errorCode = JR_ERROR,
         $rowsAffected = 0)
     {
-        
+
         $msg_error = DEFAULT_ERROR_MSG;   
         
         # Validación para el mensaje a mostrar.
@@ -35,9 +35,13 @@ class API{
                 $msg_error = $e;
         }
 
+        # Si el json_enconde retorna "null" se debe codificar $msg_error a utf8.  
+        if(json_encode($msg_error) == "null")
+            $msg_error = utf8_encode($msg_error);
+        
         if(!DEBUG_MODE && $errorCode == JR_ERROR)
             $msg_error = DEFAULT_ERROR_MSG;
-        
+
         $app = \Slim\Slim::getInstance();
         $app->status($status);
 
@@ -113,7 +117,7 @@ class API{
 
                 if($DBH_SOS->isValidApiKey($api_key)){
                     global $user_id;
-                    # Get user primary key id.
+                    # Set user primary key id.
                     $user_id = $DBH_SOS->getUserIdByApiKey($api_key);
                 }else{
                     $app->status(401);
@@ -125,7 +129,7 @@ class API{
                 echo json_response::error("Api key is misssing.");
                 $app->stop();
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             $app->status(500);
             echo $e->getMessage();
             $app->stop();

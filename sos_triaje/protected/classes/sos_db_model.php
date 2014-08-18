@@ -42,12 +42,12 @@ class sos_db_model{
     }
 
     /**
-    * Esta función se encarga de ejecutar query's con los parametros obtenidos.
-    * @param string $query  String con el query que se desea ejecutar, las variables deben comenzar con dos puntos (:).
-    * @param array  $params Arreglo con los valores de las variables a colocar con el query, deben comenzar con dos puntos (:). Puede ser NULL si el query no posee parametros.
-    * @return PDO   Retorna el resultado de la ejecución del query (Statement).
-    * @throws PDOException If Ocurre un error al ejecutar el query en la BD.
-    */
+     * Esta función se encarga de ejecutar query's con los parametros obtenidos.
+     * @param string $query  String con el query que se desea ejecutar, las variables deben comenzar con dos puntos (:).
+     * @param array  $params Arreglo con los valores de las variables a colocar con el query, deben comenzar con dos puntos (:). Puede ser NULL si el query no posee parametros.
+     * @return PDO   Retorna el resultado de la ejecución del query (Statement).
+     * @throws PDOException If Ocurre un error al ejecutar el query en la BD.
+     */
     public function execute($query, $params = null){
         try {
             $STMT = $this->DBH->prepare($query);
@@ -79,7 +79,7 @@ class sos_db_model{
         $result = $this->execute($query, $params);
 
         if ($result->rowCount() > 0) {
-            
+
             $result = $result->fetch();
 
             if ($password == $result['DB_PASSWORD']) # OR $password con hash == $result['DB_PASSWORD']
@@ -128,14 +128,14 @@ class sos_db_model{
      * Validating user api key
      * If the api key is there in db, it is a valid key
      * @param String $api_key user api key.
-     * @return boolean
+     * @return boolean  Retorna true si es un API KEY valido, de lo contrario retorna False.
      */
     public function isValidApiKey($api_key) {
 
         $params = array(':api_key' => $api_key);
 
         $query = 'SELECT id 
-                    from actor_sistema 
+                    FROM actor_sistema 
                         WHERE api_key = :api_key';
 
         $result = $this->execute($query, $params);
@@ -143,174 +143,323 @@ class sos_db_model{
         return $result->rowCount() > 0;
     }
 
-    /**
-     * Fetching user id by api key
-     * @param String $api_key user api key.
-     */
-    public function getUserIdByApiKey($api_key) {
+    #region CREATE
+        # otros
+    #endregion
 
-        $params = array(':api_key' => $api_key);
+    #region READ
+        /**
+         * Fetching user id by api key
+         * @param String $api_key user api key.
+         * @return PDO  ID del usuario al cual le corresponde el API KEY recibido por parametro.
+         */
+        public function getUserIdByApiKey($api_key) {
 
-        $query = 'SELECT id as DB_ID
-                    from actor_sistema 
-                        WHERE api_key = :api_key';
+            $params = array(':api_key' => $api_key);
 
-        $result = $this->execute($query, $params);
+            $query = 'SELECT id as DB_ID
+                        from actor_sistema 
+                            WHERE api_key = :api_key';
 
-        $result = $result->fetch();
+            $result = $this->execute($query, $params);
 
-        return $result['DB_ID'];
-    }
+            $result = $result->fetch();
 
-    /**
-     * Retorna el login, mail, rol, api_key y user_extension de un usuario.
-     * @param  string $user     correo o login de un usuario.
-     * @return PDOObject        Objeto PDO resultante de la consulta.
-     */
-    public function getUser($user){
-
-        $params = array(':user' => $user);
-
-        $this->checkUserApiKey($user);
-
-        $query = 'SELECT login, mail, rol, api_key, user_extension 
-                    FROM actor_sistema 
-                        WHERE mail = :user OR login = :user';
-
-        $result = $this->execute($query, $params);
-
-        return $result;
-    }
-
-    /**
-     * Retorna las especialidades que existe en el sistema.
-     * @return PDO  Objeto PDO con las especialidades del sistema.
-     */
-    public function getEspecialidades(){
-
-        $query = 'SELECT *
-                    FROM especialidad';
-
-        #region --- Ejemplos ---
-            #$query = 'SELECT * FROM especialidad WHERE id = 666';        
-            #$query = 'INSERT INTO `especialidad`(`id`, `version`, `descripcion`, `nombre`) VALUES (99,1,`desc`,`name`)';
-            #$query = 'UPDATE especialidad SET version=14 WHERE id = 99';
-            #$query = 'DELETE FROM especialidad WHERE id = 99';
-            #$query = 'SELECT count(id) as numEspecialidades FROM especialidad';
-
-            /*
-            $query = 
-            'SELECT *
-            FROM especialidad
-            WHERE id = :id';
-
-            $params = array(':id' => 3);
-
-            $result = $DBH_SOS->execute($query, $params);
-            /**/
-
-            /*
-            WHERE id != :id';
-            # Definión de los parametros para el query
-            $params = array(':id' => 99);
-            /**/
-        #endregion 
-
-        $result = $this->execute($query);
-        # Si el SELECT no arroja resultados retorna una respuesta generica.
-        if($result->rowCount() == 0)
-            API::throwPDOException(
-                                    DB_SELECT_NO_RESULT_MSG,
-                                    200,
-                                    $result->queryString,
-                                    JR_SUCCESS,
-                                    $result->rowCount()
-                                );
-
-        return $result;
-    }
-
-    /**
-     * Retorna las especialidades que existe en el sistema.
-     * @return PDO  Objeto PDO con las especialidades del sistema.
-     */
-    public function getCasos(){
-
-        /*
-        - Probar el filtro asignado al usuario logueado.
-        crear un caso nuevo y asignarselo a un medico. 
-        */
-
-        # params, definir el arreglo de los parametros aca !!!!! para evitar injection !!!
-        # $params[':api_key'] 
-        $params = array();
-        
-        $query = 'SELECT 
-                    c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
-                    s.nombre AS status_caso,
-                    centro.nombre AS centro_sos,
-                    p.fecha_nacimiento,
-                    e.nombre AS tipo_especialidad,
-                    COUNT(DISTINCT a.id) AS cant_archivos,
-                    COUNT(DISTINCT o.id) AS cant_opiniones
-
-                    FROM caso c
-                    LEFT JOIN archivo a ON c.id = a.caso_id
-                    LEFT JOIN opinion o ON c.id = o.caso_id
-                    LEFT JOIN status s ON c.status_id = s.id
-                    LEFT JOIN paciente p ON c.paciente_id = p.id
-                    LEFT JOIN centrosos centro ON c.centro_id = centro.id
-                    LEFT JOIN caso_especialidad c_e ON c.id = c_e.caso_especialidades_id
-                    LEFT JOIN especialidad e ON c_e.especialidad_id = e.id
-                    ';
-
-        # Condiciones para el filtro
-        if ( isset($_GET['own']) || isset($_GET['especialidad']) || isset($_GET['status']) || isset($_GET['centro'])) {
-
-            // --------------------------------------------
-            if (!empty($_GET['own'])){
-                if(/*$_GET['own'] == /**/true){
-                    $query .= ' INNER JOIN historial_caso h_c ON c.id = h_c.caso_id
-                                INNER JOIN medico m ON h_c.medico_id = m.id';
-                    # obtener el id por el apikey!!!
-                    # params
-                    $query .= ' AND m.id = ' . $_GET['own']; 
-                }
-            }
-            /**/
-            //$query .= ' WHERE 1 = 1';
-            
-            if (!empty($_GET['especialidad'])){
-                $params[':especialidad'] = $_GET['especialidad'];
-                $query .= ' AND e.id = :especialidad';
-            }
-
-            if (!empty($_GET['status'])){   
-                $params[':status'] = $_GET['status'];
-                $query .= ' AND s.id = :status';
-            }
-
-            if (!empty($_GET['centro'])){   
-                $params[':centro'] = $_GET['centro'];
-                $query .= ' AND centro.id = :centro'; 
-            }
+            return $result['DB_ID'];
         }
 
-        $query .= ' GROUP BY c.id';
+        /**
+         * Obtener datos de un usuario.
+         * @param  string $user     correo o login de un usuario.
+         * @return PDO  Objeto PDO con el login, mail, rol, api_key y user_extension de un usuario.
+         */
+        public function getUser($user){
 
-        $result = $this->execute($query, $params);
+            $params = array(':user' => $user);
 
-        # Si el SELECT no arroja resultados retorna una respuesta generica.
-        if($result->rowCount() == 0)
-            API::throwPDOException(
-                                    DB_SELECT_NO_RESULT_MSG,
-                                    200,
-                                    $result->queryString,
-                                    JR_SUCCESS,
-                                    $result->rowCount()
-                                );
+            $this->checkUserApiKey($user);
 
-        return $result;
-    }
+            $query = 'SELECT login, mail, rol, api_key, user_extension 
+                        FROM actor_sistema 
+                            WHERE mail = :user OR login = :user';
+
+            $result = $this->execute($query, $params);
+
+            return $result;
+        }
+
+        /**
+         * Retorna las especialidades que existe en el sistema.
+         * @return PDO  Objeto PDO con las especialidades del sistema.
+         * @throws PDOException If La consulta arroja 0 resultados.
+         */
+        public function getEspecialidades(){
+
+            $query = 'SELECT *
+                        FROM especialidad';
+
+            #region --- Ejemplos ---
+                #$query = 'SELECT * FROM especialidad WHERE id = 666';        
+                #$query = 'INSERT INTO `especialidad`(`id`, `version`, `descripcion`, `nombre`) VALUES (99,1,`desc`,`name`)';
+                #$query = 'UPDATE especialidad SET version=14 WHERE id = 99';
+                #$query = 'DELETE FROM especialidad WHERE id = 99';
+                #$query = 'SELECT count(id) as numEspecialidades FROM especialidad';
+
+                /*
+                $query = 
+                'SELECT *
+                FROM especialidad
+                WHERE id = :id';
+
+                $params = array(':id' => 3);
+
+                $result = $DBH_SOS->execute($query, $params);
+                /**/
+
+                /*
+                WHERE id != :id';
+                # Definión de los parametros para el query
+                $params = array(':id' => 99);
+                /**/
+            #endregion 
+
+            $result = $this->execute($query);
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_SELECT_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS,
+                                        $result->rowCount()
+                                    );
+
+            return $result;
+        }
+
+        /**
+         * Retorna el conjunto de centros SOS que existen en el sistema.
+         * @param  string $centro_id si esta definido un centro_id retornara la informacion de ese centro unicamente, de lo contrario listara todos los centros (Default="")
+         * @return PDO            Objeto PDO con la lista de centros sos del sistema.
+         */
+        public function getCentroSos($centro_id = ""){
+
+            $params = array(':centro_id' => $centro_id);
+
+            $query = 'SELECT *
+                        FROM centrosos';
+
+            if(!empty($centro_id))
+                $query .= ' WHERE centrosos.id = :centro_id';
+
+            $result = $this->execute($query, $params);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_SELECT_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS,
+                                        $result->rowCount()
+                                    );
+
+            return $result;
+        }
+
+        /**
+         * Retorna las especialidades que existe en el sistema.
+         * @param  string $caso_id ID de un caso (Default="")
+         * @return PDO  Objeto PDO con uno o más casos.
+         * @throws PDOException If La consulta arroja 0 resultados.
+         */
+        public function getCasos($caso_id = ""){
+
+            $params = array();
+
+            $query = 'SELECT 
+                        c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
+                        s.nombre AS status_caso,
+                        centro.nombre AS centro_sos,
+                        p.fecha_nacimiento,
+                        e.nombre AS tipo_especialidad,
+                        COUNT(DISTINCT a.id) AS cant_archivos,
+                        COUNT(DISTINCT o.id) AS cant_opiniones
+
+                        FROM caso c
+                        LEFT JOIN archivo a ON c.id = a.caso_id
+                        LEFT JOIN opinion o ON c.id = o.caso_id
+                        LEFT JOIN status s ON c.status_id = s.id
+                        LEFT JOIN paciente p ON c.paciente_id = p.id
+                        LEFT JOIN centrosos centro ON c.centro_id = centro.id
+                        LEFT JOIN caso_especialidad c_e ON c.id = c_e.caso_especialidades_id
+                        LEFT JOIN especialidad e ON c_e.especialidad_id = e.id';
+
+            if(!empty($caso_id)){
+                # Si es un caso especifico no se aplican los filtros
+                $params[':casoId'] = $caso_id;
+                $query .= ' WHERE c.id = :casoId';
+            }else{
+                # Condiciones para el filtro
+                if ( isset($_GET['own']) || isset($_GET['especialidad']) || isset($_GET['status']) || isset($_GET['centro'])) {
+
+                    if (!empty($_GET['own']) && $_GET['own'] == true){
+                        $query .= ' INNER JOIN historial_caso h_c ON c.id = h_c.caso_id
+                                    INNER JOIN medico m ON h_c.medico_id = m.id';
+                    }
+
+                    $query .= ' WHERE 1 = 1';
+
+                    if (!empty($_GET['own']) && $_GET['own'] == true){
+                        global $user_id;
+                        $params[':own'] = $user_id;
+                        $query .= ' AND m.id = :own'; 
+                    }
+
+                    if (!empty($_GET['especialidad'])){
+                        $params[':especialidad'] = $_GET['especialidad'];
+                        $query .= ' AND e.id = :especialidad';
+                    }
+
+                    if (!empty($_GET['status'])){   
+                        $params[':status'] = $_GET['status'];
+                        $query .= ' AND s.id = :status';
+                    }
+
+                    if (!empty($_GET['centro'])){   
+                        $params[':centro'] = $_GET['centro'];
+                        $query .= ' AND centro.id = :centro'; 
+                    }
+                }
+            }
+
+            $query .= ' GROUP BY c.id';
+
+            $result = $this->execute($query, $params);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_SELECT_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS,
+                                        $result->rowCount()
+                                    );
+
+            return $result;
+        }
+
+        /**
+         * Retorna el historial de un caso.
+         * @param  string $caso_id ID de un caso (Default="")
+         * @return PDO  Objeto PDO con las especialidades del sistema.
+         * @throws PDOException If La consulta arroja 0 resultados o si $caso_id esta vacío.
+         */
+        public function getHistorialCaso($caso_id = ""){
+
+            if (empty($caso_id))
+                API::throwPDOException("Falta el ID del caso para retornar el historial.");
+
+            $params = array(':caso_id' => $caso_id);
+
+            $query = 'SELECT *
+                        FROM historial_caso h_c
+                            WHERE h_c.caso_id = :caso_id
+                                ORDER BY h_c.fecha DESC';
+
+            $result = $this->execute($query, $params);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_SELECT_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS,
+                                        $result->rowCount()
+                                    );
+
+            return $result;
+        }
+
+        /**
+         * Retorna un archivo en formato blob.
+         * @param  string $caso_id ID de un caso (Default="")
+         * @param  string $archivo_id Id del archivo (Default="")
+         * @return blob  archivo en formato blob.
+         * @throws PDOException If La consulta arroja 0 resultados o si $archivo_id esta vacío.
+         */
+        public function getArchivo($caso_id = "", $archivo_id = ""){
+
+            if (empty($caso_id))
+                API::throwPDOException("Falta el ID del caso para obtener los archivos.");
+
+            $params = array(':caso_id' => $caso_id);
+
+            $query = 'SELECT a.*
+                        FROM caso c
+                            INNER JOIN archivo a ON c.id = a.caso_id
+                                WHERE c.id = :caso_id';
+
+            if(!empty($archivo_id)){
+                $params[':archivo_id'] = $archivo_id;
+                $query .= ' AND a.id = :archivo_id';
+            }
+
+            $result = $this->execute($query, $params);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_SELECT_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS,
+                                        $result->rowCount()
+                                    );
+
+            return $result;
+        }
+
+        /**
+         * Retorna las opiniones de un caso.
+         * @param  string $caso_id ID de un caso (Default="")
+         * @param  string $opinion_id Id de la opinion (Default="")
+         * @return [type]             [description]
+         * @throws PDOException If La consulta arroja 0 resultados o si $opinion_id esta vacío.
+         */
+        public function getOpiniones($caso_id = "", $opinion_id = ""){
+
+            if (empty($caso_id))
+                API::throwPDOException("Falta el ID del caso para obtener las opiniones.");
+
+            $params = array(':caso_id' => $caso_id);
+
+            $query = 'SELECT o.*
+                        FROM caso c
+                            INNER JOIN opinion o ON c.id = o.caso_id
+                                WHERE c.id = :caso_id';
+
+            if(!empty($opinion_id)){
+                $params[':opinion_id'] = $opinion_id;
+                $query .= ' AND o.id = :opinion_id';
+            }
+
+            $result = $this->execute($query, $params);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_SELECT_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS,
+                                        $result->rowCount()
+                                    );
+
+            return $result;
+        }
+    #endregion
 }
 ?>

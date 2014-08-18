@@ -14,9 +14,9 @@ class login{
 			$DBH_SOS = new sos_db_model();
 
 	        if ($DBH_SOS->checkLogin($user, $password)) {
-	        	        	
+	
 	        	$result = $DBH_SOS->getUser($user);
-	        	
+
 	        	# Se crea la metadata para la consulta exitosa.
 				$metadata = 
 					new json_response_metadata(
