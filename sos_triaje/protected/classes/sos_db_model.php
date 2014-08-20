@@ -144,7 +144,9 @@ class sos_db_model{
     }
 
     #region CREATE
-        # otros
+        public function createOpinion(){
+            
+        }
     #endregion
 
     #region READ

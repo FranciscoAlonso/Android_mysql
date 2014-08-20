@@ -50,6 +50,40 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 #endregion
 
 #region Métodos con auntenticación
+
+	/**
+	 * Crea una opinion a un caso especifico.
+	 * method - POST
+	 * url - /casos/:casoId/opiniones
+	 */
+	$app->post('/casos/:casoId/opiniones', 'API::authenticate', function($caso_id) use ($app){
+		
+		# check for required params
+			# id (AUTO_INCREMENT)
+			# version (Default = 0)
+			# caso_id (*** FK Requerido ***)
+			# cuerpo_opinion
+			# estado_opinion (Default = NULL)
+			# fecha_opinion (Calculado, NOW())
+			# medico_id (*** FK Requerido ***) Si el que esta logueado no es medico asignar uno por default
+			# nombre_opinion
+
+        //API::verifyRequiredParams(array('user', 'password'));
+		 
+		# reading post params
+		$foo = $app->request()->post('user');
+		if(!isset($foo))
+			exit("FOO IS NOT SET");
+
+		exit("TEST: " . $foo);
+
+        //$user = $app->request()->post('user');
+        //$password = $app->request()->post('password');
+
+		require_once  DIR_CONTROLLERS . '/opiniones.php';
+		echo opiniones::create($caso_id);
+    });
+
 	/**
 	 * Retorna el conjunto de especialidades que existen en el sistema.
 	 * method - GET
