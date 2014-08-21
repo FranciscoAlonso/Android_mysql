@@ -144,6 +144,17 @@ class sos_db_model{
     }
 
     #region CREATE
+        /**
+         * Crea una opinion a un caso especifico. Se espera en el arreglo los siguientes indices: 
+         * :version
+         * :caso_id
+         * :cuerpo_opinion
+         * :medico_id
+         * :nombre_opinion
+         * :estado_opinion
+         * @param  array $form Arreglo con los campos requeridos para insertar una opinión.
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         */
         public function createOpinion($form){
 
             $query  = 'INSERT INTO opinion';
@@ -449,7 +460,7 @@ class sos_db_model{
          * Retorna las opiniones de un caso.
          * @param  string $caso_id ID de un caso (Default="")
          * @param  string $opinion_id Id de la opinion (Default="")
-         * @return [type]             [description]
+         * @return PDO  Objeto PDO con las opiniones del caso.
          * @throws PDOException If La consulta arroja 0 resultados o si $opinion_id esta vacío.
          */
         public function getOpiniones($caso_id = "", $opinion_id = ""){
