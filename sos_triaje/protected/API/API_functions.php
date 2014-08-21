@@ -69,7 +69,7 @@ class API{
         foreach ($required_fields as $field) {
             if (!isset($request_params[$field]) || strlen(trim($request_params[$field])) <= 0) {
                 $error = true;
-                $error_fields .= $field . ', ';
+                $error_fields .= '\''. $field . '\', ';
             }
         }
 

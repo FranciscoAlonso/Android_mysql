@@ -144,8 +144,55 @@ class sos_db_model{
     }
 
     #region CREATE
-        public function createOpinion(){
+        public function createOpinion($form){
+
+            /*
+            'INSERT INTO opinion
+            (version, caso_id, cuerpo_opinion, estado_opinion, fecha_opinion, medico_id, nombre_opinion) 
+            VALUES 
+            (:version, :caso_id, :cuerpo_opinion, :estado_opinion, CURRENT_TIMESTAMP, :medico_id, :nombre_opinion)'
+             */
+
+            $query  = 'INSERT INTO opinion';
+            $query .= 
+                    '(
+                        version
+                        , caso_id
+                        , cuerpo_opinion
+                        , fecha_opinion
+                        , medico_id
+                        , nombre_opinion';
+
+            //if(isset($form['estado_opinion']))
+                $query .= ', estado_opinion';
+
+            $query .= ') VALUES';
+
+            $query .= '(
+                            :version
+                            , :caso_id
+                            , :cuerpo_opinion
+                            , CURRENT_TIMESTAMP
+                            , :medico_id
+                            , :nombre_opinion';
             
+            //if(isset($form['estado_opinion']))
+                $query .= ', :estado_opinion';
+            
+            $query .= ')';
+            
+            return $this->execute($query, $form);
+
+            foreach ($form as $key => $value) {
+                echo $key . " - " . $value . '<br>';
+            }
+            echo '<br>';
+
+            //if(!isset($form['asdasdasdgf']))
+                //exit("NO ESTA SETEADO !!!!");
+
+            exit("sos_db_model::createOpinion()");
+
         }
     #endregion
 

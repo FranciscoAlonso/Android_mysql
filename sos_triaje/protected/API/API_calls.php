@@ -68,20 +68,42 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			# medico_id (*** FK Requerido ***) Si el que esta logueado no es medico asignar uno por default
 			# nombre_opinion
 
-        //API::verifyRequiredParams(array('user', 'password'));
-		 
-		# reading post params
-		$foo = $app->request()->post('user');
-		if(!isset($foo))
-			exit("FOO IS NOT SET");
+        API::verifyRequiredParams(
+        	array(
+        		'version'
+        		, 'cuerpo_opinion'
+        		//, 'estado_opinion' # puede ser null
+        		, 'nombre_opinion'
+        	));
+			
+		/*
+			 # $id;
+			$version;
+			 #$caso_id;
+			$cuerpo_opinion;
+			$estado_opinion;
+			 # $fecha_opinion;
+			 # $medico_id;
+			$nombre_opinion;
+		
+		 */
+		
+		global $user_id;
+		
+		$form[':version'] = $app->request()->post('version');
+		$form[':caso_id'] = $caso_id;
+		$form[':cuerpo_opinion'] = $app->request()->post('cuerpo_opinion');
+		$form[':medico_id'] = $user_id;
+		$form[':nombre_opinion'] = $app->request()->post('nombre_opinion');
+		$form[':estado_opinion'] = $app->request()->post('estado_opinion');
 
-		exit("TEST: " . $foo);
-
-        //$user = $app->request()->post('user');
-        //$password = $app->request()->post('password');
+if(isset($form[':estado_opinion']))
+	exit("is set!!!!!!!!!!");
+else
+	exit("is not set");
 
 		require_once  DIR_CONTROLLERS . '/opiniones.php';
-		echo opiniones::create($caso_id);
+		echo opiniones::create($form);
     });
 
 	/**

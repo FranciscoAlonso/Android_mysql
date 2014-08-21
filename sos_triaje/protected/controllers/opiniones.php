@@ -7,15 +7,14 @@ class opiniones{
 	private function __construct(){}
   	private function __clone(){}
 
-  	public static function create($caso_id = ""){
-  		
+  	public static function create($form){
+
   		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
-  		exit("CREATE!!!");
 
-			$result = $DBH_SOS->getOpiniones($caso_id, $opinion_id);
-
+			$result = $DBH_SOS->createOpinion($form);
+exit("opinon creada");
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
 				new json_response_metadata(
