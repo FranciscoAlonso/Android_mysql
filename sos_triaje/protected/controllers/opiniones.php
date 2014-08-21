@@ -14,7 +14,7 @@ class opiniones{
 			$DBH_SOS = new sos_db_model();
 
 			$result = $DBH_SOS->createOpinion($form);
-exit("opinon creada");
+
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
 				new json_response_metadata(
@@ -25,7 +25,7 @@ exit("opinon creada");
 					);
 
 			# Retorna el resultado de la consulta con información extra en formato JSON.
-			return json_response::generate($metadata, $result);
+			return json_response::generate($metadata, DB_INSERT_SUCESS_MSG);
 		} catch (Exception $e) {
             return $e->getMessage();
 		}

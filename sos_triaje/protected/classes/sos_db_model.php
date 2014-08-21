@@ -146,13 +146,6 @@ class sos_db_model{
     #region CREATE
         public function createOpinion($form){
 
-            /*
-            'INSERT INTO opinion
-            (version, caso_id, cuerpo_opinion, estado_opinion, fecha_opinion, medico_id, nombre_opinion) 
-            VALUES 
-            (:version, :caso_id, :cuerpo_opinion, :estado_opinion, CURRENT_TIMESTAMP, :medico_id, :nombre_opinion)'
-             */
-
             $query  = 'INSERT INTO opinion';
             $query .= 
                     '(
@@ -161,38 +154,21 @@ class sos_db_model{
                         , cuerpo_opinion
                         , fecha_opinion
                         , medico_id
-                        , nombre_opinion';
+                        , nombre_opinion
+                        , estado_opinion
+                    )
+                    VALUES
+                    (
+                        :version
+                        , :caso_id
+                        , :cuerpo_opinion
+                        , CURRENT_TIMESTAMP
+                        , :medico_id
+                        , :nombre_opinion
+                        , :estado_opinion
+                    )';
 
-            //if(isset($form['estado_opinion']))
-                $query .= ', estado_opinion';
-
-            $query .= ') VALUES';
-
-            $query .= '(
-                            :version
-                            , :caso_id
-                            , :cuerpo_opinion
-                            , CURRENT_TIMESTAMP
-                            , :medico_id
-                            , :nombre_opinion';
-            
-            //if(isset($form['estado_opinion']))
-                $query .= ', :estado_opinion';
-            
-            $query .= ')';
-            
             return $this->execute($query, $form);
-
-            foreach ($form as $key => $value) {
-                echo $key . " - " . $value . '<br>';
-            }
-            echo '<br>';
-
-            //if(!isset($form['asdasdasdgf']))
-                //exit("NO ESTA SETEADO !!!!");
-
-            exit("sos_db_model::createOpinion()");
-
         }
     #endregion
 
@@ -232,9 +208,7 @@ class sos_db_model{
                         FROM actor_sistema 
                             WHERE mail = :user OR login = :user';
 
-            $result = $this->execute($query, $params);
-
-            return $result;
+            return $this->execute($query, $params);
         }
 
         /**

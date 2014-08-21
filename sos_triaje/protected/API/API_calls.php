@@ -59,35 +59,13 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	$app->post('/casos/:casoId/opiniones', 'API::authenticate', function($caso_id) use ($app){
 		
 		# check for required params
-			# id (AUTO_INCREMENT)
-			# version (Default = 0)
-			# caso_id (*** FK Requerido ***)
-			# cuerpo_opinion
-			# estado_opinion (Default = NULL)
-			# fecha_opinion (Calculado, NOW())
-			# medico_id (*** FK Requerido ***) Si el que esta logueado no es medico asignar uno por default
-			# nombre_opinion
-
         API::verifyRequiredParams(
         	array(
         		'version'
         		, 'cuerpo_opinion'
-        		//, 'estado_opinion' # puede ser null
         		, 'nombre_opinion'
         	));
-			
-		/*
-			 # $id;
-			$version;
-			 #$caso_id;
-			$cuerpo_opinion;
-			$estado_opinion;
-			 # $fecha_opinion;
-			 # $medico_id;
-			$nombre_opinion;
-		
-		 */
-		
+
 		global $user_id;
 		
 		$form[':version'] = $app->request()->post('version');
@@ -96,11 +74,6 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 		$form[':medico_id'] = $user_id;
 		$form[':nombre_opinion'] = $app->request()->post('nombre_opinion');
 		$form[':estado_opinion'] = $app->request()->post('estado_opinion');
-
-if(isset($form[':estado_opinion']))
-	exit("is set!!!!!!!!!!");
-else
-	exit("is not set");
 
 		require_once  DIR_CONTROLLERS . '/opiniones.php';
 		echo opiniones::create($form);
