@@ -8,12 +8,11 @@ class casos{
   	private function __clone(){}
 
 	/**
-	 * Función que se encarga de obtener los casos.
+	 * Invoca al modelo para obtener los casos.
 	 * @return JSON 		JSON que contiene los casos. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
 	public static function read($caso_id = ""){
-
 		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();

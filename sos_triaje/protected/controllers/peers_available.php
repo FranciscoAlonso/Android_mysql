@@ -8,12 +8,11 @@ class peers_available{
   	private function __clone(){}
 
 	/**
-	 * Función que se encarga de obtener los peers disponibles.
+	 * Invoca al modelo para obtener los peers disponibles.
 	 * @return JSON 		JSON que contiene los peers disponibles. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
 	public static function read(){
-
 		try {
 			exit("peers_available::read();");
 

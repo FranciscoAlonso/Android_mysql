@@ -8,13 +8,12 @@ class archivos{
   	private function __clone(){}
 
 	/**
-	 * Función que se encarga de obtener los archivos de un caso.
+	 * Invoca al modelo para obtener los archivos de un caso.
 	 * @return JSON 		JSON que contiene todos los archivos de un caso.
 	 * @return blob 		Blob que contiene el archivo especificado. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
 	public static function read($caso_id = "", $archivo_id = ""){
-
 		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();

@@ -8,12 +8,11 @@ class especialidades{
   	private function __clone(){}
 
 	/**
-	 * Función que se encarga de obtener las especialidades.
+	 * Invoca al modelo para obtener las especialidades.
 	 * @return JSON 		JSON que contiene las especialidades. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
 	public static function read(){
-
 		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();

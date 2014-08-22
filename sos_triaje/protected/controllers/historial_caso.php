@@ -8,13 +8,12 @@ class historial_caso{
   	private function __clone(){}
 
 	/**
-	 * Función que se encarga de obtener el historial de un caso.
+	 * Invoca al modelo para obtener el historial de un caso.
 	 * @return JSON 		JSON que contiene el historial del caso. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
 	public static function read($caso_id = ""){
-
-		try {		
+		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
 

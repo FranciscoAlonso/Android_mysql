@@ -8,12 +8,11 @@ class centro_sos{
   	private function __clone(){}
 
 	/**
-	 * Función que se encarga de obtener los centros SOS.
+	 * Invoca al modelo para obtener los centros SOS.
 	 * @return JSON 		JSON que contiene los centros SOS. 	
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
 	 */
 	public static function read($centro_id = ""){
-
 		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
