@@ -50,143 +50,159 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 #endregion
 
 #region Métodos con auntenticación
+	
+	#region CREATES
+		/**
+		 * Crea una opinion a un caso especifico.
+		 * method - POST
+		 * url - /casos/:casoId/opiniones
+		 */
+		$app->post('/casos/:casoId/opiniones', 'API::authenticate', function($caso_id) use ($app){
+			
+			# check for required params
+	        API::verifyRequiredParams(
+	        	array(
+	        		'version'
+	        		, 'cuerpo_opinion'
+	        		, 'nombre_opinion'
+	        	));
 
-	/**
-	 * Crea una opinion a un caso especifico.
-	 * method - POST
-	 * url - /casos/:casoId/opiniones
-	 */
-	$app->post('/casos/:casoId/opiniones', 'API::authenticate', function($caso_id) use ($app){
-		
-		# check for required params
-        API::verifyRequiredParams(
-        	array(
-        		'version'
-        		, 'cuerpo_opinion'
-        		, 'nombre_opinion'
-        	));
+			global $user_id;
+			
+			$form[':version'] = $app->request()->post('version');
+			$form[':caso_id'] = $caso_id;
+			$form[':cuerpo_opinion'] = $app->request()->post('cuerpo_opinion');
+			$form[':medico_id'] = $user_id;
+			$form[':nombre_opinion'] = $app->request()->post('nombre_opinion');
+			$form[':estado_opinion'] = $app->request()->post('estado_opinion');
 
-		global $user_id;
-		
-		$form[':version'] = $app->request()->post('version');
-		$form[':caso_id'] = $caso_id;
-		$form[':cuerpo_opinion'] = $app->request()->post('cuerpo_opinion');
-		$form[':medico_id'] = $user_id;
-		$form[':nombre_opinion'] = $app->request()->post('nombre_opinion');
-		$form[':estado_opinion'] = $app->request()->post('estado_opinion');
+			require_once  DIR_CONTROLLERS . '/opiniones.php';
+			echo opiniones::create($form);
+	    });
+    #endregion
 
-		require_once  DIR_CONTROLLERS . '/opiniones.php';
-		echo opiniones::create($form);
-    });
+	#region READS
+		/**
+		 * Retorna el conjunto de especialidades que existen en el sistema.
+		 * method - GET
+		 * url - /especialidades
+		 */
+		$app->get('/especialidades', 'API::authenticate', function(){
+			require_once  DIR_CONTROLLERS . '/especialidades.php';
+			echo especialidades::read();
+	    });
 
-	/**
-	 * Retorna el conjunto de especialidades que existen en el sistema.
-	 * method - GET
-	 * url - /especialidades
-	 */
-	$app->get('/especialidades', 'API::authenticate', function(){
-		require_once  DIR_CONTROLLERS . '/especialidades.php';
-		echo especialidades::read();
-    });
+		/**
+		 * Retorna el conjunto de centros sos que existen en el sistema.
+		 * method - GET
+		 * url - /centro_sos
+		 */
+		$app->get('/centro_sos', 'API::authenticate', function(){
+			require_once  DIR_CONTROLLERS . '/centro_sos.php';
+			echo centro_sos::read();
+	    });
 
-	/**
-	 * Retorna el conjunto de centros sos que existen en el sistema.
-	 * method - GET
-	 * url - /centro_sos
-	 */
-	$app->get('/centro_sos', 'API::authenticate', function(){
-		require_once  DIR_CONTROLLERS . '/centro_sos.php';
-		echo centro_sos::read();
-    });
+	    /**
+		 * Retorna un centros sos.
+		 * method - GET
+		 * url - /centro_sos
+		 */
+		$app->get('/centro_sos/:centro_id', 'API::authenticate', function($centro_id){
+			require_once  DIR_CONTROLLERS . '/centro_sos.php';
+			echo centro_sos::read($centro_id);
+	    });   
 
-    /**
-	 * Retorna un centros sos.
-	 * method - GET
-	 * url - /centro_sos
-	 */
-	$app->get('/centro_sos/:centro_id', 'API::authenticate', function($centro_id){
-		require_once  DIR_CONTROLLERS . '/centro_sos.php';
-		echo centro_sos::read($centro_id);
-    });   
+		/**
+		 * Retorna el conjunto de casos que existen en el sistema.
+		 * method - GET
+		 * url - /casos
+		 */
+	    $app->get('/casos', 'API::authenticate', function(){
+			require_once  DIR_CONTROLLERS . '/casos.php';
+			echo casos::read();
+	    });
 
-	/**
-	 * Retorna el conjunto de casos que existen en el sistema.
-	 * method - GET
-	 * url - /casos
-	 */
-    $app->get('/casos', 'API::authenticate', function(){
-		require_once  DIR_CONTROLLERS . '/casos.php';
-		echo casos::read();
-    });
+	    /**
+		 * Retorna un caso.
+		 * method - GET
+		 * url - /casos/:casoId
+		 */
+	    $app->get('/casos/:casoId', 'API::authenticate', function($caso_id){
+			require_once  DIR_CONTROLLERS . '/casos.php';
+			echo casos::read($caso_id);
+	    });
 
-    /**
-	 * Retorna un caso.
-	 * method - GET
-	 * url - /casos/:casoId
-	 */
-    $app->get('/casos/:casoId', 'API::authenticate', function($caso_id){
-		require_once  DIR_CONTROLLERS . '/casos.php';
-		echo casos::read($caso_id);
-    });
+	    /**
+		 * Retorna el historial de un caso.
+		 * method - GET
+		 * url - /casos/:casoId/historial
+		 */
+	    $app->get('/casos/:casoId/historial', 'API::authenticate', function($caso_id){
+			require_once  DIR_CONTROLLERS . '/historial_caso.php';
+			echo historial_caso::read($caso_id);
+	    });
 
-    /**
-	 * Retorna el historial de un caso.
-	 * method - GET
-	 * url - /casos/:casoId/historial
-	 */
-    $app->get('/casos/:casoId/historial', 'API::authenticate', function($caso_id){
-		require_once  DIR_CONTROLLERS . '/historial_caso.php';
-		echo historial_caso::read($caso_id);
-    });
+	    /**
+		 * Retorna los archivos relacionados a un caso.
+		 * method - GET
+		 * url - /casos/:casoId/archivos
+		 */
+	    $app->get('/casos/:casoId/archivos', 'API::authenticate', function($caso_id){
+	    	require_once  DIR_CONTROLLERS . '/archivos.php';
+			echo archivos::read($caso_id);
+	    });
 
-    /**
-	 * Retorna los archivos relacionados a un caso.
-	 * method - GET
-	 * url - /casos/:casoId/archivos
-	 */
-    $app->get('/casos/:casoId/archivos', 'API::authenticate', function($caso_id){
-    	require_once  DIR_CONTROLLERS . '/archivos.php';
-		echo archivos::read($caso_id);
-    });
+	    /**
+		 * Retorna el archivo del caso.
+		 * method - GET
+		 * url - /casos/:casoId/archivos/:archivoId
+		 */
+	    $app->get('/casos/:casoId/archivos/:archivoId', 'API::authenticate', function($caso_id, $archivo_id){
+	    	require_once  DIR_CONTROLLERS . '/archivos.php';
+			echo archivos::read($caso_id, $archivo_id);
+	    });
 
-    /**
-	 * Retorna el archivo del caso.
-	 * method - GET
-	 * url - /casos/:casoId/archivos/:archivoId
-	 */
-    $app->get('/casos/:casoId/archivos/:archivoId', 'API::authenticate', function($caso_id, $archivo_id){
-    	require_once  DIR_CONTROLLERS . '/archivos.php';
-		echo archivos::read($caso_id, $archivo_id);
-    });
+	    /**
+	     * Retorna las opiniones de un caso.
+	     * method - GET
+	     * url - /casos/:casoId/opiniones
+	     */
+	    $app->get('/casos/:casoId/opiniones', 'API::authenticate', function($caso_id){
+	    	require_once  DIR_CONTROLLERS . '/opiniones.php';
+			echo opiniones::read($caso_id);
+	    });
 
-    /**
-     * Retorna las opiniones de un caso.
-     * method - GET
-     * url - /casos/:casoId/opiniones
-     */
-    $app->get('/casos/:casoId/opiniones', 'API::authenticate', function($caso_id){
-    	require_once  DIR_CONTROLLERS . '/opiniones.php';
-		echo opiniones::read($caso_id);
-    });
+	    /**
+	     * Retorna una opinión del caso.
+	     * method - GET
+	     * url - /casos/:casoId/opiniones/:opinionesId
+	     */
+	    $app->get('/casos/:casoId/opiniones/:opinionesId', 'API::authenticate', function($caso_id, $opinion_id){
+	    	require_once  DIR_CONTROLLERS . '/opiniones.php';
+			echo opiniones::read($caso_id, $opinion_id);
+	    });
 
-    /**
-     * Retorna una opinión del caso.
-     * method - GET
-     * url - /casos/:casoId/opiniones/:opinionesId
-     */
-    $app->get('/casos/:casoId/opiniones/:opinionesId', 'API::authenticate', function($caso_id, $opinion_id){
-    	require_once  DIR_CONTROLLERS . '/opiniones.php';
-		echo opiniones::read($caso_id, $opinion_id);
-    });
+	    /**
+	     * Retorna una lista de usuarios que estan disponibles para ser llamados.
+	     * method - GET
+	     * url - /peers_available
+	     */
+	    $app->get('/peers_available', 'API::authenticate', function(){
+			require_once  DIR_CONTROLLERS . '/peers_available.php';
+			echo peers_available::read();
+	    });
+    #endregion
 
-    /**
-     * Retorna una lista de usuarios que estan disponibles para ser llamados.
-     * method - GET
-     * url - /peers_available
-     */
-    $app->get('/peers_available', 'API::authenticate', function(){
-		require_once  DIR_CONTROLLERS . '/peers_available.php';
-		echo peers_available::read();
-    });
+    #region UPDATES
+
+    #endregion
+
+    #region DELETES:
+	    $app->delete('/casos/:casoId/opiniones/:opinionesId', 'API::authenticate', function($caso_id, $opinion_id){
+	    	require_once  DIR_CONTROLLERS . '/opiniones.php';
+			echo opiniones::delete($caso_id, $opinion_id);
+	    });
+    #endregion
+
 #endregion
 ?>

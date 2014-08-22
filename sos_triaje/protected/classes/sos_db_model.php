@@ -495,5 +495,47 @@ class sos_db_model{
             return $result;
         }
     #endregion
+    
+    #region UPDATE
+        
+    #endregion
+    
+    #region DELETE
+        /**
+         * Elimina una opinión asociada a un caso.
+         * @param  string $caso_id ID de un caso (Default="")
+         * @param  string $opinion_id Id de la opinion (Default="")
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         * @throws PDOException If La consulta arroja 0 resultados o, si $caso_id u $opinion_id estan vacíos.
+         */
+        public function deleteOpinion($caso_id = "", $opinion_id = ""){
+
+            if (empty($caso_id) || empty($opinion_id))
+                API::throwPDOException("Falta el ID del caso y/o ID de la opinión.");
+
+            $params = array(
+                              ':caso_id' => $caso_id
+                            , ':opinion_id' => $opinion_id
+                            );
+
+            $query = 'DELETE
+                        FROM opinion
+                            WHERE caso_id = :caso_id AND id = :opinion_id';
+
+            $result = $this->execute($query, $params);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_DELETE_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS,
+                                        $result->rowCount()
+                                    );
+
+            return $result;
+        }
+    #endregion
 }
 ?>

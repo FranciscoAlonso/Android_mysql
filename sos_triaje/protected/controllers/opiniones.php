@@ -91,14 +91,14 @@ class opiniones{
 	}
 	/**/
 
-/*
 	public static function delete($caso_id, $opinion_id){
 		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
 
 			$result = $DBH_SOS->deleteOpinion($caso_id, $opinion_id);
-
+			exit("opiniones::delete()");
+/*
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
 				new json_response_metadata(
@@ -110,9 +110,10 @@ class opiniones{
 
 			# Retorna el resultado de la consulta con información extra en formato JSON.
 			return json_response::generate($metadata, $result);
+	/**/
 		} catch (Exception $e) {
             return $e->getMessage();
 		}
-	}/**/
+	}
 }
 ?>
