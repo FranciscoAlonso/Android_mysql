@@ -66,12 +66,12 @@ class json_response_metadata{
    * @return array Arreglo con todos los valores de la metadata.
    */
   function getMetaData(){ 
-    $result[METADATA_KEY][json_response_metadata::errorCodeKey]    = $this->errorCode;
-    $result[METADATA_KEY][json_response_metadata::rowsAffectedKey] = $this->rowsAffected;
+    $result[METADATA_KEY][self::errorCodeKey]    = $this->errorCode;
+    $result[METADATA_KEY][self::rowsAffectedKey] = $this->rowsAffected;
     if(DEBUG_MODE){
-      $result[METADATA_KEY]['debug'][json_response_metadata::errorMessageKey] = $this->errorMessage;
-      $result[METADATA_KEY]['debug'][json_response_metadata::requestMethodKey] = $this->requestMethod;
-      $result[METADATA_KEY]['debug'][json_response_metadata::queryStringKey]   = $this->queryString;
+      $result[METADATA_KEY]['debug'][self::errorMessageKey] = $this->errorMessage;
+      $result[METADATA_KEY]['debug'][self::requestMethodKey] = $this->requestMethod;
+      $result[METADATA_KEY]['debug'][self::queryStringKey]   = $this->queryString;
     }
     return $result;
   }
@@ -86,7 +86,8 @@ class json_response{
   private function __clone(){}
 
   # Constantes que definen el KEY para el arreglo
-  const msgDescription = 'msgDescription';
+  const msgDescriptionKey = 'msgDescription';
+  const lastInsertIdKey = 'lastInsertId';
 
   /**
    * Junta la metadata con la data.
@@ -94,12 +95,15 @@ class json_response{
    * @param  PDO                    $data        Objeto PDO resultado del Query ejecutado.
    * @return JSON           Respuesta JSON final.
    */
-  public static function generate($metadata, $data){
+  public static function generate($metadata, $data, $lastInsertId = ""){
 
     $result = $metadata->getMetaData();
 
+    if(!empty($lastInsertId))
+      $result[DATA_KEY][self::lastInsertIdKey] = $lastInsertId;
+
     if(is_string($data)){
-      $result[DATA_KEY][json_response::msgDescription] = $data;
+      $result[DATA_KEY][self::msgDescriptionKey] = $data;
     }else{
       # Se extrae los datos del objeto PDO
       $index = 0;
@@ -130,7 +134,7 @@ class json_response{
 
     $metadata = new json_response_metadata(JR_ERROR, 0, $queryString, $_SERVER['REQUEST_METHOD']);
     $result = $metadata->getMetaData();
-    $result[DATA_KEY][json_response::msgDescription] = $msgDescription;
+    $result[DATA_KEY][self::msgDescriptionKey] = $msgDescription;
 
     return json_encode($result);
   }

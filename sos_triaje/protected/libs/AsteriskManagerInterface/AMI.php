@@ -7,7 +7,7 @@ class AMI{
   private function __construct(){}
   private function __clone(){}
 
-  # Definir mensajes de respuesta
+  const IP_PATTERN = '/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/';
 
   /**
    * [isPeerConnected description]
@@ -16,8 +16,154 @@ class AMI{
    */
   public static function isPeerConnected($peer = ""){
 
-  }
+  	$peer_ok = false;
+  	$peer_ip_ok = false;
 
+  	# Connect to the manager 
+  	$fp = fsockopen(
+		  			ELASTIX_AMI_HOST
+		  			, ELASTIX_AMI_PORT
+		  			, $errno
+		  			, $errstr
+		  			, ELASTIX_AMI_TIMEOUT
+	  			);
+	
+	if (!$fp)
+	{
+	    echo "There was an error connecting to the manager: $errstr (Error Number: $errno)\n";
+	}
+	else
+	{
+	    echo "-- Connected to the Asterisk Manager\n";
+	    echo '<br>';
+	    echo "-- About to log in\n";
+	    echo '<br>';
+
+	    $login = "Action: login\r\n";
+	    $login .= "Username: " . ELASTIX_AMI_USER . "\r\n";
+	    $login .= "Secret: " . ELASTIX_AMI_PASSWORD . "\r\n";
+	    $login .= "Events: Off\r\n";
+	    $login .= "\r\n";
+	    fwrite($fp, $login);
+
+	    $manager_version = fgets($fp);
+	    echo $manager_version . '<br>'; # Asterisk Call Manager/1.1
+	    
+	    $cmd_response = fgets($fp);
+	    echo $cmd_response . '<br>'; # Response: Success
+
+	    $response = fgets($fp);
+	    echo $response . '<br>'; # Message: Authentication accepted
+
+	    $blank_line = fgets($fp);
+	    echo $blank_line . '<br>'; #
+
+	    if (substr($response,0,9) == "Message: ")
+	    {
+	        # We have got a response 
+	        $loginresponse = trim(substr($response, 9));
+	        
+	        if (!$loginresponse == "Authentication Accepted") 
+	        {
+	            echo "-- Unable to log in: $loginresponse\n";
+	            fclose($fp);
+	            //exit(0);
+	        } 
+	        else 
+	        {
+	            echo "-- Logged in Successfully\n";
+	            echo '<br>';
+	            
+	            $checkpeer = "Action: Command\r\n";
+	            $checkpeer .= "Command: $peer_type show peer $peer\r\n";
+	            /*
+	            $checkpeer .= "Command: core show channels\r\n";
+	            $checkpeer .= "Command: $peer_type show peer 0000\r\n"; # STATUS: Peer 0000 not found.
+	            $checkpeer .= "Command: $peer_type show peers\r\n";
+	            $checkpeer .= "\r\n";
+	            /**/
+	            fwrite($fp, $checkpeer);
+	            
+	            $line = trim(fgets($fp));
+	            $found_entry = false;
+
+	            echo "<br>#" . $line . '<br>';
+
+	            $index = 100;
+
+	            # -- CREAR CONTADOR PARA EVITAR LOOP INFINITO (> 70 #)
+	            while ($line != "--END COMMAND--" && $index > 0) 
+	            {
+	                if (substr($line, 0, 6) == "Status") 
+	                {
+	                    $status = trim(substr(strstr($line, ":"), 1));
+	                    $found_entry = true;
+	                
+	                    if (substr($status, 0, 2) == "OK")
+	                    {
+	                        $peer_ok = true;
+	                    }
+	                }
+
+	                if (substr($line, 0, 8) == "Addr->IP"){
+	                	$status = trim(substr(strstr($line, ":"),1));
+	                	
+	                	if (preg_match(self::IP_PATTERN, $status))
+	                    {
+	                        $peer_ip_ok = true;
+	                    }
+	                } 
+
+	                $line = trim(fgets($fp));
+	                echo "#" . $line . '<br>';
+
+	                $index--;
+	            }
+
+
+	            if ($found_entry == false)
+	            {   # PEER NOT FOUND (Caso que no ocurrirá en la app ya que los usuarios son tomados de la misma BD de asterisk)
+	                echo "-- We didn't get the response we were looking for - is the peer name correct?\n";
+	            } 
+	            else if ($peer_ok == true)
+	            {   # STATUS OK
+	                echo "-- Peer looks good at the moment: >$status<\n";
+	                # FALTA VERIFICAR SI SE ENCUENTRA DISPONIBLE, que no se encuentre llamando...
+	                // Ejecutar el comando 'core show channels' y verificar si el peer está o no en la lista. 
+	            }
+	            else
+	            {   # SE RECIBIO UNA RESPUESTA DISTINTA A UN "OK", PEER NO CONECTADO
+
+	                # We received a response other than ok - you can really do whatever 
+	                # you want here - in this example I'm going to use the originate    
+	                # command to call me and play me the tt-monkeys sound - if I hear   
+	                # this then I know there is an issue :)                             
+	                echo "-- Peer not ok ($status) - running some code\n";
+
+	                /*
+	                $originate = "Action: originate\r\n";
+	                $originate .= "Channel: SIP/6002\r\n";
+	                $originate .= "Application: Playback\r\n";
+	                $originate .= "Data: tt-monkeys\r\n";
+	                $originate .= "\r\n";
+	                /**/
+	                fwrite($fp, $originate);
+	            
+	            }
+	            fclose($fp);
+	            //exit(0);
+	        }
+	    } 
+	    else 
+	    {
+	        echo "Unexpected response: $response\n";
+	        fclose($fp);
+	        //exit(0);
+	    }
+	}
+	exit("AMI::isPeerConnected() -> $peer_ok: " . $peer_ok  . " and $peer_ip_ok: " . $peer_ip_ok);
+	return $peer_ok && $peer_ip_ok;
+  }
 }
 
 /* 

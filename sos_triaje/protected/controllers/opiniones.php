@@ -11,7 +11,7 @@ class opiniones{
   	 * Invoca al modelo para crear una opinión a un caso.
   	 * @param  array $form Arreglo con los valores de la nueva opinión.
   	 * @return JSON 		JSON indicando si la inserción de la opinión fue un éxito o no. 
-  	 * @throws Exception If Ocurre alguna excepción en el proceso de la obtención de la data.
+  	 * @throws Exception If Ocurre alguna excepción en el proceso de la creación de la data.
   	 */
   	public static function create($form){
   		try {
@@ -30,7 +30,7 @@ class opiniones{
 					);
 
 			# Retorna el resultado de la consulta con información extra en formato JSON.
-			return json_response::generate($metadata, DB_INSERT_SUCESS_MSG);
+			return json_response::generate($metadata, DB_INSERT_SUCESS_MSG, $DBH_SOS->getLastInsertId());
 		} catch (Exception $e) {
             return $e->getMessage();
 		}
@@ -66,14 +66,19 @@ class opiniones{
 		}
 	}
 
-/*
+	/**
+  	 * Invoca al modelo para modificar una opinión a un caso.
+  	 * @param  array $form Arreglo con los nuevos valores de la opinión.
+  	 * @return JSON 		JSON indicando si la actualización de la opinión fue un éxito o no. 
+  	 * @throws Exception If Ocurre alguna excepción en el proceso de la modificación de la data.
+  	 */
 	public static function update($form){
 		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
 
-			$result = $DBH_SOS->getOpiniones($caso_id, $opinion_id);
-
+			$result = $DBH_SOS->updateOpinion($form);
+		
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
 				new json_response_metadata(
@@ -84,20 +89,20 @@ class opiniones{
 					);
 
 			# Retorna el resultado de la consulta con información extra en formato JSON.
-			return json_response::generate($metadata, $result);
+			return json_response::generate($metadata, $result->rowCount() . DB_UPDATE_SUCESS_MSG);
 		} catch (Exception $e) {
             return $e->getMessage();
 		}
 	}
-	/**/
 
 	/**
 	 * Invoca al modelo para eliminar una opinión asociada a un caso.
-	 * @param  [type] $caso_id    [description]
-	 * @param  [type] $opinion_id [description]
-	 * @return JSON 		JSON que contiene las opiniones. 
+	 * @param string $caso_id 		ID del caso.
+	 * @param string $opinion_id	ID de la opinion a eliminar.
+	 * @return JSON 				JSON indicando si la eliminación de la opinión fue un éxito o no. 
+	 * @throws Exception If Ocurre alguna excepción en el proceso de la eliminación de la data.
 	 */
-	public static function delete($caso_id, $opinion_id){
+	public static function delete($caso_id = "", $opinion_id = ""){
 		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();

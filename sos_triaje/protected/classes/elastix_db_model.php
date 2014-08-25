@@ -42,6 +42,14 @@ class elastix_db_model{
     }
 
     /**
+     * Obtiene el último id insertado.
+     * @return string   id del último registro insertado.
+     */
+    public function getLastInsertId(){
+        return $this->DBH->lastInsertId();
+    }
+
+    /**
      * Esta función se encarga de ejecutar query's con los parametros obtenidos.
      * @param string $query  String con el query que se desea ejecutar, las variables deben comenzar con dos puntos (:).
      * @param array  $params Arreglo con los valores de las variables a colocar con el query, deben comenzar con dos puntos (:). Puede ser NULL si el query no posee parametros.

@@ -54,6 +54,6 @@ class archivos{
 		} catch (Exception $e) {
             return $e->getMessage();
 		}
-	}
+	}	
 }
 ?>

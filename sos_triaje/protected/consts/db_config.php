@@ -28,7 +28,7 @@ define('ELASTIX_AMI_PEER_TYPE', 'sip'               ); # The type of peer (i.e. 
   # PDO::ERRMODE_SILENT (Deafult): The other two methods are more ideal for DRY programming. If you leave it in this mode, you'll have to check for errors in the way you're probably used to if you used the mysql or mysqli extensions.
   # PDO::ERRMODE_WARNING: It's useful for debugging. This mode will issue a standard PHP warning, and allow the program to continue execution.
   # PDO::ERRMODE_EXCEPTION: This is the mode you should want in most situations. It fires an exception, allowing you to handle errors gracefully and hide data that might help someone exploit your system.
-define('GLOBAL_PDO_ERROR_MODE', PDO::ERRMODE_EXCEPTION );
+define('GLOBAL_PDO_ERROR_MODE', PDO::ERRMODE_EXCEPTION);
 
 # Definición global de la forma como se obtiene la data: 
   # PDO::FETCH_ASSOC: returns an array indexed by column name.

@@ -50,8 +50,48 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 #endregion
 
 #region Métodos con auntenticación
-	
+
 	#region CREATES
+		/**
+		 * Crea un caso.
+		 * method - POST
+		 * url - /casos
+		 */
+		$app->post('/casos', 'API::authenticate', function() use($app){
+
+			# check for required params
+	        API::verifyRequiredParams(
+	        	array(
+	        		'version'
+	        		, 'descripcion'
+	        		//, 'paciente_id'
+	        		//, 'status_id'
+	        	));
+
+			$form = array();
+
+			$form[':version'] = $app->request()->post('version');
+			$form[':centro_id'] = $app->request()->post('centro_id');
+			$form[':descripcion'] = $app->request()->post('descripcion');
+			$form[':fecha_solucion'] = $app->request()->post('fecha_solucion');
+			$form[':id_casosos'] = $app->request()->post('id_casosos');
+			$form[':paciente_id'] = $app->request()->post('paciente_id');
+			$form[':status_id'] = $app->request()->post('status_id');
+
+			# Si no se envía el ID de un paciente se asigna el caso a un paciente generico.
+			if(empty($form[':paciente_id']))
+				$form[':paciente_id'] = 0;
+
+			# Si no se envía el ID del status se asigna el ID del status "En espera" (ID = 1)
+			if(empty($form[':status_id']))
+				$form[':status_id'] = 1;
+
+			$especialidad_id = $app->request()->post('especialidad_id');
+
+			require_once  DIR_CONTROLLERS . '/casos.php';
+			echo casos::create($form, $especialidad_id);
+		});
+
 		/**
 		 * Crea una opinion a un caso especifico.
 		 * method - POST
@@ -69,16 +109,40 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 
 			global $user_id;
 			
-			$form[':version'] = $app->request()->post('version');
 			$form[':caso_id'] = $caso_id;
-			$form[':cuerpo_opinion'] = $app->request()->post('cuerpo_opinion');
 			$form[':medico_id'] = $user_id;
+
+			$form[':version'] = $app->request()->post('version');
+			$form[':cuerpo_opinion'] = $app->request()->post('cuerpo_opinion');
 			$form[':nombre_opinion'] = $app->request()->post('nombre_opinion');
 			$form[':estado_opinion'] = $app->request()->post('estado_opinion');
 
 			require_once  DIR_CONTROLLERS . '/opiniones.php';
 			echo opiniones::create($form);
 	    });
+
+		/**
+		 * Crea un paciente.
+		 * method - POST
+		 * url - /pacientes
+		 */
+		/*
+	    $app->post('/pacientes', 'API::authenticate', function() use ($app){
+
+	    	# check for required params
+	        API::verifyRequiredParams(
+	        	array(
+	        		'fecha_nacimiento'
+	        		//, 'id'
+	        	));
+
+	        $form[':fecha_nacimiento'] = $app->request()->post('fecha_nacimiento');
+	        //$form[':id'] = $app->request()->post('id');
+
+	    	require_once  DIR_CONTROLLERS . '/pacientes.php';
+			echo pacientes::create($form);
+	    });
+	    /**/
     #endregion
 
 	#region READS
@@ -183,6 +247,26 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	    });
 
 	    /**
+	     * Retorna información de un paciente.
+	     * method - GET
+	     * url - /pacientes/:paciente_id  
+	     */
+	    $app->get('/pacientes', 'API::authenticate', function(){
+	    	require_once  DIR_CONTROLLERS . '/pacientes.php';
+			echo pacientes::read();
+	    });
+
+	    /**
+	     * Retorna información de un paciente.
+	     * method - GET
+	     * url - /pacientes/:paciente_id  
+	     */
+	    $app->get('/pacientes/:paciente_id', 'API::authenticate', function($paciente_id){
+	    	require_once  DIR_CONTROLLERS . '/pacientes.php';
+			echo pacientes::read($paciente_id);
+	    });
+
+	    /**
 	     * Retorna una lista de usuarios que estan disponibles para ser llamados.
 	     * method - GET
 	     * url - /peers_available
@@ -194,10 +278,56 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
     #endregion
 
     #region UPDATES
+    	/**
+    	 * Modifica una opinión asociada a un caso.
+    	 * method - PUT
+    	 * url - /casos/:casoId/opiniones/:opinionesId
+    	 */
+	    $app->put('/casos/:casoId/opiniones/:opinionesId', 'API::authenticate', function($caso_id, $opinion_id) use($app){
 
+			global $user_id;
+
+			$form[':id'] = $opinion_id;
+			$form[':caso_id'] = $caso_id;
+			$form[':medico_id'] = $user_id;
+				
+			$aux = $app->request()->post('version');
+			if(isset($aux))
+				$form[':version'] = $aux;
+
+			$aux = $app->request()->post('cuerpo_opinion');
+			if(isset($aux))
+				$form[':cuerpo_opinion'] = $aux;
+
+			$aux = $app->request()->post('nombre_opinion');
+			if(isset($aux))
+				$form[':nombre_opinion'] = $aux;
+			
+			$aux = $app->request()->post('estado_opinion');
+			if(isset($aux))
+				$form[':estado_opinion'] = $aux;
+
+			require_once  DIR_CONTROLLERS . '/opiniones.php';
+			echo opiniones::update($form);
+	    });
     #endregion
 
     #region DELETES:
+    	/**
+    	 * Elimina un caso.
+    	 * method - DELETE
+    	 * url - /casos/:casoId
+    	 */
+    	$app->delete('/casos/:casoId', 'API::authenticate', function($caso_id){
+    		require_once  DIR_CONTROLLERS . '/casos.php';
+			echo casos::delete($caso_id);
+    	});
+
+	    /**
+		 * Elimina una opinión asociada a un caso.
+		 * method - DELETE
+		 * url - /casos/:casoId/opiniones/:opinionesId
+		 */
 	    $app->delete('/casos/:casoId/opiniones/:opinionesId', 'API::authenticate', function($caso_id, $opinion_id){
 	    	require_once  DIR_CONTROLLERS . '/opiniones.php';
 			echo opiniones::delete($caso_id, $opinion_id);

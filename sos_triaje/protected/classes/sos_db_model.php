@@ -42,6 +42,14 @@ class sos_db_model{
     }
 
     /**
+     * Obtiene el último id insertado.
+     * @return string   id del último registro insertado.
+     */
+    public function getLastInsertId(){
+        return $this->DBH->lastInsertId();
+    }
+
+    /**
      * Esta función se encarga de ejecutar query's con los parametros obtenidos.
      * @param string $query  String con el query que se desea ejecutar, las variables deben comenzar con dos puntos (:).
      * @param array  $params Arreglo con los valores de las variables a colocar con el query, deben comenzar con dos puntos (:). Puede ser NULL si el query no posee parametros.
@@ -143,7 +151,78 @@ class sos_db_model{
         return $result->rowCount() > 0;
     }
 
+    #region SETS
+        /**
+         * Establece la asociación entre un caso y una especialidad.
+         * @param  string $caso_id ID de un caso (Default="")
+         * @param string $especialidad_id ID de una especialidad (Default="")
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         */
+        public function setCasoEspecialidad($caso_id = "", $especialidad_id = ""){
+
+            $params = array(
+                              ':caso_id' => $caso_id
+                            , ':especialidad_id' => $especialidad_id
+                            );
+
+            $query  = 
+            'INSERT INTO `caso_especialidad`
+            (
+                caso_especialidades_id
+                , especialidad_id
+            )
+            VALUES
+            (
+                :caso_id
+                , :especialidad_id
+            )';
+
+            return $this->execute($query, $params);
+        }
+    #endregion
+
     #region CREATE
+        /**
+         * Crea un caso. Se espera en el arreglo los siguientes indices: 
+         * :version
+         * :centro_id
+         * :descripcion
+         * :fecha_solucion
+         * :id_casosos
+         * :paciente_id
+         * :status_id
+         * @param  array $form Arreglo con los campos requeridos para crear un caso.
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         */
+        public function createCaso($form){
+            
+            $query  = 
+            'INSERT INTO `caso`
+            (
+                version
+                , centro_id
+                , descripcion
+                , fecha_inicio
+                , fecha_solucion
+                , id_casosos
+                , paciente_id
+                , status_id
+            )
+            VALUES
+            (
+                :version
+                , :centro_id
+                , :descripcion
+                , CURRENT_TIMESTAMP
+                , :fecha_solucion
+                , :id_casosos
+                , :paciente_id
+                , :status_id
+            )';
+
+            return $this->execute($query, $form);
+        }
+
         /**
          * Crea una opinion a un caso especifico. Se espera en el arreglo los siguientes indices: 
          * :version
@@ -152,32 +231,53 @@ class sos_db_model{
          * :medico_id
          * :nombre_opinion
          * :estado_opinion
-         * @param  array $form Arreglo con los campos requeridos para insertar una opinión.
+         * @param  array $form Arreglo con los campos requeridos para crear una opinión.
          * @return PDO  Objeto PDO resultante de la ejecución del query.
          */
         public function createOpinion($form){
 
-            $query  = 'INSERT INTO opinion';
-            $query .= 
-                    '(
-                        version
-                        , caso_id
-                        , cuerpo_opinion
-                        , fecha_opinion
-                        , medico_id
-                        , nombre_opinion
-                        , estado_opinion
-                    )
-                    VALUES
-                    (
-                        :version
-                        , :caso_id
-                        , :cuerpo_opinion
-                        , CURRENT_TIMESTAMP
-                        , :medico_id
-                        , :nombre_opinion
-                        , :estado_opinion
-                    )';
+            $query  = 
+            'INSERT INTO opinion
+            (
+                version
+                , caso_id
+                , cuerpo_opinion
+                , fecha_opinion
+                , medico_id
+                , nombre_opinion
+                , estado_opinion
+            )
+            VALUES
+            (
+                :version
+                , :caso_id
+                , :cuerpo_opinion
+                , CURRENT_TIMESTAMP
+                , :medico_id
+                , :nombre_opinion
+                , :estado_opinion
+            )';
+
+            return $this->execute($query, $form);
+        }
+
+        /**
+         * Crea un paciente. Se espera en el arreglo los siguientes indices: 
+         * :fecha_naciemiento
+         * @param  array $form Arreglo con los campos requeridos para crear una persona.
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         */
+        public function createPaciente($form){
+
+            $query = 
+            'INSERT INTO paciente
+            (
+                fecha_nacimiento
+            )
+            VALUES
+            (
+                :fecha_nacimiento
+            )';
 
             return $this->execute($query, $form);
         }
@@ -264,8 +364,7 @@ class sos_db_model{
                                         DB_SELECT_NO_RESULT_MSG,
                                         200,
                                         $result->queryString,
-                                        JR_SUCCESS,
-                                        $result->rowCount()
+                                        JR_SUCCESS
                                     );
 
             return $result;
@@ -284,7 +383,7 @@ class sos_db_model{
                         FROM centrosos';
 
             if(!empty($centro_id))
-                $query .= ' WHERE centrosos.id = :centro_id';
+                $query .= ' WHERE id = :centro_id';
 
             $result = $this->execute($query, $params);
 
@@ -294,8 +393,7 @@ class sos_db_model{
                                         DB_SELECT_NO_RESULT_MSG,
                                         200,
                                         $result->queryString,
-                                        JR_SUCCESS,
-                                        $result->rowCount()
+                                        JR_SUCCESS
                                     );
 
             return $result;
@@ -337,6 +435,7 @@ class sos_db_model{
                 # Condiciones para el filtro
                 if ( isset($_GET['own']) || isset($_GET['especialidad']) || isset($_GET['status']) || isset($_GET['centro'])) {
 
+                    # JOIN para filtrar los casos que tenga un historial con la persona logueada.
                     if (!empty($_GET['own']) && $_GET['own'] == true){
                         $query .= ' INNER JOIN historial_caso h_c ON c.id = h_c.caso_id
                                     INNER JOIN medico m ON h_c.medico_id = m.id';
@@ -344,22 +443,26 @@ class sos_db_model{
 
                     $query .= ' WHERE 1 = 1';
 
+                    # Filtra los casos que tenga un historial con la persona logueada.
                     if (!empty($_GET['own']) && $_GET['own'] == true){
                         global $user_id;
                         $params[':own'] = $user_id;
                         $query .= ' AND m.id = :own'; 
                     }
 
+                    # Filtra los casos que pertenezcan a una especialidad.
                     if (!empty($_GET['especialidad'])){
                         $params[':especialidad'] = $_GET['especialidad'];
                         $query .= ' AND e.id = :especialidad';
                     }
 
+                    # Filtra los casos por estatus.
                     if (!empty($_GET['status'])){   
                         $params[':status'] = $_GET['status'];
                         $query .= ' AND s.id = :status';
                     }
 
+                    # Filtra los casos que pertenezcan a un centro sos en específico.
                     if (!empty($_GET['centro'])){   
                         $params[':centro'] = $_GET['centro'];
                         $query .= ' AND centro.id = :centro'; 
@@ -377,8 +480,7 @@ class sos_db_model{
                                         DB_SELECT_NO_RESULT_MSG,
                                         200,
                                         $result->queryString,
-                                        JR_SUCCESS,
-                                        $result->rowCount()
+                                        JR_SUCCESS
                                     );
 
             return $result;
@@ -410,8 +512,7 @@ class sos_db_model{
                                         DB_SELECT_NO_RESULT_MSG,
                                         200,
                                         $result->queryString,
-                                        JR_SUCCESS,
-                                        $result->rowCount()
+                                        JR_SUCCESS
                                     );
 
             return $result;
@@ -449,8 +550,7 @@ class sos_db_model{
                                         DB_SELECT_NO_RESULT_MSG,
                                         200,
                                         $result->queryString,
-                                        JR_SUCCESS,
-                                        $result->rowCount()
+                                        JR_SUCCESS
                                     );
 
             return $result;
@@ -488,8 +588,36 @@ class sos_db_model{
                                         DB_SELECT_NO_RESULT_MSG,
                                         200,
                                         $result->queryString,
-                                        JR_SUCCESS,
-                                        $result->rowCount()
+                                        JR_SUCCESS
+                                    );
+
+            return $result;
+        }
+
+        /**
+         * Retorna el conjunto de pacientes que existen en el sistema.
+         * @param  string $paciente_id si esta definido un paciente_id retornara la informacion de ese paciente unicamente, de lo contrario listara todos los pacientes (Default="")
+         * @return PDO            Objeto PDO con la lista de pacientes del sistema.
+         */
+        public function getPacientes($paciente_id = ""){
+
+            $params = array(':paciente_id' => $paciente_id);
+
+            $query = 'SELECT *
+                        FROM paciente';
+
+            if(!empty($paciente_id))
+                $query .= ' WHERE id = :paciente_id';
+
+            $result = $this->execute($query, $params);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_SELECT_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS
                                     );
 
             return $result;
@@ -497,10 +625,103 @@ class sos_db_model{
     #endregion
     
     #region UPDATE
-        
+        /**
+         * Modifica una opinión asociada a un caso. Se espera en el arreglo los siguientes indices: 
+         * :id
+         * :caso_id
+         * :medico_id
+         * :version (opcional)
+         * :cuerpo_opinion (opcional)
+         * :nombre_opinion (opcional)
+         * :estado_opinion (opcional)
+         * Nota: Debe enviarse al menos un parámetro de los opcionales.
+         * @param  array $form Arreglo con los valores a modificar
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         * @throws PDOException If La consulta arroja 0 resultados o si no recibe ningun parametro.
+         */
+        public function updateOpinion($form){
+
+            # Validar que exista al menos una columna a modificar.
+            if (
+                !isset($form[':version']) && 
+                !isset($form[':cuerpo_opinion']) &&
+                !isset($form[':estado_opinion']) &&
+                !isset($form[':nombre_opinion'])
+            )
+                API::throwPDOException("Faltan los campos ya sea 'version', 'cuerpo_opinion', 'estado_opinion', 'nombre_opinion' para modificar dicha opinión.");
+
+            $query =
+            'UPDATE 
+                opinion
+            SET
+                id = :id';
+
+            if(isset($form[':version']))
+                $query .= ', version = :version';
+
+            if(isset($form[':cuerpo_opinion']))
+                $query .= ', cuerpo_opinion = :cuerpo_opinion';
+
+            if(isset($form[':estado_opinion']))
+                $query .= ', estado_opinion = :estado_opinion';
+
+            if(isset($form[':nombre_opinion']))
+                $query .= ', nombre_opinion = :nombre_opinion';
+
+            $query .= 
+            ' WHERE
+                id = :id
+                AND caso_id = :caso_id
+                AND medico_id = :medico_id
+            ';
+
+            $result = $this->execute($query, $form);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_UPDATE_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS
+                                    );
+
+            return $result;
+        }
     #endregion
     
     #region DELETE
+        /**
+         * Elimina un caso.
+         * @param  string $caso_id ID de un caso (Default="")
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         * @throws PDOException If La consulta arroja 0 resultados o, si $caso_id esta vacío.
+         */
+        public function deleteCaso($caso_id = ""){
+
+            if (empty($caso_id))
+                API::throwPDOException("Falta el ID del caso.");
+            
+            $params = array(':caso_id' => $caso_id);
+
+            $query = 'DELETE
+                        FROM caso
+                            WHERE id = :caso_id';
+
+            $result = $this->execute($query, $params);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_DELETE_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS
+                                    );
+
+            return $result;
+        }
+
         /**
          * Elimina una opinión asociada a un caso.
          * @param  string $caso_id ID de un caso (Default="")
@@ -530,8 +751,7 @@ class sos_db_model{
                                         DB_DELETE_NO_RESULT_MSG,
                                         200,
                                         $result->queryString,
-                                        JR_SUCCESS,
-                                        $result->rowCount()
+                                        JR_SUCCESS
                                     );
 
             return $result;
