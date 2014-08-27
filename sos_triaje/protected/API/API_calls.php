@@ -271,7 +271,8 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	     * method - GET
 	     * url - /peers_available
 	     */
-	    $app->get('/peers_available', 'API::authenticate', function(){
+	    //$app->get('/peers_available', 'API::authenticate', function(){
+	    $app->get('/peers_available', function(){
 			require_once  DIR_CONTROLLERS . '/peers_available.php';
 			echo peers_available::read();
 	    });

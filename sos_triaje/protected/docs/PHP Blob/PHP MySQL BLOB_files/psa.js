@@ -1,0 +1,23 @@
+var hrefUrl = new Array;
+hrefUrl[0] = new Array;
+hrefUrl[0][0] = "adc_autism";
+hrefUrl[0][1] = "http://www.autismspeaks.org/whatisit/learnsigns.php";
+hrefUrl[1] = new Array;
+hrefUrl[1][0] = "discoveringnature";
+hrefUrl[1][1] = "http://discovertheforest.org";
+hrefUrl[2] = new Array;
+hrefUrl[2][0] = "feedingamerica";
+hrefUrl[2][1] = "http://feedingamerica.org";
+hrefUrl[3] = new Array;
+hrefUrl[3][0] = "letsmove";
+hrefUrl[3][1] = "http://letsmove.gov";
+hrefUrl[4] = new Array;
+hrefUrl[4][0] = "shelterpetproject";
+hrefUrl[4][1] = "http://theshelterpetproject.org";
+hrefUrl[5] = new Array;
+hrefUrl[5][0] = "smokeybear";
+hrefUrl[5][1] = "http://smokeybear.com";
+arrLen = hrefUrl.length;
+psaRand = Math.floor(Math.random() * arrLen);
+pImgUrl = "<img src='http://ad-cdn.technoratimedia.com/psa/creatives/" + hrefUrl[psaRand][0] + "_" + adWidth + "x" + adHeight + ".gif' width='" + adWidth + "' height='" + adHeight + "' border='0'>";
+document.write("<a href='" + hrefUrl[psaRand][1] + "' target='_blank'>" + pImgUrl + "</a>")

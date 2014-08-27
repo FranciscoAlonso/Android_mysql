@@ -14,8 +14,16 @@ class peers_available{
 	 */
 	public static function read(){
 		try {
-			exit("peers_available::read();");
 
+			require_once DIR_LIBS . '/AsteriskManagerInterface/AMI.php';
+
+			AMI::isPeerConnected();
+
+			# Instanciar
+			# 
+			# Ejecutar
+
+			exit("peers_available::read();");
 			# - Se utilizará la interfaz AMI para obtener el estado de los peers.
 			# - Ampliar el json_response::generate() para que maneje arreglos (para la data).
 

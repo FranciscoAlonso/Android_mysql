@@ -1,0 +1,79 @@
+-- Connected to the Asterisk Manager 
+-- About to log in 
+Asterisk Call Manager/1.1 
+Response: Success 
+Message: Authentication accepted 
+
+-- Logged in Successfully 
+
+#Response: Follows
+#Privilege: Command
+#
+#
+#* Name : 6001
+#Secret : 
+#MD5Secret : 
+#Remote Secret: 
+#Context : from-internal
+#Subscr.Cont. : 
+#Language :
+#AMA flags : Unknown
+#Transfer mode: open
+#CallingPres : Presentation Allowed, Not Screened
+#Callgroup :
+#Pickupgroup :
+#MOH Suggest :
+#Mailbox : 6001@device
+#VM Extension : *97
+#LastMsgsSent : 32767/65535
+#Call limit : 2147483647
+#Max forwards : 0
+#Dynamic : Yes
+#Callerid : "device" <6001>
+#MaxCallBR : 384 kbps
+#Expire : -1
+#Insecure : no
+#Force rport : Yes
+#ACL : Yes
+#DirectMedACL : No
+#T.38 support : No
+#T.38 EC mode : Unknown
+#T.38 MaxDtgrm: -1
+#DirectMedia : Yes
+#PromiscRedir : No
+#User=Phone : No
+#Video Support: Yes
+#Text Support : No
+#Ign SDP ver : No
+#Trust RPID : No
+#Send RPID : No
+#Subscriptions: Yes
+#Overlap dial : Yes
+#DTMFmode : rfc2833
+#Timer T1 : 500
+#Timer B : 32000
+#ToHost :
+#Addr->IP : (null)
+******************************************** IP VALID: 192.168.1.255 - #Defaddr->IP : (null)
+#Prim.Transp. : UDP
+#Allowed.Trsp : UDP
+#Def. Username:
+#SIP Options : (none)
+#Codecs : 0x3c000e (gsm|ulaw|alaw|h261|h263|h263p|h264)
+#Codec Order : (ulaw:20,alaw:20,gsm:20)
+#Auto-Framing : No
+#Status : UNKNOWN
+############################################ ERROR: PEER UNKNOWN - #Useragent :
+#Reg. Contact :
+#Qualify Freq : 60000 ms
+#Sess-Timers : Accept
+#Sess-Refresh : uas
+#Sess-Expires : 1800 secs
+#Min-Sess : 90 secs
+#RTP Engine : asterisk
+#Parkinglot :
+#Use Reason : No
+#Encryption : No
+#
+#--END COMMAND--
+-- Peer not ok (UNKNOWN) - running some code

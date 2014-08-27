@@ -12,7 +12,7 @@ ALTER TABLE actor_sistema ADD user_extension VARCHAR(255);
 ALTER TABLE archivo ADD mime_type VARCHAR(255) default 'image/jpg';
 
 -- -- 
--- Se agrega un paciente genericoa la tabla "paciente".
+-- Se agrega un paciente generico a la tabla "paciente".
 -- --
 INSERT INTO `sos_triaje`.`paciente` (`id` ,`fecha_nacimiento`)
 VALUES ('0', '0000-00-00 00:00:00');

@@ -1,0 +1,9 @@
+OX_245701349({
+  "ads":{
+    "medium":"w",
+    "record_tmpl":"http://ox-d.technoratimedia.servedbyopenx.com/{medium}/1.0/{rtype}?ts={txn_state}",
+    "pixels":"http://us-u.openx.net/w/1.0/pd?plm=5&ph=685aabc1-fec6-421b-8769-347816b21f53",
+    "adunits" : [
+    ]
+  }
+});
