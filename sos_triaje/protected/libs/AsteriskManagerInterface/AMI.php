@@ -1,11 +1,18 @@
 <?php
 /**
- * Clase estática 
+ * Clase 
  */
 class AMI{
 
-	private function __construct(){}
-	private function __clone(){}
+	private $fp;
+
+	public function __construct(){
+		echo ("************************ SE HA CREADO LA CLASE AMI ************************<br>");
+	}
+	
+	public function __destruct(){
+		echo ("<br>************************ SE HA DESTRUIDO LA CLASE AMI ************************");
+	}
 
 	const IP_PATTERN = '/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/';
 

@@ -17,11 +17,11 @@ class peers_available{
 
 			require_once DIR_LIBS . '/AsteriskManagerInterface/AMI.php';
 
-			AMI::isPeerConnected();
+			$ami = new AMI();
 
-			# Instanciar
-			# 
-			# Ejecutar
+			//exit();
+
+			AMI::isPeerConnected();
 
 			exit("peers_available::read();");
 			# - Se utilizará la interfaz AMI para obtener el estado de los peers.
