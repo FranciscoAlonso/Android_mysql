@@ -16,12 +16,21 @@ class peers_available{
 		try {
 
 			require_once DIR_LIBS . '/AsteriskManagerInterface/AMI.php';
+			/*
+			$str = "TRUE";
+			for ($i=0; $str != "FALSE" && $i < 100 ; $i++) { 
+			echo $i . ')<br>';
+				if($i == 24)
+					$str = "FALSE";
 
+			}
+			exit("STR: " . $str);
+			/**/
 			$ami = new AMI();
 
 			//exit();
 
-			AMI::isPeerConnected();
+			//AMI::isPeerConnected();
 
 			exit("peers_available::read();");
 			# - Se utilizará la interfaz AMI para obtener el estado de los peers.
