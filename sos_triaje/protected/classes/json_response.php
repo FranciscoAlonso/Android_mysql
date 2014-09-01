@@ -15,7 +15,7 @@ define('DATA_KEY'     ,'data'    );
  * Clase que define la estructura de la metadata.
  */
 class json_response_metadata{
-  
+
   private $errorCode;
   private $errorMessage;
   private $rowsAffected;
@@ -99,24 +99,27 @@ class json_response{
 
     $result = $metadata->getMetaData();
 
+    $result[DATA_KEY] = array();
+
     if(!empty($lastInsertId))
       $result[DATA_KEY][self::lastInsertIdKey] = $lastInsertId;
 
-    if(is_string($data)){
+    # Se procede a insertar la data.
+    if(is_string($data))
+    {
       $result[DATA_KEY][self::msgDescriptionKey] = $data;
-    }else{
+    }
+    else if(is_array($data))
+    {
+      foreach ($data as $row) {
+        array_push($result[DATA_KEY], $row);
+      }
+    }
+    else
+    {
       # Se extrae los datos del objeto PDO
-      $index = 0;
       while( $row = $data->fetch() ) {
-        /*echo $row['id'] . " - ";
-        echo $row['descripcion'] . " - ";
-        echo $row['nombre'] . "<br>";/**/
-        #print_r($row); echo '<br>';
-        foreach( $row as $key => $value ) {
-          //echo $key.' - '.$value.'<br />';
-          $result[DATA_KEY][$index][$key] = $value;
-        }
-        $index++;
+        array_push($result[DATA_KEY], $row);
       }
     }
 

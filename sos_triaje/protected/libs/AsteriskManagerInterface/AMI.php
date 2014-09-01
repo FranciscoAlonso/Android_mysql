@@ -22,18 +22,23 @@ class AMI{
 
 		require_once DIR_CONSTANTS . '/db_config.php';
 
-		# Connect to the manager
-		$this->fp = fsockopen(
-						ELASTIX_AMI_HOST
-						, ELASTIX_AMI_PORT
-						, $errno
-						, $errstr
-						, ELASTIX_AMI_TIMEOUT
-					);
+		try {	
+			# Connect to the manager
+			$this->fp = fsockopen(
+							ELASTIX_AMI_HOST
+							, ELASTIX_AMI_PORT
+							, $errno
+							, $errstr
+							, ELASTIX_AMI_TIMEOUT
+						);
+		} catch (Exception $e) {
+			# Se crea el mensaje de error para informar a la app/usuario de lo ocurrido.
+			API::throwPDOException($e);
+		}
 
 		if (!$this->fp)
 		{
-			//echo "There was an error connecting to the manager: $errstr (Error Number: $errno)\n";
+			//echo "There was an error connecting to the manager: " . $errstr . " (Error Number: " . $errno . ")\n";
 		}
 		else
 		{
@@ -70,7 +75,7 @@ class AMI{
 
 				if (!$loginresponse == "Authentication Accepted")
 				{
-					echo "-- Unable to log in: " . $loginresponse . "\n";
+					//echo "-- Unable to log in: " . $loginresponse . "\n";
 					fclose($this->fp);
 				}
 				else
@@ -81,7 +86,7 @@ class AMI{
 			}
 			else
 			{
-				//echo "Unexpected response: " . $this->connection_msg . "\n";
+				//echo "-- Unexpected response: " . $this->connection_msg . "\n";
 				fclose($this->fp);
 			}
 		}
@@ -90,7 +95,8 @@ class AMI{
 	}
 
 	public function __destruct(){
-		fclose($this->fp);
+		if(!is_null($this->fp))
+			fclose($this->fp);
 		//echo ("<br>************************ SE HA DESTRUIDO LA CLASE AMI ************************");
 	}
 
@@ -100,27 +106,56 @@ class AMI{
 	}
 	/**/
 
-	public static function isPeerConnected($peer_name = ""){
+	/**
+	 * Validar si el File Pointer es diferente de NULL.
+	 * @throws PDOException If $this->fp es NULL.
+	 */
+	private function validateConnection(){
+		if(is_null($this->fp))
+		    API::throwPDOException("La conexión al Asterisk Manager Interface se encuentra cerrada.");
+	}
 
-		echo "-- Logged in Successfully\n";
-		echo '<br>';
+	public function isPeerAvailable($peer_name = ""){
+
+		$this->validateConnection();
+
+		$found_entry = false;
+		
+		//echo "-- Logged in Successfully\n";
+		//echo '<br>';
 
 		$command = "Action: Command\r\n";
 		$command .= "Command: " . ELASTIX_AMI_PEER_TYPE . " show peer " . $peer_name . "\r\n";
 		$command .= "\r\n";
-
 		fwrite($fp, $command);
 
 		$line = trim(fgets($fp));
 
-		$found_entry = false;
 		echo "<br>#" . $line . '<br>';
 
 		$index = 100; # Contador para evitar posible loop infinito.
 
 		while ($line != "--END COMMAND--" && $index > 0)
 		{
-			if (substr($line, 0, 6) == 'Status')
+			if(substr($line, 0, 8) == 'Addr->IP')
+			{
+				$ip_addr = trim(substr(strstr($line, ":"), 1));
+				//exit ("EXIT: IP ADRESS: >>>" . $ip_addr . "<<<");
+				//$ip_addr = "192.168.1.255";
+				$found_entry = true;
+
+				if (preg_match(self::IP_PATTERN, $ip_addr))
+				{
+					$peer_ip_ok = true;
+					echo("******************************************** IP VALID: " . $ip_addr . " - ");
+				}
+				else
+				{
+					$peer_ip_ok = false;
+					echo("############################################ ERROR: IP NOT VALID: " . $ip_addr . " - ");
+				}							
+			}
+			else if (substr($line, 0, 6) == 'Status')
 			{
 				$status = trim(substr(strstr($line, ":"), 1));
 				$found_entry = true;
@@ -137,38 +172,20 @@ class AMI{
 				}
 			}
 
-			if(substr($line, 0, 8) == 'Addr->IP')
-			{
-				$ip_addr = trim(substr(strstr($line, ":"), 1));
-				$ip_addr = "192.168.1.255";
-
-				$found_entry = true;
-
-				if (preg_match(self::IP_PATTERN, $ip_addr))
-				{
-					//$peer_ip_ok = true;
-					echo("******************************************** IP VALID: " . $ip_addr . " - ");
-				}
-				else
-				{
-					//$peer_ip_ok = false;
-					echo("############################################ ERROR: IP NOT VALID: " . $ip_addr . " - ");
-				}							
-			}
-
 			$line = trim(fgets($fp));
 			echo "#" . $line . '<br>';
 			
 			$index--;
 		}
 
+		///*
 		if ($found_entry == false)
 		{	# PEER NOT FOUND (Caso que no ocurrirá en la app ya que los usuarios son tomados de la misma BD de asterisk)
 			echo "-- We didn't get the response we were looking for - is the peer name correct?\n";
 		}
 		else if ($peer_ok == true)
 		{	# STATUS OK
-			echo "-- Peer looks good at the moment: >$status<\n";
+			echo "-- Peer looks good at the moment: >" . $status . "<\n";
 			# FALTA VERIFICAR SI SE ENCUENTRA DISPONIBLE, que no se encuentre llamando...
 			// Ejecutar el comando 'core show channels' y verificar si el peer está o no en la lista. 
 		}
@@ -179,26 +196,49 @@ class AMI{
 			# you want here - in this example I'm going to use the originate   
 			# command to call me and play me the tt-monkeys sound - if I hear  
 			# this then I know there is an issue :)                            
-			echo "-- Peer not ok ($status) - running some code\n";
+			echo "-- Peer not ok (" . $status . ") - running some code\n";
 
-			/*
-			$originate = "Action: originate\r\n";
-			$originate .= "Channel: SIP/6002\r\n";
-			$originate .= "Application: Playback\r\n";
-			$originate .= "Data: tt-monkeys\r\n";
-			$originate .= "\r\n";
-			fwrite($fp, $originate);
-			/**/
+			//$originate = "Action: originate\r\n";
+			//$originate .= "Channel: SIP/6002\r\n";
+			//$originate .= "Application: Playback\r\n";
+			//$originate .= "Data: tt-monkeys\r\n";
+			//$originate .= "\r\n";
+			//fwrite($fp, $originate);
 		}
-		fclose($fp);
-		exit(0);
+		//fclose($fp);
+		//exit(0);
+		/**/
+
+		return $peer_ip_ok && $peer_ok;
 	}
 
-	/**
-	 * [isPeerConnected description]
-	 * @param  string  $peer [description]
-	 * @return boolean       [description]
-	 */
+	public function getPeers(){
+		# saber si con el comando 'sip show peers' tambien trae descripcion del peer 
+		# (especialidad), si no, crear una funcion que lo haga con la BD de asterisk.
+
+		$this->validateConnection();
+
+		$result = array();
+
+		$command = "Action: Command\r\n";
+		$command .= "Command: " . ELASTIX_AMI_PEER_TYPE . " show peers\r\n";
+		$command .= "\r\n";
+		fwrite($fp, $command);
+
+		$line = trim(fgets($fp));
+		echo "<br>#" . $line . '<br>';
+
+		for ($index = 0; $line != "--END COMMAND--" && $index < MAX_LOOPS; $index++) { 
+			array_push($result, explode(" ", $line));
+			
+			$line = trim(fgets($fp));
+			echo "#" . $line . '<br>';
+		}
+
+		return $result;
+	}
+
+	/*
 	public static function isPeerConnected_old($peer_name = ""){
 
 		require_once DIR_CONSTANTS . '/db_config.php';
@@ -293,12 +333,12 @@ class AMI{
 							if (substr($status, 0, 2) == 'OK')
 							{
 								$peer_ok = true;
-								echo("******************************************** PEER " . substr($status, 0, 2) . " - ");
+								echo("******************************************** PEER " . substr($status, 0, 2) . "<br>");
 							}
 							else
 							{
 								$peer_ok = false;
-								echo("############################################ ERROR: PEER " . $status . " - ");
+								echo("############################################ ERROR: PEER " . $status . "<br>");
 							}
 						}
 
@@ -312,12 +352,12 @@ class AMI{
 							if (preg_match(self::IP_PATTERN, $ip_addr))
 							{
 								//$peer_ip_ok = true;
-								echo("******************************************** IP VALID: " . $ip_addr . " - ");
+								echo("******************************************** IP VALID: " . $ip_addr . "<br>");
 							}
 							else
 							{
 								//$peer_ip_ok = false;
-								echo("############################################ ERROR: IP NOT VALID: " . $ip_addr . " - ");
+								echo("############################################ ERROR: IP NOT VALID: " . $ip_addr . "<br>");
 							}							
 						}
 
@@ -346,14 +386,12 @@ class AMI{
 						# this then I know there is an issue :)                            
 						echo "-- Peer not ok ($status) - running some code\n";
 
-						/*
-						$originate = "Action: originate\r\n";
-						$originate .= "Channel: SIP/6002\r\n";
-						$originate .= "Application: Playback\r\n";
-						$originate .= "Data: tt-monkeys\r\n";
-						$originate .= "\r\n";
-						fwrite($fp, $originate);
-						/**/
+						//$originate = "Action: originate\r\n";
+						//$originate .= "Channel: SIP/6002\r\n";
+						//$originate .= "Application: Playback\r\n";
+						//$originate .= "Data: tt-monkeys\r\n";
+						//$originate .= "\r\n";
+						//fwrite($fp, $originate);
 					}
 					fclose($fp);
 					exit(0);
