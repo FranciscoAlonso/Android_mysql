@@ -36,10 +36,10 @@ class API{
         }
 
         # Si el json_enconde retorna "null" se debe codificar $msg_error a utf8.  
-        if(json_encode($msg_error) == "null")
+        if(json_encode($msg_error) === "null")
             $msg_error = utf8_encode($msg_error);
-        
-        if(!DEBUG_MODE && $errorCode == JR_ERROR)
+
+        if(!DEBUG_MODE && $errorCode === JR_ERROR)
             $msg_error = DEFAULT_ERROR_MSG;
 
         $app = \Slim\Slim::getInstance();

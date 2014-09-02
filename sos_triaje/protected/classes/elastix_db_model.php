@@ -11,16 +11,19 @@ class elastix_db_model{
      * Realiza la conexión con la BD 'asteriskcdrdb'
      * @throws PDOException If Ocurre algún error al momento que establecer la conexión con la BD.
      */
-	public function __construct(){
+	public function __construct($DB_NAME = ""){
 
         require_once DIR_CONSTANTS . '/db_config.php';
+
+        if(empty($DB_NAME))
+            $DB_NAME = ELASTIX_DB_NAME;
 
 		try {
             # *** Prueba de conexión fallida ***
             //$this->DBH = new PDO("mysql:host=localhost;dbname=database", ELASTIX_DB_USER , ELASTIX_DB_PASSWORD ); 
             $this->DBH = new PDO(
                                 "mysql:host="   . ELASTIX_DB_SERVER .
-                                ";dbname="      . ELASTIX_DB_NAME,
+                                ";dbname="      . $DB_NAME,
                                 ELASTIX_DB_USER,
                                 ELASTIX_DB_PASSWORD,
                                 array(
@@ -30,6 +33,7 @@ class elastix_db_model{
                             );
         } catch (PDOException $e) {
             # Se crea el mensaje de error para informar a la app/usuario de lo ocurrido.
+            print_r($e);exit();
             API::throwPDOException($e);
         }
     }

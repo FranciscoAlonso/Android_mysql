@@ -39,6 +39,7 @@ class AMI{
 		if (!$this->fp)
 		{
 			//echo "There was an error connecting to the manager: " . $errstr . " (Error Number: " . $errno . ")\n";
+			API::throwPDOException("There was an error connecting to the manager: " . $errstr . " (Error Number: " . $errno . ")");
 		}
 		else
 		{
@@ -68,15 +69,16 @@ class AMI{
 			echo $blank_line . '<br>'; #
 			/**/
 
-			if (substr($this->connection_msg, 0, 9) == "Message: ")
+			if (substr($this->connection_msg, 0, 9) === "Message: ")
 			{
 				# We have got a response
 				$loginresponse = trim(substr($this->connection_msg, 9));
 
-				if (!$loginresponse == "Authentication Accepted")
+				if (strcmp($loginresponse, "Authentication accepted"))
 				{
 					//echo "-- Unable to log in: " . $loginresponse . "\n";
 					fclose($this->fp);
+					API::throwPDOException("Unable to login: " . $loginresponse);
 				}
 				else
 				{
@@ -88,6 +90,8 @@ class AMI{
 			{
 				//echo "-- Unexpected response: " . $this->connection_msg . "\n";
 				fclose($this->fp);
+				API::throwPDOException("Unexpected response: " . $this->connection_msg);
+
 			}
 		}
 
@@ -95,7 +99,7 @@ class AMI{
 	}
 
 	public function __destruct(){
-		if(!is_null($this->fp))
+		if(is_resource($this->fp))
 			fclose($this->fp);
 		//echo ("<br>************************ SE HA DESTRUIDO LA CLASE AMI ************************");
 	}
@@ -111,7 +115,7 @@ class AMI{
 	 * @throws PDOException If $this->fp es NULL.
 	 */
 	private function validateConnection(){
-		if(is_null($this->fp))
+		if(!is_resource($this->fp))
 		    API::throwPDOException("La conexión al Asterisk Manager Interface se encuentra cerrada.");
 	}
 
@@ -127,9 +131,9 @@ class AMI{
 		$command = "Action: Command\r\n";
 		$command .= "Command: " . ELASTIX_AMI_PEER_TYPE . " show peer " . $peer_name . "\r\n";
 		$command .= "\r\n";
-		fwrite($fp, $command);
+		fwrite($this->fp, $command);
 
-		$line = trim(fgets($fp));
+		$line = trim(fgets($this->fp));
 
 		echo "<br>#" . $line . '<br>';
 
@@ -172,7 +176,7 @@ class AMI{
 				}
 			}
 
-			$line = trim(fgets($fp));
+			$line = trim(fgets($this->fp));
 			echo "#" . $line . '<br>';
 			
 			$index--;
@@ -203,9 +207,9 @@ class AMI{
 			//$originate .= "Application: Playback\r\n";
 			//$originate .= "Data: tt-monkeys\r\n";
 			//$originate .= "\r\n";
-			//fwrite($fp, $originate);
+			//fwrite($this->fp, $originate);
 		}
-		//fclose($fp);
+		//fclose($this->fp);
 		//exit(0);
 		/**/
 
@@ -221,24 +225,25 @@ class AMI{
 		$result = array();
 
 		$command = "Action: Command\r\n";
-		$command .= "Command: " . ELASTIX_AMI_PEER_TYPE . " show peers\r\n";
+		//$command .= "Command: " . ELASTIX_AMI_PEER_TYPE . " show peers\r\n";
+		$command .= "Command: database show\r\n";
+		//$command .= "Command: " . ELASTIX_AMI_PEER_TYPE . " show peers\r\n";
 		$command .= "\r\n";
-		fwrite($fp, $command);
+		fwrite($this->fp, $command);
 
-		$line = trim(fgets($fp));
+		$line = trim(fgets($this->fp));
 		echo "<br>#" . $line . '<br>';
 
-		for ($index = 0; $line != "--END COMMAND--" && $index < MAX_LOOPS; $index++) { 
+		for ($index = 0; $line != "--END COMMAND--" && $index < self::MAX_LOOPS; $index++) { 
 			array_push($result, explode(" ", $line));
 			
-			$line = trim(fgets($fp));
-			echo "#" . $line . '<br>';
+			$line = trim(fgets($this->fp));
+			echo "$index#" . $line . '<br>';
 		}
 
 		return $result;
 	}
 
-	/*
 	public static function isPeerConnected_old($peer_name = ""){
 
 		require_once DIR_CONSTANTS . '/db_config.php';
@@ -345,7 +350,7 @@ class AMI{
 						if(substr($line, 0, 8) == 'Addr->IP')
 						{
 							$ip_addr = trim(substr(strstr($line, ":"), 1));
-							$ip_addr = "192.168.1.255";
+							//$ip_addr = "192.168.1.255";
 
 							$found_entry = true;
 

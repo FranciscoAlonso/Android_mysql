@@ -15,34 +15,21 @@ class peers_available{
 	public static function read(){
 		try {
 
+			# Invocar a la clase elastix_db_model.
+			$DBH_ELASTIX = new elastix_db_model();
+
+			/*
 			require_once DIR_LIBS . '/AsteriskManagerInterface/AMI.php';
 
-			# TEST ---------------------------------------------------------------------
-				$metadata = new json_response_metadata(JR_SUCCESS);
-
-				$a = array('1' => 1, '2'=> 2,'3' => 3);
-				$b = array(4, 5, 6);
-				$c = array(7, 8, array('a','b','c', array(true)));
-
-				$arrays_merged = array();
-
-				array_push($arrays_merged, $a);
-				//print_r($arrays_merged);
-				array_push($arrays_merged, $b);
-				//print_r($arrays_merged);
-				array_push($arrays_merged, $c);
-
-				//return json_response::generate($metadata, "String response.");
-				return json_response::generate($metadata, $arrays_merged);
-			# ENDTEST ---------------------------------------------------------------------
-
 			$ami = new AMI();
+			
 			# TEST DE LA SALIDA:
-			//AMI::isPeerConnected_old();
+			//AMI::isPeerConnected_old('6001');
+			//AMI::isPeerConnected_old('6003');
 
 			$ami->getPeers();
-
-			//$ami->isPeerAvailable();
+			/**/
+			//$ami->isPeerAvailable('6001');
 
 			exit("peers_available::read();");
 			# - Se utilizará la interfaz AMI para obtener el estado de los peers.
