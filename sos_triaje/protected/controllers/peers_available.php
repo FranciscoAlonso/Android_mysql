@@ -14,15 +14,11 @@ class peers_available{
 	 */
 	public static function read(){
 		try {
-
-			# Invocar a la clase elastix_db_model.
-			$DBH_ELASTIX = new elastix_db_model();
-
 			/*
 			require_once DIR_LIBS . '/AsteriskManagerInterface/AMI.php';
 
 			$ami = new AMI();
-			
+
 			# TEST DE LA SALIDA:
 			//AMI::isPeerConnected_old('6001');
 			//AMI::isPeerConnected_old('6003');
@@ -31,15 +27,14 @@ class peers_available{
 			/**/
 			//$ami->isPeerAvailable('6001');
 
-			exit("peers_available::read();");
+			//exit("peers_available::read();");
 			# - Se utilizará la interfaz AMI para obtener el estado de los peers.
 			# - Ampliar el json_response::generate() para que maneje arreglos (para la data).
 
-			/*
 			# Invocar a la clase elastix_db_model.
 			$DBH_ELASTIX = new elastix_db_model();
 
-			$result = $DBH_ELASTIX->getCasos($caso_id);
+			$result = $DBH_ELASTIX->test();
 
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
@@ -50,9 +45,16 @@ class peers_available{
 						$_SERVER['REQUEST_METHOD']
 					);
 
+			# Se procesa la data para poder retornar de forma separada los contactos pertenecientes a cada ringgroup.
+			$aux = array();
+			while( $row = $result->fetch() ) {
+		    	$aux['grpnum'] = $row['grpnum'];
+		    	$aux['description'] = $row['description'];
+		    	$aux['grplist'] = explode("-", $row['grplist']);
+		    }
+
 			# Retorna el resultado de la consulta con información extra en formato JSON.
-			return json_response::generate($metadata, $result);
-			/**/
+			return json_response::generate($metadata, $aux);
 		} catch (Exception $e) {
             return $e->getMessage();
 		}

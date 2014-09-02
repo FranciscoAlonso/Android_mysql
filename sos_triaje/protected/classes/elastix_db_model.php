@@ -59,7 +59,7 @@ class elastix_db_model{
      * @return PDO   Retorna el resultado de la ejecución del query (Statement).
      * @throws PDOException If Ocurre un error al ejecutar el query en la BD.
      */
-    public function execute($query, $params = null){
+    private function execute($query, $params = null){
         try {
             $STMT = $this->DBH->prepare($query);
             $STMT->execute($params);
@@ -71,6 +71,27 @@ class elastix_db_model{
             //exit($e->getMessage());
             API::throwPDOException($e, 500, $STMT->queryString);
         }
+    }
+
+    public function test(){
+
+        $params = array();
+
+        $query = 'SELECT grpnum, description, grplist
+                    FROM ringgroups';
+
+        $result = $this->execute($query, $params);
+
+        # Si el SELECT no arroja resultados retorna una respuesta generica.
+        if($result->rowCount() == 0)
+            API::throwPDOException(
+                                    DB_SELECT_NO_RESULT_MSG,
+                                    200,
+                                    $result->queryString,
+                                    JR_SUCCESS
+                                );
+
+        return $result;
     }
 }
 ?>
