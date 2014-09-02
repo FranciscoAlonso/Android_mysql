@@ -33,7 +33,6 @@ class elastix_db_model{
                             );
         } catch (PDOException $e) {
             # Se crea el mensaje de error para informar a la app/usuario de lo ocurrido.
-            print_r($e);exit();
             API::throwPDOException($e);
         }
     }
