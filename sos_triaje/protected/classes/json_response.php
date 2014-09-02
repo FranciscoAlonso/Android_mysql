@@ -109,22 +109,13 @@ class json_response{
     {
       $result[DATA_KEY][self::msgDescriptionKey] = $data;
     }
-    else if(is_array($data))
+    else
     {
       foreach ($data as $row) {
         array_push($result[DATA_KEY], $row);
       }
     }
-    else
-    {
-      # Se extrae los datos del objeto PDO
-      while( $row = $data->fetch() ) {
-        array_push($result[DATA_KEY], $row);
-      }
-    }
 
-    //echo $metadata::queryTypeKey . '<br>';
-    //print_r( json_decode( json_encode($result, JSON_UNESCAPED_UNICODE)));
     return json_encode($result);
   }
 
