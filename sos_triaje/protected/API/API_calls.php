@@ -266,16 +266,28 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			echo pacientes::read($paciente_id);
 	    });
 
+		/**
+	     * Retorna una lista de grupos de llamada (Ring Groups).
+	     * method - GET
+	     * url - /call_groups
+	     */
+	    //$app->get('/call_groups', 'API::authenticate', function(){
+	    $app->get('/call_groups', function(){
+			require_once  DIR_CONTROLLERS . '/call_groups.php';
+			echo call_groups::read();
+	    });
+
 	    /**
 	     * Retorna una lista de usuarios que estan disponibles para ser llamados.
 	     * method - GET
 	     * url - /peers_available
-	     */
+	     *//*
 	    //$app->get('/peers_available', 'API::authenticate', function(){
 	    $app->get('/peers_available', function(){
 			require_once  DIR_CONTROLLERS . '/peers_available.php';
 			echo peers_available::read();
 	    });
+		/**/
     #endregion
 
     #region UPDATES
