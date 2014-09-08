@@ -33,4 +33,18 @@ require_once DIR_API . '/API_calls.php';
 
 # Se ejecuta la aplicación REST (Slim Framework)
 $app->run();
+
+/*
+https://192.168.2.44/index.php
+?
+menu=monitoring
+&
+action=download
+&
+id=1404932607.2
+&
+namefile=20140709-143327-1404932607.2.wav
+&
+rawmode=yes
+*/
 ?>

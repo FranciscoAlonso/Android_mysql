@@ -1,0 +1,94 @@
+<!--
+/*
+https://www.google.co.ve/url?sa=t&rct=j&q=&esrc=s&source=web&cd=4&ved=0CDQQFjAD&url=http%3A%2F%2Fftp.jaist.ac.jp%2Fpub%2F%2Fsourceforge%2Fe%2Fel%2Felastix%2FTutorials_Docs_Manuals%2FEWS-Example%2Fews-user-manual-eng.pdf&ei=tBAOVNKENYHMggS_9IKIDw&usg=AFQjCNFIBO-0WfVvm_Ap66orULvoEbAhCw&sig2=7nn2aS8rS5kFosRvf6oFsg&bvm=bv.74649129,d.eXY&cad=rja
+
+/var/www/html/modules
+
+ */
+/**/
+<!---->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>..:: SOAP TEST ::..</title>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+	<h1>Hola mundo</h1>
+
+
+	<button onclick="getContacts()">Click me!</button>
+
+	<script>
+		function getContacts(){
+			//alert("Hola mundo");
+			/*
+			var WS = new jQuery.SOAPClient({
+				url : "https://192.168.2.44/modules/calendar.escenarios/escenarios/soap_addressBook.php"
+				, methode : "listAddressBook"
+				, async : true
+				, username : "admin"
+				, password : "Tajrh123654"
+				, error : function()
+				{
+					alert("ERROR");
+				}
+				, data : {
+					addressBookType: "external"
+				}
+				, success : function()
+				{
+					alert("SUCCESS");
+				}
+
+			});
+			/**/
+
+			jQuery.ajax({
+				url: "https://192.168.2.44/modules/calendar.escenarios/escenarios/soap_addressBook.php",
+				type: "POST",
+				dataType: "xml",
+				contentType: "text/xml; charset=\"utf-8\"",
+				//data: soapMessage,
+				username : "admin"
+				, password : "Tajrh123654"
+				, error : function()
+				{
+					alert("ERROR");
+				}
+				, data : {
+					addressBookType: "external"
+				}
+				, success : function()
+				{
+					alert("SUCCESS");
+				}
+	          //processData: false,   // what is it for? may be should be true when using 'complete:' ?
+	          //timeout: 5000,
+
+	          // below I first try to have only 'complete:' then I tried to have 'success:' + 'error:', then the 3. Nothing seems to be ok. I do not find which one i should use.
+	          /*
+	          complete: myCallback,
+
+	          success: function( response ){
+	              //document.getElementById('debug').innerHTML = document.getElementById('debug').innerHTML + '\n' + 'success!' + '\n';
+	              alert("success!!!");
+	          },
+
+	          error: function(XMLHttpRequest,textStatus, errorThrown){
+	              //document.getElementById('debug').innerHTML = document.getElementById('debug').innerHTML + '\n' + 'error : ' + textStatus + '\n';
+	              alert("error : " + textStatus);
+	          }
+	          /**/
+
+	  });
+
+		}
+	</script>
+
+</body>
+</html>
