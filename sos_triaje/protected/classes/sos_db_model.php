@@ -414,6 +414,7 @@ class sos_db_model{
                         s.nombre AS status_caso,
                         centro.nombre AS centro_sos,
                         p.fecha_nacimiento,
+                        e.id AS especialidad_id,
                         e.nombre AS tipo_especialidad,
                         COUNT(DISTINCT a.id) AS cant_archivos,
                         COUNT(DISTINCT o.id) AS cant_opiniones
