@@ -35,6 +35,10 @@ require_once DIR_API . '/API_calls.php';
 $app->run();
 
 /*
+https://admin:123456@192.168.2.44/index.php
+*/
+
+/*
 https://192.168.2.44/index.php
 ?
 menu=monitoring
@@ -47,4 +51,8 @@ namefile=20140709-143327-1404932607.2.wav
 &
 rawmode=yes
 */
+
+/*
+ SELECT calldate,src,dst,uniqueid,userfield FROM cdr WHERE src = 6002 order by calldate desc limit 1;
+ */
 ?>
