@@ -55,4 +55,20 @@ rawmode=yes
 /*
  SELECT calldate,src,dst,uniqueid,userfield FROM cdr WHERE src = 6002 order by calldate desc limit 1;
  */
+
+/*
+https://190.72.194.19/index.php
+?
+menu=monitoring
+&
+filter_field=src
+&
+filter_value=
+&
+filter_value_userfield=
+&
+date_start=09+Sep+2014
+&
+date_end=09+Sep+2014
+ */
 ?>
