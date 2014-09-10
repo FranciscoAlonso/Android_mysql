@@ -34,11 +34,27 @@ require_once DIR_API . '/API_calls.php';
 # Se ejecuta la aplicación REST (Slim Framework)
 $app->run();
 
-/*
-https://admin:123456@192.168.2.44/index.php
-*/
+/* 
+SELECT 
+	calldate
+	, src
+	, dst
+	, duration
+	, disposition
+	, uniqueid
+	, userfield 
+
+	FROM cdr
+		WHERE src = 6002
+			AND disposition = "ANSWERED"
+			AND userfield != ""
+
+		ORDER BY calldate desc LIMIT 1;
+/**/
 
 /*
+DOWNLOAD DIRECTO:
+
 https://192.168.2.44/index.php
 ?
 menu=monitoring
@@ -46,29 +62,7 @@ menu=monitoring
 action=download
 &
 id=1404932607.2
-&
-namefile=20140709-143327-1404932607.2.wav
-&
-rawmode=yes
+
+https://192.168.2.44/index.php?menu=monitoring&action=download&id=1404932607.2&namefile=20140709-143327-1404932607.2.wav&rawmode=yes
 */
-
-/*
- SELECT calldate,src,dst,uniqueid,userfield FROM cdr WHERE src = 6002 order by calldate desc limit 1;
- */
-
-/*
-https://190.72.194.19/index.php
-?
-menu=monitoring
-&
-filter_field=src
-&
-filter_value=
-&
-filter_value_userfield=
-&
-date_start=09+Sep+2014
-&
-date_end=09+Sep+2014
- */
 ?>
