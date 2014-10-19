@@ -73,7 +73,7 @@ class elastix_db_model{
         }
     }
 
-    public function test(){
+    public function getCallGroups(){
 
         $params = array();
 

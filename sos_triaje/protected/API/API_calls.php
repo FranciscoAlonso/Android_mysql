@@ -271,8 +271,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	     * method - GET
 	     * url - /call_groups
 	     */
-	    //$app->get('/call_groups', 'API::authenticate', function(){
-	    $app->get('/call_groups', function(){
+	    $app->get('/call_groups', 'API::authenticate', function(){
 			require_once  DIR_CONTROLLERS . '/call_groups.php';
 			echo call_groups::read();
 	    });

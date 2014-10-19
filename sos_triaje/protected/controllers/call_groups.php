@@ -17,7 +17,7 @@ class call_groups{
 			# Invocar a la clase elastix_db_model.
 			$DBH_ELASTIX = new elastix_db_model();
 
-			$result = $DBH_ELASTIX->test();
+			$result = $DBH_ELASTIX->getCallGroups();
 
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
