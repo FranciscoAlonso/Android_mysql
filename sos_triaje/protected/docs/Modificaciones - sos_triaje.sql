@@ -12,6 +12,12 @@ ALTER TABLE actor_sistema ADD user_extension VARCHAR(255);
 ALTER TABLE archivo ADD mime_type VARCHAR(255) default 'image/jpg';
 
 -- -- 
+-- Se agrega la columna "cdr_uniqueid" a la tabla
+-- "opinion" para su uso con el Web Service.
+-- --
+ALTER TABLE opinion ADD cdr_uniqueid VARCHAR(255);
+
+-- -- 
 -- Se agrega un paciente generico a la tabla "paciente".
 -- --
 INSERT INTO `sos_triaje`.`paciente` (`id` ,`fecha_nacimiento`)

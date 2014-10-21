@@ -34,7 +34,9 @@ require_once DIR_API . '/API_calls.php';
 # Se ejecuta la aplicación REST (Slim Framework)
 $app->run();
 
-/* 
+/*
+SELECT calldate, src, dst, duration, disposition, uniqueid, userfield FROM cdr WHERE src = 6002 AND disposition = "ANSWERED" AND userfield != "" ORDER BY calldate desc LIMIT 1;
+
 SELECT 
 	calldate
 	, src
