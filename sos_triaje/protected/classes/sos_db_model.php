@@ -151,6 +151,25 @@ class sos_db_model{
         return $result->rowCount() > 0;
     }
 
+    /**
+     * Consulta a la tabla "opinion" si el cdr_uniqueid ya existe. 
+     * @param  string $cdr_uniqueid ID a consultar su existencia.
+     * @return boolean               Retorna true si encuentra el ID, de lo contrario false.
+     */
+    public function exist_cdr_uniqueid($cdr_uniqueid){
+
+        $params = array(':cdr_uniqueid' => $cdr_uniqueid);
+
+        $query = 'SELECT COUNT(cdr_uniqueid) as rows
+                    FROM opinion 
+                        WHERE cdr_uniqueid = :cdr_uniqueid';
+
+        $result = $this->execute($query, $params);
+        $result = $result->fetch();
+
+        return $result['rows'] != 0;
+    }
+
     #region SETS
         /**
          * Establece la asociación entre un caso y una especialidad.
@@ -246,6 +265,7 @@ class sos_db_model{
                 , medico_id
                 , nombre_opinion
                 , estado_opinion
+                , cdr_uniqueid
             )
             VALUES
             (
@@ -256,6 +276,7 @@ class sos_db_model{
                 , :medico_id
                 , :nombre_opinion
                 , :estado_opinion
+                , :cdr_uniqueid
             )';
 
             return $this->execute($query, $form);
