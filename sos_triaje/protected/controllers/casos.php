@@ -14,17 +14,31 @@ class casos{
   	 * @return JSON 		JSON indicando si la inserción del caso fue un éxito o no. 
   	 * @throws Exception If Ocurre alguna excepción en el proceso de la creación de la data.
   	 */
-  	public static function create($form, $especialidad_id = ""){
+  	public static function create($form, $especialidad_id = "", $fecha_nacimiento = "0000-00-00 00:00:00"){
   		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
 
+			# Se inicia la transaction
+			$DBH_SOS->beginTransaction();	
+
+			#region Crea el paciente
+				$form_paciente = array();
+				$form_paciente[':fecha_nacimiento'] = $fecha_nacimiento;
+				$paciente = $DBH_SOS->createPaciente($form_paciente);
+				$form[':paciente_id'] = $DBH_SOS->getLastInsertId();
+			#endregion
+
+			# Crea el caso
 			$result = $DBH_SOS->createCaso($form);
-			
+
 			$inserted_caso_id = $DBH_SOS->getLastInsertId();
 
 			if(!empty($especialidad_id))
 				$DBH_SOS->setCasoEspecialidad($inserted_caso_id, $especialidad_id);	
+
+			# Commit transaction
+			$DBH_SOS->commit();
 
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
@@ -38,6 +52,9 @@ class casos{
 			# Retorna el resultado de la consulta con información extra en formato JSON.
 			return json_response::generate($metadata, DB_INSERT_SUCESS_MSG, $inserted_caso_id);
 		} catch (Exception $e) {
+			# RollBack transaction
+			if(!is_null($DBH_SOS))
+				$DBH_SOS->rollBack();
             return $e->getMessage();
 		}
   	}

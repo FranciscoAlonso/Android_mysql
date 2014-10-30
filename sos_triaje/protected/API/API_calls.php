@@ -66,6 +66,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	        		// , 'version'
 	        		//, 'paciente_id'
 	        		//, 'status_id'
+	        		//, 'fecha_nacimiento' 
 	        	));
 
 			$form = array();
@@ -78,10 +79,12 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			$form[':paciente_id'] = $app->request()->post('paciente_id');
 			$form[':status_id'] = $app->request()->post('status_id');
 
+			$fecha_nacimiento = $app->request()->post('fecha_nacimiento');
+
 			# Si no se envía la versión se asigna el valor de LASTEST_API_VERSION.
 			if(empty($form[':version']))
 				$form[':version'] = LASTEST_API_VERSION;
-			
+
 			# Si no se envía el ID de un paciente se asigna el caso a un paciente generico.
 			if(empty($form[':paciente_id']))
 				$form[':paciente_id'] = 0;
@@ -93,7 +96,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			$especialidad_id = $app->request()->post('especialidad_id');
 
 			require_once  DIR_CONTROLLERS . '/casos.php';
-			echo casos::create($form, $especialidad_id);
+			echo casos::create($form, $especialidad_id, $fecha_nacimiento);
 		});
 
 		/**
@@ -137,7 +140,6 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 		 * method - POST
 		 * url - /pacientes
 		 */
-		/*
 	    $app->post('/pacientes', 'API::authenticate', function() use ($app){
 
 	    	# check for required params
