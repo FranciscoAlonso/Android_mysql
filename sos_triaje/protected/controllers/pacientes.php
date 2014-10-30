@@ -13,7 +13,6 @@ class pacientes{
   	 * @return JSON 		JSON indicando si la inserción del paciente fue un éxito o no. 
   	 * @throws Exception If Ocurre alguna excepción en el proceso de la creación de la data.
   	 */
-  	/*
   	public static function create($form){
   		try {
 			# Invocar a la clase sos_db_model.
