@@ -8,10 +8,10 @@ define('JSON_CONTENT_TYPE'	, 'application/json');
 define('XML_CONTENT_TYPE'	, 'application/xml'	);
 define('JPG_CONTENT_TYPE'	, 'image/jpg'		);
 
-define('DEFAULT_VERSION', 'version=1'); # Versión más antigua.
-define('LASTEST_VERSION', 'version=1'); # Versión más reciente.
+define('DEFAULT_API_VERSION', '1'); # Versión del API más antigua.
+define('LASTEST_API_VERSION', '1'); # Versión del API más reciente.
 
-define('DEFAULT_CONTENT_TYPE', JSON_CONTENT_TYPE . ';' . DEFAULT_VERSION );
+define('DEFAULT_CONTENT_TYPE', JSON_CONTENT_TYPE . ';' . 'version=' + DEFAULT_API_VERSION );
 
 define('DEFAULT_ERROR_MSG', 'Ha ocurrido un error mientras se realizaba la operación, intente nuevamente más tarde.'); 
 
@@ -306,21 +306,21 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			$form[':caso_id'] = $caso_id;
 			$form[':medico_id'] = $user_id;
 				
-			$aux = $app->request()->post('version');
-			if(isset($aux))
-				$form[':version'] = $aux;
+			$version = $app->request()->post('version');
+			if(isset($version))
+				$form[':version'] = $version;
 
-			$aux = $app->request()->post('cuerpo_opinion');
-			if(isset($aux))
-				$form[':cuerpo_opinion'] = $aux;
+			$cuerpo_opinion = $app->request()->post('cuerpo_opinion');
+			if(isset($cuerpo_opinion))
+				$form[':cuerpo_opinion'] = $cuerpo_opinion;
 
-			$aux = $app->request()->post('nombre_opinion');
-			if(isset($aux))
-				$form[':nombre_opinion'] = $aux;
+			$nombre_opinion = $app->request()->post('nombre_opinion');
+			if(isset($nombre_opinion))
+				$form[':nombre_opinion'] = $nombre_opinion;
 			
-			$aux = $app->request()->post('estado_opinion');
-			if(isset($aux))
-				$form[':estado_opinion'] = $aux;
+			$estado_opinion = $app->request()->post('estado_opinion');
+			if(isset($estado_opinion))
+				$form[':estado_opinion'] = $estado_opinion;
 
 			require_once  DIR_CONTROLLERS . '/opiniones.php';
 			echo opiniones::update($form);
