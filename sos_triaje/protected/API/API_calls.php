@@ -8,10 +8,10 @@ define('JSON_CONTENT_TYPE'	, 'application/json');
 define('XML_CONTENT_TYPE'	, 'application/xml'	);
 define('JPG_CONTENT_TYPE'	, 'image/jpg'		);
 
-define('DEFAULT_API_VERSION', '1'); # Versión del API más antigua.
-define('LASTEST_API_VERSION', '1'); # Versión del API más reciente.
+define('DEFAULT_API_VERSION', '111'); # Versión del API más antigua.
+define('LASTEST_API_VERSION', '111'); # Versión del API más reciente.
 
-define('DEFAULT_CONTENT_TYPE', JSON_CONTENT_TYPE . ';' . 'version=' + DEFAULT_API_VERSION );
+define('DEFAULT_CONTENT_TYPE', JSON_CONTENT_TYPE . ';' . 'version=' . DEFAULT_API_VERSION );
 
 define('DEFAULT_ERROR_MSG', 'Ha ocurrido un error mientras se realizaba la operación, intente nuevamente más tarde.'); 
 
@@ -62,8 +62,8 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			# check for required params
 	        API::verifyRequiredParams(
 	        	array(
-	        		'version'
-	        		, 'descripcion'
+	        		'descripcion'
+	        		// , 'version'
 	        		//, 'paciente_id'
 	        		//, 'status_id'
 	        	));
@@ -78,6 +78,10 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			$form[':paciente_id'] = $app->request()->post('paciente_id');
 			$form[':status_id'] = $app->request()->post('status_id');
 
+			# Si no se envía la versión se asigna el valor de LASTEST_API_VERSION.
+			if(empty($form[':version']))
+				$form[':version'] = LASTEST_API_VERSION;
+			
 			# Si no se envía el ID de un paciente se asigna el caso a un paciente generico.
 			if(empty($form[':paciente_id']))
 				$form[':paciente_id'] = 0;
