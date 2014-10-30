@@ -1,32 +1,7 @@
 ﻿-- -- 
--- Se agregan las columnas de "api_key" y "user_extension" a la tabla
--- "actor_sistema" para su uso con el Web Service.
--- --
-ALTER TABLE actor_sistema ADD api_key VARCHAR(255);
-ALTER TABLE actor_sistema ADD user_extension VARCHAR(255);
-
--- -- 
--- Se agrega las columnas "content_type" a la tabla
--- "archivo" para su uso con el Web Service.
--- --
-ALTER TABLE archivo ADD mime_type VARCHAR(255) default 'image/jpg';
-
--- -- 
--- Se agrega la columna "cdr_uniqueid" a la tabla
--- "opinion" para su uso con el Web Service.
--- --
-ALTER TABLE opinion ADD cdr_uniqueid VARCHAR(255);
-
--- -- 
--- Se agrega la columna "group_extension" a la tabla
--- "especialidad" para su uso con el Web Service.
--- --
-ALTER TABLE especialidad ADD group_extension VARCHAR(255);
-
--- -- 
 -- Se agrega un paciente generico a la tabla "paciente".
 -- --
-INSERT INTO `sos_triaje`.`paciente` (`id` ,`fecha_nacimiento`)
+INSERT INTO `paciente` (`id` ,`fecha_nacimiento`)
 VALUES ('0', '0000-00-00 00:00:00');
 
 -- -- 
@@ -53,6 +28,36 @@ ALTER TABLE opinion DROP FOREIGN KEY `FKB4EDB382DDADB17F`;
 
 ALTER TABLE opinion_opinion DROP FOREIGN KEY `FKDDC86BC5387563EE`;
 ALTER TABLE opinion_opinion DROP FOREIGN KEY `FKDDC86BC5CA99929D`;
+
+-- -- 
+-- Se agregan las columnas de "api_key" y "user_extension" a la tabla
+-- "actor_sistema" para su uso con el Web Service.
+-- --
+ALTER TABLE actor_sistema ADD api_key VARCHAR(255);
+ALTER TABLE actor_sistema ADD user_extension VARCHAR(255);
+
+-- -- 
+-- Se agrega las columnas "content_type" a la tabla
+-- "archivo" para su uso con el Web Service.
+-- --
+ALTER TABLE archivo ADD mime_type VARCHAR(255) default 'image/jpg';
+
+-- -- 
+-- Se agrega la columna "cdr_uniqueid" a la tabla
+-- "opinion" para su uso con el Web Service.
+-- --
+ALTER TABLE opinion ADD cdr_uniqueid VARCHAR(255);
+
+-- -- 
+-- Se agrega la columna "group_extension" a la tabla
+-- "especialidad" para su uso con el Web Service.
+-- --
+ALTER TABLE especialidad ADD group_extension VARCHAR(255);
+
+-- -- 
+-- Se agrega la propiedad "AUTO_INCREMENT" a la columna id de la tabla paciente.
+-- --
+ALTER TABLE paciente MODIFY id bigint(20) AUTO_INCREMENT;
 
 -- -- 
 -- Se agregan nuevamente los FOREIGN KEY con la
