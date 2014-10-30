@@ -19,16 +19,21 @@ class opiniones{
 			$DBH_SOS = new sos_db_model();
 
 			#region Agrega a la opinion el id de la ultima grabación (solamente si es único)
-				# Invocar a la clase elastix_db_model.
-				$DBH_ELASTIX = new elastix_db_model("asteriskcdrdb");
-							
-				$cdr_record = $DBH_ELASTIX->getLastRecordedCall($user_extension);
-				$cdr_record = $cdr_record->fetch();
-	      		
-				if ( $DBH_SOS->exist_cdr_uniqueid($cdr_record['uniqueid']) ){
+				try {
+					# Invocar a la clase elastix_db_model.
+					$DBH_ELASTIX = new elastix_db_model("asteriskcdrdb");
+								
+					$cdr_record = $DBH_ELASTIX->getLastRecordedCall($user_extension);
+					$cdr_record = $cdr_record->fetch();
+		      		
+					if ( $DBH_SOS->exist_cdr_uniqueid($cdr_record['uniqueid']) ){
+						$form[':cdr_uniqueid'] = null;
+					}else{
+						$form[':cdr_uniqueid'] = $cdr_record['uniqueid'];
+					}
+				} catch (Exception $e) {
+					# Ha ocurrido un error al intentar conectar con el servidor VoiP, se captura y continua la creación de la opinión.
 					$form[':cdr_uniqueid'] = null;
-				}else{
-					$form[':cdr_uniqueid'] = $cdr_record['uniqueid'];
 				}
 			#endregion
 
