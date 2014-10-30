@@ -74,6 +74,27 @@ class elastix_db_model{
     }
 
     /**
+     * PDO::beginTransaction — Initiates a transaction
+     */
+    public function beginTransaction(){
+        $this->DBH->beginTransaction();
+    }
+    
+    /**
+     * PDO::commit — Commits a transaction
+     */
+    public function commit(){
+        $this->DBH->commit();
+    }
+    
+    /**
+     * PDO::rollBack — Rolls back a transaction
+     */
+    public function rollBack(){
+        $this->DBH->rollBack();
+    }
+    
+    /**
      * Esta función retorna la lista de grupos de llamadas (Ring Groups) que existen configurados en el Elastix
      * @return PDO   Retorna información de los Ring Groups.
      */
