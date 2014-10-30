@@ -106,8 +106,8 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			# check for required params
 	        API::verifyRequiredParams(
 	        	array(
-	        		'version'
-	        		, 'cuerpo_opinion'
+	        		'cuerpo_opinion'
+	        		//, 'version'
 	        		, 'nombre_opinion'
 	        		, 'user_extension'
 	        	));
@@ -124,6 +124,10 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 
 			$user_extension = $app->request()->post('user_extension');
 
+			# Si no se envía la versión se asigna el valor de LASTEST_API_VERSION.
+			if(empty($form[':version']))
+				$form[':version'] = LASTEST_API_VERSION;
+			
 			require_once  DIR_CONTROLLERS . '/opiniones.php';
 			echo opiniones::create($form, $user_extension);
 	    });
