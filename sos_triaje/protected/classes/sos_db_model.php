@@ -71,6 +71,27 @@ class sos_db_model{
     }
 
     /**
+     * PDO::beginTransaction — Initiates a transaction
+     */
+    public function beginTransaction(){
+        $this->DBH->beginTransaction();
+    }
+    
+    /**
+     * PDO::commit — Commits a transaction
+     */
+    public function commit(){
+        $this->DBH->commit();
+    }
+    
+    /**
+     * PDO::rollBack — Rolls back a transaction
+     */
+    public function rollBack(){
+        $this->DBH->rollBack();
+    }
+
+    /**
      * Verifica que el usuario este registrado.
      * @param  string $user     Correo o login del usuario. 
      * @param  string $password Contraseña del usuario.
