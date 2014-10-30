@@ -18,6 +18,12 @@ ALTER TABLE archivo ADD mime_type VARCHAR(255) default 'image/jpg';
 ALTER TABLE opinion ADD cdr_uniqueid VARCHAR(255);
 
 -- -- 
+-- Se agrega la columna "group_extension" a la tabla
+-- "especialidad" para su uso con el Web Service.
+-- --
+ALTER TABLE especialidad ADD group_extension VARCHAR(255);
+
+-- -- 
 -- Se agrega un paciente generico a la tabla "paciente".
 -- --
 INSERT INTO `sos_triaje`.`paciente` (`id` ,`fecha_nacimiento`)
