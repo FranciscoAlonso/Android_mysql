@@ -73,6 +73,10 @@ class elastix_db_model{
         }
     }
 
+    /**
+     * Esta función retorna la lista de grupos de llamadas (Ring Groups) que existen configurados en el Elastix
+     * @return PDO   Retorna información de los Ring Groups.
+     */
     public function getCallGroups(){
 
         $params = array();
@@ -90,6 +94,36 @@ class elastix_db_model{
                                     $result->queryString,
                                     JR_SUCCESS
                                 );
+
+        return $result;
+    }
+
+    /**
+     * Retorna la última grabación realizada por el usuario.
+     * @param  string $user_extension Extension del usuario a consultar su ultima grabación.
+     * @return PDO                 Informacion acerca de la grabación, si existe.
+     */
+    public function getLastRecordedCall($user_extension){
+
+        $params = array(':user_extension' => $user_extension);
+
+        $query = 'SELECT 
+                    calldate
+                    , src
+                    , dst
+                    , duration
+                    , disposition
+                    , uniqueid
+                    , userfield 
+
+                    FROM cdr
+                        WHERE src = :user_extension
+                            AND disposition = "ANSWERED"
+                            AND userfield != ""
+
+                        ORDER BY calldate desc LIMIT 1;';
+
+        $result = $this->execute($query, $params);
 
         return $result;
     }

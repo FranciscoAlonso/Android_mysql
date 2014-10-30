@@ -105,6 +105,7 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	        		'version'
 	        		, 'cuerpo_opinion'
 	        		, 'nombre_opinion'
+	        		, 'user_extension'
 	        	));
 
 			global $user_id;
@@ -117,8 +118,10 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			$form[':nombre_opinion'] = $app->request()->post('nombre_opinion');
 			$form[':estado_opinion'] = $app->request()->post('estado_opinion');
 
+			$user_extension = $app->request()->post('user_extension');
+
 			require_once  DIR_CONTROLLERS . '/opiniones.php';
-			echo opiniones::create($form);
+			echo opiniones::create($form, $user_extension);
 	    });
 
 		/**
