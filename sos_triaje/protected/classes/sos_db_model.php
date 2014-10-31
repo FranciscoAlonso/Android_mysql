@@ -372,7 +372,8 @@ class sos_db_model{
         public function getEspecialidades(){
 
             $query = 'SELECT *
-                        FROM especialidad';
+                        FROM especialidad
+                            ORDER BY nombre';
 
             #region --- Ejemplos ---
                 #$query = 'SELECT * FROM especialidad WHERE id = 666';        
