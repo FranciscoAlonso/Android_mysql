@@ -542,6 +542,9 @@ class sos_db_model{
             }
 
             $query .= ' GROUP BY c.id';
+            
+            # Se verifica si se enviaron por parametro LIMIT y OFFSET para la consulta.
+            $query .= $this->getLimitAndOffsetString();
 
             $result = $this->execute($query, $params);
 
