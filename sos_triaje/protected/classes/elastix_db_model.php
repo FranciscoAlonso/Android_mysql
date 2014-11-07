@@ -1,14 +1,14 @@
 <?php
 /**
  * Clase que se encarga de realizar la conexión con la base de datos 
- * "asteriskcdrdb" y ofrece funciones para obtener data básica.
+ * relacionada con Elastix y ofrece funciones para obtener data básica.
  */
 class elastix_db_model{
 
 	private $DBH;
 
     /**
-     * Realiza la conexión con la BD 'asteriskcdrdb'
+     * Realiza la conexión con la BD
      * @throws PDOException If Ocurre algún error al momento que establecer la conexión con la BD.
      */
 	public function __construct($DB_NAME = ""){
@@ -120,33 +120,62 @@ class elastix_db_model{
     }
 
     /**
-     * Retorna la última grabación realizada por el usuario.
-     * @param  string $user_extension Extension del usuario a consultar su ultima grabación.
-     * @return PDO                 Informacion acerca de la grabación, si existe.
+     * Retorna un string con los valores de LIMIT y OFFSET enviados por GET para que se concatene al final de un query y se delimite la consulta.
+     * @return string String en SQL con LIMIT y OFFSET si fueron definidos, de lo contrario retorna vacío. 
      */
-    public function getLastRecordedCall($user_extension){
+    public function getLimitAndOffsetString(){
 
-        $params = array(':user_extension' => $user_extension);
+        $query = "";
 
-        $query = 'SELECT 
-                    calldate
-                    , src
-                    , dst
-                    , duration
-                    , disposition
-                    , uniqueid
-                    , userfield 
+        # ISSET limit 
+        if(isset($_GET['limit'])){
+            $limit = intval($_GET['limit']);
 
-                    FROM cdr
-                        WHERE src = :user_extension
-                            AND disposition = "ANSWERED"
-                            AND userfield != ""
+            if($limit > 0){
+                $query .= ' LIMIT ' . $limit;
 
-                        ORDER BY calldate desc LIMIT 1;';
+                # ISSET offset ?
+                if(isset($_GET['offset'])){
+                    $offset = intval($_GET['offset']);
+                    if ($offset > 0)
+                        $query .= ' OFFSET ' . $offset;
+                }
+            }
+        }
 
-        $result = $this->execute($query, $params);
-
-        return $result;
+        return $query;
     }
+
+    #region READ
+        /**
+         * Retorna la última grabación realizada por el usuario.
+         * @param  string $user_extension Extension del usuario a consultar su ultima grabación.
+         * @return PDO                 Informacion acerca de la grabación, si existe.
+         */
+        public function getLastRecordedCall($user_extension){
+
+            $params = array(':user_extension' => $user_extension);
+
+            $query = 'SELECT 
+                        calldate
+                        , src
+                        , dst
+                        , duration
+                        , disposition
+                        , uniqueid
+                        , userfield 
+
+                        FROM cdr
+                            WHERE src = :user_extension
+                                AND disposition = "ANSWERED"
+                                AND userfield != ""
+
+                            ORDER BY calldate desc LIMIT 1;';
+
+            $result = $this->execute($query, $params);
+
+            return $result;
+        }
+    #endregion
 }
 ?>

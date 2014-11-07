@@ -191,6 +191,33 @@ class sos_db_model{
         return $result['rows'] != 0;
     }
 
+    /**
+     * Retorna un string con los valores de LIMIT y OFFSET enviados por GET para que se concatene al final de un query y se delimite la consulta.
+     * @return string String en SQL con LIMIT y OFFSET si fueron definidos, de lo contrario retorna vacío. 
+     */
+    public function getLimitAndOffsetString(){
+
+        $query = "";
+
+        # ISSET limit 
+        if(isset($_GET['limit'])){
+            $limit = intval($_GET['limit']);
+
+            if($limit > 0){
+                $query .= ' LIMIT ' . $limit;
+
+                # ISSET offset ?
+                if(isset($_GET['offset'])){
+                    $offset = intval($_GET['offset']);
+                    if ($offset > 0)
+                        $query .= ' OFFSET ' . $offset;
+                }
+            }
+        }
+
+        return $query;
+    }
+
     #region SETS
         /**
          * Establece la asociación entre un caso y una especialidad.
@@ -477,7 +504,7 @@ class sos_db_model{
                 $query .= ' WHERE c.id = :casoId';
             }else{
                 # Condiciones para el filtro
-                if ( isset($_GET['own']) || isset($_GET['especialidad']) || isset($_GET['status']) || isset($_GET['centro'])) {
+                if (isset($_GET['own']) || isset($_GET['especialidad']) || isset($_GET['status']) || isset($_GET['centro'])) {
 
                     # JOIN para filtrar los casos que tenga un historial con la persona logueada.
                     if (!empty($_GET['own']) && $_GET['own'] == true){
