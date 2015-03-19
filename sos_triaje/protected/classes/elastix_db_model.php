@@ -163,12 +163,12 @@ class elastix_db_model{
                         , duration
                         , disposition
                         , uniqueid
-                        , userfield 
+                        , recordingfile 
 
                         FROM cdr
                             WHERE src = :user_extension
                                 AND disposition = "ANSWERED"
-                                AND userfield != ""
+                                AND recordingfile != ""
 
                             ORDER BY calldate desc LIMIT 1;';
 
