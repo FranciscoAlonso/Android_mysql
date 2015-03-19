@@ -34,6 +34,10 @@ class opiniones{
 				} catch (Exception $e) {
 					# Ha ocurrido un error al intentar conectar con el servidor VoiP, se captura y continua la creación de la opinión.
 					$form[':cdr_uniqueid'] = null;
+					
+					# Se reestablece el codigo HTTP a 200  
+                                        $app = \Slim\Slim::getInstance();
+                                        $app->status(200);  
 				}
 			#endregion
 
