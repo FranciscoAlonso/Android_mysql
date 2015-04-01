@@ -384,7 +384,7 @@ class sos_db_model{
 
             $this->checkUserApiKey($user);
 
-            $query = 'SELECT login, mail, rol, api_key, user_extension 
+            $query = 'SELECT id, login, mail, rol, api_key, user_extension 
                         FROM actor_sistema 
                             WHERE mail = :user OR login = :user';
 
