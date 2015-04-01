@@ -808,14 +808,17 @@ class sos_db_model{
             if (empty($caso_id) || empty($opinion_id))
                 API::throwPDOException("Falta el ID del caso y/o ID de la opinión.");
 
+            global $user_id;
+
             $params = array(
-                              ':caso_id' => $caso_id
+                              ':caso_id'    => $caso_id
                             , ':opinion_id' => $opinion_id
+                            , ':medico_id'  => $user_id
                             );
 
             $query = 'DELETE
                         FROM opinion
-                            WHERE caso_id = :caso_id AND id = :opinion_id';
+                            WHERE caso_id = :caso_id AND id = :opinion_id AND medico_id = :medico_id';
 
             $result = $this->execute($query, $params);
 
