@@ -22,11 +22,13 @@ class casos{
 			# Se inicia la transaction
 			$DBH_SOS->beginTransaction();	
 
-			#region Crea el paciente
+			#region Crea el paciente si no se recibe en la solicitud
+			if(empty($form[':paciente_id'])){
 				$form_paciente = array();
 				$form_paciente[':fecha_nacimiento'] = $fecha_nacimiento;
 				$paciente = $DBH_SOS->createPaciente($form_paciente);
 				$form[':paciente_id'] = $DBH_SOS->getLastInsertId();
+			}
 			#endregion
 
 			# Crea el caso
