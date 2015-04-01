@@ -95,31 +95,6 @@ class elastix_db_model{
     }
     
     /**
-     * Esta función retorna la lista de grupos de llamadas (Ring Groups) que existen configurados en el Elastix
-     * @return PDO   Retorna información de los Ring Groups.
-     */
-    public function getCallGroups(){
-
-        $params = array();
-
-        $query = 'SELECT grpnum, description, grplist
-                    FROM ringgroups';
-
-        $result = $this->execute($query, $params);
-
-        # Si el SELECT no arroja resultados retorna una respuesta generica.
-        if($result->rowCount() == 0)
-            API::throwPDOException(
-                                    DB_SELECT_NO_RESULT_MSG,
-                                    200,
-                                    $result->queryString,
-                                    JR_SUCCESS
-                                );
-
-        return $result;
-    }
-
-    /**
      * Retorna un string con los valores de LIMIT y OFFSET enviados por GET para que se concatene al final de un query y se delimite la consulta.
      * @return string String en SQL con LIMIT y OFFSET si fueron definidos, de lo contrario retorna vacío. 
      */
@@ -144,6 +119,34 @@ class elastix_db_model{
         }
 
         return $query;
+    }
+
+    /**
+     * Esta función retorna la lista de grupos de llamadas (Ring Groups) que existen configurados en el Elastix
+     * @return PDO   Retorna información de los Ring Groups.
+     */
+    public function getCallGroups(){
+
+        $params = array();
+
+        $query = 'SELECT grpnum, description, grplist
+                    FROM ringgroups';
+
+        # Se verifica si se enviaron por parametro LIMIT y OFFSET para la consulta.
+        $query .= $this->getLimitAndOffsetString();
+
+        $result = $this->execute($query, $params);
+
+        # Si el SELECT no arroja resultados retorna una respuesta generica.
+        if($result->rowCount() == 0)
+            API::throwPDOException(
+                                    DB_SELECT_NO_RESULT_MSG,
+                                    200,
+                                    $result->queryString,
+                                    JR_SUCCESS
+                                );
+
+        return $result;
     }
 
     #region READ
