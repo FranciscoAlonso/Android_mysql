@@ -427,6 +427,9 @@ class sos_db_model{
                 /**/
             #endregion 
 
+            # Se verifica si se enviaron por parametro LIMIT y OFFSET para la consulta.
+            $query .= $this->getLimitAndOffsetString();
+            
             $result = $this->execute($query);
             # Si el SELECT no arroja resultados retorna una respuesta generica.
             if($result->rowCount() == 0)
@@ -455,6 +458,9 @@ class sos_db_model{
             if(!empty($centro_id))
                 $query .= ' WHERE id = :centro_id';
 
+            # Se verifica si se enviaron por parametro LIMIT y OFFSET para la consulta.
+            $query .= $this->getLimitAndOffsetString();
+            
             $result = $this->execute($query, $params);
 
             # Si el SELECT no arroja resultados retorna una respuesta generica.
@@ -578,6 +584,9 @@ class sos_db_model{
                             WHERE h_c.caso_id = :caso_id
                                 ORDER BY h_c.fecha DESC';
 
+            # Se verifica si se enviaron por parametro LIMIT y OFFSET para la consulta.
+            $query .= $this->getLimitAndOffsetString();
+            
             $result = $this->execute($query, $params);
 
             # Si el SELECT no arroja resultados retorna una respuesta generica.
@@ -616,6 +625,9 @@ class sos_db_model{
                 $query .= ' AND a.id = :archivo_id';
             }
 
+            # Se verifica si se enviaron por parametro LIMIT y OFFSET para la consulta.
+            $query .= $this->getLimitAndOffsetString();
+            
             $result = $this->execute($query, $params);
 
             # Si el SELECT no arroja resultados retorna una respuesta generica.
@@ -654,6 +666,9 @@ class sos_db_model{
                 $query .= ' AND o.id = :opinion_id';
             }
 
+            # Se verifica si se enviaron por parametro LIMIT y OFFSET para la consulta.
+            $query .= $this->getLimitAndOffsetString();
+            
             $result = $this->execute($query, $params);
 
             # Si el SELECT no arroja resultados retorna una respuesta generica.
@@ -683,6 +698,9 @@ class sos_db_model{
             if(!empty($paciente_id))
                 $query .= ' WHERE id = :paciente_id';
 
+            # Se verifica si se enviaron por parametro LIMIT y OFFSET para la consulta.
+            $query .= $this->getLimitAndOffsetString();
+            
             $result = $this->execute($query, $params);
 
             # Si el SELECT no arroja resultados retorna una respuesta generica.
