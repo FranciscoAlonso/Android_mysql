@@ -63,10 +63,10 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 	        API::verifyRequiredParams(
 	        	array(
 	        		'descripcion'
-	        		// , 'version'
+	        		//, 'version'
 	        		//, 'paciente_id'
 	        		//, 'status_id'
-	        		//, 'fecha_nacimiento' 
+	        		, 'fecha_nacimiento' 
 	        	));
 
 			$form = array();
@@ -84,10 +84,6 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 			# Si no se envía la versión se asigna el valor de LASTEST_API_VERSION.
 			if(empty($form[':version']))
 				$form[':version'] = LASTEST_API_VERSION;
-
-			# Si no se envía el ID de un paciente se asigna el caso a un paciente generico.
-			if(empty($form[':paciente_id']))
-				$form[':paciente_id'] = 0;
 
 			# Si no se envía el ID del status se asigna el ID del status "En espera" (ID = 1)
 			if(empty($form[':status_id']))
