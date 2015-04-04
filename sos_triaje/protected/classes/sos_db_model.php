@@ -496,6 +496,7 @@ class sos_db_model{
 
             $query = 'SELECT 
                         c.id, c.descripcion, c.fecha_inicio, c.fecha_solucion,
+                        c.FK_actor_sistema,
                         s.nombre AS status_caso,
                         centro.nombre AS centro_sos,
                         p.fecha_nacimiento,
