@@ -728,6 +728,57 @@ class sos_db_model{
     
     #region UPDATE
         /**
+         * Modifica una opinión asociada a un caso. Se espera en el arreglo los siguientes indices:
+         * :id
+         * :version (opcional)
+         * :centro_id (opcional)
+         * :descripcion (opcional)
+         * :fecha_solucion (opcional)
+         * :id_casosos (opcional)
+         * :status_id (opcional)
+         * Nota: Debe enviarse al menos un parámetro de los opcionales.
+         * @param  array $form Arreglo con los valores a modificar
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         * @throws PDOException If La consulta arroja 0 resultados o si no recibe ningun parametro.
+         */
+        public function updateCaso($form){
+
+            global $user_id;
+            $form[':user_id'] = $user_id; 
+
+            $query =
+            'UPDATE 
+                caso
+            SET
+                id = :id';
+
+            if(isset($form[':version'])) $query .= ', version = :version';
+            if(isset($form[':centro_id'])) $query .= ', centro_id = :centro_id';
+            if(isset($form[':descripcion'])) $query .= ', descripcion = :descripcion';
+            if(isset($form[':fecha_solucion'])) $query .= ', fecha_solucion = :fecha_solucion';
+            if(isset($form[':id_casosos'])) $query .= ', id_casosos = :id_casosos';
+            if(isset($form[':status_id'])) $query .= ', status_id = :status_id';
+
+            $query .= 
+            ' WHERE
+                id = :id
+                AND FK_actor_sistema = :user_id
+            ';
+
+            $result = $this->execute($query, $form);
+
+            # Si el SELECT no arroja resultados retorna una respuesta generica.
+            if($result->rowCount() == 0)
+                API::throwPDOException(
+                                        DB_UPDATE_NO_RESULT_MSG,
+                                        200,
+                                        $result->queryString,
+                                        JR_SUCCESS
+                                    );
+
+            return $result;
+        }
+        /**
          * Modifica una opinión asociada a un caso. Se espera en el arreglo los siguientes indices: 
          * :id
          * :caso_id

@@ -300,6 +300,56 @@ $app->contentType(DEFAULT_CONTENT_TYPE);
 
     #region UPDATES
     	/**
+    	 * Modifica un caso.
+    	 * method - PUT
+    	 * url - /casos/:casoId
+    	 */
+	    $app->put('/casos/:casoId', 'API::authenticate', function($caso_id) use($app){
+
+			try {
+		    	$version = $app->request()->post('version');
+		    	$centro_id = $app->request()->post('centro_id');
+		    	$descripcion = $app->request()->post('descripcion');
+		    	$fecha_solucion = $app->request()->post('fecha_solucion');
+		    	$id_casosos = $app->request()->post('id_casosos');
+		    	$status_id = $app->request()->post('status_id');
+
+				# Validar que exista al menos una columna a modificar.
+	            if (
+	                !isset($version) && 
+	                !isset($centro_id) &&
+	                !isset($descripcion) &&
+	                !isset($fecha_solucion) &&
+	                !isset($id_casosos) &&
+	                !isset($status_id)
+	            )
+	            	API::throwPDOException(
+	                	"Faltan los campos ya sea" . 
+	                	" 'version'" .
+	                	", 'centro_id'" .
+	                	", 'descripcion'" .
+	                	", 'fecha_solucion'" .
+	                	", 'id_casosos'" .
+	                	", 'status_id'" .
+	                	" para modificar dicho caso.");
+				
+	            $form[':id'] = $caso_id;
+
+	            if(isset($version)) $form[':version'] = $version;
+	            if(isset($centro_id)) $form[':centro_id'] = $centro_id;
+	            if(isset($descripcion)) $form[':descripcion'] = $descripcion;
+	            if(isset($fecha_solucion)) $form[':fecha_solucion'] = $fecha_solucion;
+	            if(isset($id_casosos)) $form[':id_casosos'] = $id_casosos;
+	            if(isset($status_id)) $form[':status_id'] = $status_id;
+
+	            require_once  DIR_CONTROLLERS . '/casos.php';
+    			echo casos::update($form);
+
+			} catch (Exception $e) {
+				echo $e->getMessage();
+			}			
+    	});
+    	/**
     	 * Modifica una opinión asociada a un caso.
     	 * method - PUT
     	 * url - /casos/:casoId/opiniones/:opinionesId

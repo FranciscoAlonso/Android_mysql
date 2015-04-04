@@ -90,7 +90,34 @@ class casos{
 		}
 	}
 
-	//public static function update($form){}
+	/**
+  	 * Invoca al modelo para modificar un caso.
+  	 * @param  array $form Arreglo con los nuevos valores del caso.
+  	 * @return JSON 		JSON indicando si la actualización del caso fue un éxito o no. 
+  	 * @throws Exception If Ocurre alguna excepción en el proceso de la modificación de la data.
+  	 */
+	public static function update($form){
+		try {
+			# Invocar a la clase sos_db_model.
+			$DBH_SOS = new sos_db_model();
+
+			$result = $DBH_SOS->updateCaso($form);
+		
+			# Crear metadata para la consulta exitosa.
+			$metadata = 
+				new json_response_metadata(
+						JR_SUCCESS,
+						$result->rowCount(),
+						$result->queryString,
+						$_SERVER['REQUEST_METHOD']
+					);
+
+			# Retorna el resultado de la consulta con información extra en formato JSON.
+			return json_response::generate($metadata, $result->rowCount() . DB_UPDATE_SUCESS_MSG);
+		} catch (Exception $e) {
+            return $e->getMessage();
+		}
+	}
 
 	/**
 	 * para eliminar un caso.
