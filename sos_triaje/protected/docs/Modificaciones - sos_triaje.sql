@@ -43,18 +43,24 @@ ALTER TABLE actor_sistema ADD user_extension VARCHAR(255);
 ALTER TABLE archivo ADD mime_type VARCHAR(255) default 'image/jpg';
 
 -- -- 
--- Se agrega la columna "cdr_uniqueid", "calldate" y "recordingfile"
--- a la tabla "opinion" para su uso con el Web Service.
+-- Se agrega la columna "FK_actor_sistema" a la tabla
+-- "caso" para su uso con el Web Service.
 -- --
-ALTER TABLE opinion ADD cdr_uniqueid VARCHAR(255);
-ALTER TABLE opinion ADD calldate datetime;
-ALTER TABLE opinion ADD recordingfile VARCHAR(255);
+ALTER TABLE caso ADD FK_actor_sistema bigint(20);
 
 -- -- 
 -- Se agrega la columna "group_extension" a la tabla
 -- "especialidad" para su uso con el Web Service.
 -- --
 ALTER TABLE especialidad ADD group_extension VARCHAR(255);
+
+-- -- 
+-- Se agrega la columna "cdr_uniqueid", "calldate" y "recordingfile"
+-- a la tabla "opinion" para su uso con el Web Service.
+-- --
+ALTER TABLE opinion ADD cdr_uniqueid VARCHAR(255);
+ALTER TABLE opinion ADD calldate datetime;
+ALTER TABLE opinion ADD recordingfile VARCHAR(255);
 
 -- -- 
 -- Se agrega la propiedad "AUTO_INCREMENT" a la columna id de la tabla paciente.
@@ -71,7 +77,8 @@ ALTER TABLE `archivo`
 ALTER TABLE `caso`
   ADD CONSTRAINT `FK2E7B3AC4E46216` FOREIGN KEY (`status_id`) REFERENCES `status` (`id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `FK2E7B3AD8BF583C` FOREIGN KEY (`paciente_id`) REFERENCES `paciente` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK2E7B3ADBDDF23E` FOREIGN KEY (`centro_id`) REFERENCES `centrosos` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK2E7B3ADBDDF23E` FOREIGN KEY (`centro_id`) REFERENCES `centrosos` (`id`) ON UPDATE CASCADE,
+  ADD FOREIGN KEY (`FK_actor_sistema`) REFERENCES `actor_sistema` (`id`) ON UPDATE CASCADE;
 
 ALTER TABLE `caso_especialidad`
   ADD CONSTRAINT `FK4E7036174A6E53D6` FOREIGN KEY (`especialidad_id`) REFERENCES `especialidad` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,

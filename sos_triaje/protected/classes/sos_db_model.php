@@ -263,6 +263,9 @@ class sos_db_model{
          */
         public function createCaso($form){
             
+            global $user_id;
+            $form[':user_id'] = $user_id;
+
             $query  = 
             'INSERT INTO `caso`
             (
@@ -274,6 +277,7 @@ class sos_db_model{
                 , id_casosos
                 , paciente_id
                 , status_id
+                , FK_actor_sistema
             )
             VALUES
             (
@@ -285,6 +289,7 @@ class sos_db_model{
                 , :id_casosos
                 , :paciente_id
                 , :status_id
+                , :user_id
             )';
 
             return $this->execute($query, $form);
@@ -798,11 +803,17 @@ class sos_db_model{
             if (empty($caso_id))
                 API::throwPDOException("Falta el ID del caso.");
             
-            $params = array(':caso_id' => $caso_id);
+            global $user_id;
+
+            $params = array(
+                              ':caso_id' => $caso_id
+                            , ':user_id' => $user_id
+                            );
 
             $query = 'DELETE
                         FROM caso
-                            WHERE id = :caso_id';
+                            WHERE id = :caso_id 
+                            AND FK_actor_sistema = :user_id';
 
             $result = $this->execute($query, $params);
 
