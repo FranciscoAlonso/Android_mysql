@@ -3,7 +3,7 @@ header('Access-Control-Allow-Origin: *');
 try {
     /*This variables you can modify*/
     $user     = "admin";
-    $password = "Tajrh123654";
+    $password = "";
     $ipServer = "192.168.2.44";
    /********************************/
 

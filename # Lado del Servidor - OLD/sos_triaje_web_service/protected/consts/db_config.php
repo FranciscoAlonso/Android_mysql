@@ -14,7 +14,7 @@ define('SOS_DB_PASSWORD',''); 			# Contraseña de la BD
 define('ELASTIX_DB_SERVER', '');	# Servidor de la BD de Elastix
 define('ELASTIX_DB_NAME','asteriskcdrdb'); 		# Nombre de la BD a conectar
 define('ELASTIX_DB_USER','root'); 				# Usuario de la BD
-define('ELASTIX_DB_PASSWORD','Tajrh123654'); 	# Contraseña de la BD
+define('ELASTIX_DB_PASSWORD',''); 	# Contraseña de la BD
 
 # Definición global para los tipos de mensajes de error:
   # PDO::ERRMODE_SILENT (Deafult): The other two methods are more ideal for DRY programming. If you leave it in this mode, you'll have to check for errors in the way you're probably used to if you used the mysql or mysqli extensions.

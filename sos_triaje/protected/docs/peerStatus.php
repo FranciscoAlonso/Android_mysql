@@ -56,7 +56,7 @@ a menos que sea de forma local
 /* Connection details */
 $manager_host = "192.168.2.44";
 $manager_user = "admin";
-$manager_pass = "Tajrh123654";
+$manager_pass = "";
 
 /* Default Port */
 $manager_port = "5038";

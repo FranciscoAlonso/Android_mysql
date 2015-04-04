@@ -22,7 +22,7 @@ a menos que sea de forma local
 /* Connection details */
 $manager_host = "190.72.197.215";
 $manager_user = "admin";
-$manager_pass = "Tajrh123654";
+$manager_pass = "";
 
 /* Default Port */
 $manager_port = "5038";
