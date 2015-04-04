@@ -43,10 +43,12 @@ ALTER TABLE actor_sistema ADD user_extension VARCHAR(255);
 ALTER TABLE archivo ADD mime_type VARCHAR(255) default 'image/jpg';
 
 -- -- 
--- Se agrega la columna "cdr_uniqueid" a la tabla
--- "opinion" para su uso con el Web Service.
+-- Se agrega la columna "cdr_uniqueid", "calldate" y "recordingfile"
+-- a la tabla "opinion" para su uso con el Web Service.
 -- --
 ALTER TABLE opinion ADD cdr_uniqueid VARCHAR(255);
+ALTER TABLE opinion ADD calldate datetime;
+ALTER TABLE opinion ADD recordingfile VARCHAR(255);
 
 -- -- 
 -- Se agrega la columna "group_extension" a la tabla

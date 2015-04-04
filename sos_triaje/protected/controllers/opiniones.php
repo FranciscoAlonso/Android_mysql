@@ -28,16 +28,22 @@ class opiniones{
 		      		
 					if ( $DBH_SOS->exist_cdr_uniqueid($cdr_record['uniqueid']) ){
 						$form[':cdr_uniqueid'] = null;
+						$form[':calldate'] = null;
+						$form[':recordingfile'] = null;
 					}else{
 						$form[':cdr_uniqueid'] = $cdr_record['uniqueid'];
+						$form[':calldate'] = $cdr_record['calldate'];
+						$form[':recordingfile'] = $cdr_record['recordingfile'];
 					}
 				} catch (Exception $e) {
 					# Ha ocurrido un error al intentar conectar con el servidor VoiP, se captura y continua la creación de la opinión.
 					$form[':cdr_uniqueid'] = null;
-					
-					# Se reestablece el codigo HTTP a 200  
-                                        $app = \Slim\Slim::getInstance();
-                                        $app->status(200);  
+					$form[':calldate'] = null;
+					$form[':recordingfile'] = null;
+
+					# Se reestablece el codigo HTTP a 200
+					$app = \Slim\Slim::getInstance();
+					$app->status(200);  
 				}
 			#endregion
 

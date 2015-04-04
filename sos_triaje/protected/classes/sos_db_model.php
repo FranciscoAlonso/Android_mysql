@@ -314,6 +314,8 @@ class sos_db_model{
                 , nombre_opinion
                 , estado_opinion
                 , cdr_uniqueid
+                , calldate
+                , recordingfile
             )
             VALUES
             (
@@ -325,6 +327,8 @@ class sos_db_model{
                 , :nombre_opinion
                 , :estado_opinion
                 , :cdr_uniqueid
+                , :calldate
+                , :recordingfile
             )';
 
             return $this->execute($query, $form);
