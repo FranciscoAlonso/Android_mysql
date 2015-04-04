@@ -11,10 +11,10 @@ define('SOS_DB_PASSWORD', ''           ); # Contraseña de la BD.
 
 # Recuerde cambiar la configuración en el servidor Elastix
 # para que permita la conexión desde otro servidor (ACL). 
-define('ELASTIX_DB_SERVER'  , '192.168.2.44'  ); # Servidor de la BD de Elastix.
-define('ELASTIX_DB_NAME'    , 'asterisk'      ); # Nombre de la BD por defecto a conectar.
-define('ELASTIX_DB_USER'    , 'root'          ); # Usuario de la BD.
-define('ELASTIX_DB_PASSWORD', 'Tajrh123654'   ); # Contraseña de la BD.
+define('ELASTIX_DB_SERVER'  , '190.201.142.217' );  # Servidor de la BD de Elastix.
+define('ELASTIX_DB_NAME'    , 'asterisk'        );  # Nombre de la BD por defecto a conectar.
+define('ELASTIX_DB_USER'    , 'root'            );  # Usuario de la BD.
+define('ELASTIX_DB_PASSWORD', '123456'          );  # Contraseña de la BD.
 
 # Constantes para acceder al Asterisk Manager Interface (AMI)
 define('ELASTIX_AMI_HOST'     , ELASTIX_DB_SERVER   ); # AMI Host.
