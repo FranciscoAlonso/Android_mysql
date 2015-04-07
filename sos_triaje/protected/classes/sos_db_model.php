@@ -246,6 +246,30 @@ class sos_db_model{
 
             return $this->execute($query, $params);
         }
+        
+        /**
+         * Cambia el estado de un caso.
+         * @param string $caso_id ID de un caso (Default="")
+         * @param string $status_id ID de un status (Default="")
+         * @return PDO  Objeto PDO resultante de la ejecución del query.
+         */
+        public function setCasoStatus($caso_id = "", $status_id = ""){
+        	
+        	$params = array(
+                              ':caso_id' => $caso_id
+                            , ':status_id' => $status_id
+                            );
+                            
+                $query  = 
+	            'UPDATE
+	            	caso 
+	            SET 
+	            	status_id = :status_id 
+	            WHERE 
+	            	id = :caso_id;';
+	         
+	         return $this->execute($query, $params);
+        }
     #endregion
 
     #region CREATE
