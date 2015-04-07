@@ -57,7 +57,9 @@ class opiniones{
 						$result->queryString,
 						$_SERVER['REQUEST_METHOD']
 					);
-
+			
+			$DBH_SOS->setCasoStatus( $form[':caso_id'] , 7 );
+			
 			# Retorna el resultado de la consulta con información extra en formato JSON.
 			return json_response::generate($metadata, DB_INSERT_SUCESS_MSG, $DBH_SOS->getLastInsertId());
 		} catch (Exception $e) {
