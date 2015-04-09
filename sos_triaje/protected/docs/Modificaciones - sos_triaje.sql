@@ -1,8 +1,7 @@
 ﻿-- -- 
 -- Se agrega un paciente generico a la tabla "paciente".
 -- --
-INSERT INTO `paciente` (`id` ,`fecha_nacimiento`)
-VALUES ('0', '0000-00-00 00:00:00');
+-- INSERT INTO `paciente` (`id` ,`fecha_nacimiento`) VALUES ('0', '0000-00-00 00:00:00');
 
 -- -- 
 -- Se eliminan todos los FOREIGN KEY para actualizarlos y 
