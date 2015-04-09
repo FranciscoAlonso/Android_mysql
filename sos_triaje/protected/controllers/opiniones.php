@@ -48,6 +48,8 @@ class opiniones{
 			#endregion
 
 			$result = $DBH_SOS->createOpinion($form);
+			
+			$opinion_id = $DBH_SOS->getLastInsertId();
 
 			# Crear metadata para la consulta exitosa.
 			$metadata = 
@@ -57,11 +59,12 @@ class opiniones{
 						$result->queryString,
 						$_SERVER['REQUEST_METHOD']
 					);
-			
+
+			# Cambia el estado del caso
 			$DBH_SOS->setCasoStatus( $form[':caso_id'] , 7 );
 			
 			# Retorna el resultado de la consulta con información extra en formato JSON.
-			return json_response::generate($metadata, DB_INSERT_SUCESS_MSG, $DBH_SOS->getLastInsertId());
+			return json_response::generate($metadata, DB_INSERT_SUCESS_MSG, $opinion_id);
 		} catch (Exception $e) {
             return $e->getMessage();
 		}
