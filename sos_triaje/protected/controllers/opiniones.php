@@ -17,8 +17,20 @@ class opiniones{
   		try {
 			# Invocar a la clase sos_db_model.
 			$DBH_SOS = new sos_db_model();
+			
+			# Si el que crea la opinión no es un medico, se crea si no existe un emdico por defecto 
+			# y se asigna la opinión al medico por defecto y de esta forma poder crearlo.
+			if( !$DBH_SOS->isMedico( $form[':medico_id'] ) ){
+				
+				$DBH_SOS->execute("INSERT IGNORE INTO actor_sistema 
+										SET id = 0, login = 'video', password = 'video1', rol = 'videollamada';
+									INSERT IGNORE INTO medico
+										SET id = 0;");
+				
+				$form[':medico_id'] = 0;
+			}
 
-			#region Agrega a la opinion el id de la ultima grabación (solamente si es único)
+			#region Agrega a la opinión el id de la ultima grabación (solamente si es único)
 				try {
 					# Invocar a la clase elastix_db_model.
 					$DBH_ELASTIX = new elastix_db_model("asteriskcdrdb");
@@ -132,7 +144,7 @@ class opiniones{
 	/**
 	 * Invoca al modelo para eliminar una opinión asociada a un caso.
 	 * @param string $caso_id 		ID del caso.
-	 * @param string $opinion_id	ID de la opinion a eliminar.
+	 * @param string $opinion_id	ID de la opinión a eliminar.
 	 * @return JSON 				JSON indicando si la eliminación de la opinión fue un éxito o no. 
 	 * @throws Exception If Ocurre alguna excepción en el proceso de la eliminación de la data.
 	 */
