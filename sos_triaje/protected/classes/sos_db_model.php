@@ -218,6 +218,25 @@ class sos_db_model{
         return $query;
     }
 
+    /**
+     * Consulta a la tabla "medico" si el id ya existe. 
+     * @param  string $medico_id ID a consultar su existencia.
+     * @return boolean               Retorna true si encuentra el ID, de lo contrario false.
+     */
+    public function isMedico($medico_id = ""){
+
+        $params = array(':medico_id' => $medico_id);
+
+        $query = 'SELECT count(id) as rows
+                    FROM medico 
+                        WHERE id = :medico_id;';
+
+        $result = $this->execute($query, $params);
+        $result = $result->fetch();
+
+        return $result['rows'] != 0;
+    }
+
     #region SETS
         /**
          * Establece la asociación entre un caso y una especialidad.
