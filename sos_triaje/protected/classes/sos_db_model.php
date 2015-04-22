@@ -851,24 +851,20 @@ class sos_db_model{
                 opinion
             SET
                 id = :id';
-
-            if(isset($form[':version']))
-                $query .= ', version = :version';
-
-            if(isset($form[':cuerpo_opinion']))
-                $query .= ', cuerpo_opinion = :cuerpo_opinion';
-
-            if(isset($form[':estado_opinion']))
-                $query .= ', estado_opinion = :estado_opinion';
-
-            if(isset($form[':nombre_opinion']))
-                $query .= ', nombre_opinion = :nombre_opinion';
+                
+            if(isset($form[':version'])) $query .= ', version = :version';
+            if(isset($form[':cuerpo_opinion'])) $query .= ', cuerpo_opinion = :cuerpo_opinion';
+            if(isset($form[':estado_opinion'])) $query .= ', estado_opinion = :estado_opinion';
+            if(isset($form[':nombre_opinion'])) $query .= ', nombre_opinion = :nombre_opinion';
 
             $query .= 
             ' WHERE
                 id = :id
                 AND caso_id = :caso_id
                 AND medico_id = :medico_id
+                OR id = :id
+                AND caso_id = :caso_id
+                AND medico_id = 0
             ';
 
             $result = $this->execute($query, $form);
@@ -907,7 +903,8 @@ class sos_db_model{
 
             $query = 'DELETE
                         FROM caso
-                            WHERE id = :caso_id 
+                            WHERE 
+                            id = :caso_id 
                             AND FK_actor_sistema = :user_id';
 
             $result = $this->execute($query, $params);
@@ -946,7 +943,14 @@ class sos_db_model{
 
             $query = 'DELETE
                         FROM opinion
-                            WHERE caso_id = :caso_id AND id = :opinion_id AND medico_id = :medico_id';
+                            WHERE 
+                            	caso_id = :caso_id 
+                            	AND id = :opinion_id 
+                            	AND medico_id = :medico_id
+                            	OR caso_id = :caso_id
+                            	AND id = :opinion_id 
+                            	AND medico_id = 0
+                            	';
 
             $result = $this->execute($query, $params);
 
